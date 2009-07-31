@@ -46,3 +46,4 @@ It has not been tested on Windows. Give it a try and let me know how it goes!
 1. Directory to be imported
 2. Resulting pages
 3. Options screen
+4. Results: imported pages and rewrite rules
