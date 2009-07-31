@@ -3,7 +3,7 @@ Contributors: sillybean
 Tags: import, pages
 Requires at least: 2.8
 Tested up to: 2.8.2
-Stable tag: 1.0
+Stable tag: 1.01
 
 Imports well-formed HTML files into WordPress pages. 
 
