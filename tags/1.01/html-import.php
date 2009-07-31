@@ -48,10 +48,6 @@ register_activation_hook(__FILE__, 'html_import_activation_check');
 // Hook for adding admin menus
 add_action('admin_menu', 'html_import_add_pages');
 
-function html_import_js() {
-	wp_enqueue_script( 'showhide.js',get_bloginfo('wpurl').'/wp-content/plugins/html-import/showhide.js', array('jquery'));
-}
-
 function html_import_css() {
 	$options = get_option('html_import');
 		echo "<style type=\"text/css\">\n";
@@ -67,14 +63,16 @@ function html_import_css() {
 		echo "#content-region, #title-region { width: 100%; height: 8em; background: #f9f9f9; z-index: 10; }";
 		echo "#content-switch, #title-switch { position: relative; height: 8em; }";
 		echo "#content-region, #content-tag, #title-region, #title-tag { position: absolute; }";
-	if ($options['import_content'] == 'tag') echo "#content-region { display: none }";
-	if ($options['import_title'] == 'tag') echo "#title-region { display: none }";
+	if( $_POST[ $hidden_field_name ] == 'Y' ) {
+		if ($_POST['import_content'] == 'tag') echo "#content-region { display: none }";
+		if ($_POST['import_title'] == 'tag') echo "#title-region { display: none }";
+	}
+	else {
+		if ($options['import_content'] == 'tag') echo "#content-region { display: none }";
+		if ($options['import_title'] == 'tag') echo "#title-region { display: none }";
+	}
 		echo "</style>";
 }
-
-/*
-http://iamzed.com/2006/12/14/using-jquery-to-show-hide-form-elements-based-on-a-checkbox-selection/comment-page-1/
-*/
 
 function html_import_add_pages() {
     // Add a new submenu under Options:
@@ -118,7 +116,6 @@ function html_import_options() {
 		// See if the user has posted us some information
 		// If they did, this hidden field will be set to 'Y'
 		if( $_POST[ $hidden_field_name ] == 'Y' ) {
-			//html_page_import();
 				
 			?> <div class="wrap"><h2><?php _e( 'Importing...'); ?></h2>
             <table class="widefat page fixed" id="importing" cellspacing="0"><thead><tr><th id="id">ID</th><th>Old path</th><th>New path</th><th>Title</th></tr></thead><tbody> <?php	
