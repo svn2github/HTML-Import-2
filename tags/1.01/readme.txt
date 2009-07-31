@@ -1,5 +1,6 @@
 === Import HTML Pages ===
 Contributors: sillybean
+Donate link: http://sillybean.net/code/wordpress/html-import/
 Tags: import, pages
 Requires at least: 2.8
 Tested up to: 2.8.2
