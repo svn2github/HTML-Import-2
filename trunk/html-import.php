@@ -182,7 +182,7 @@ function html_import_options() {
 	<input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
         
     <div id="optionsform">
-    <p><label><?php _e("Beginning directory or URL: "); ?><br />
+    <p><label><?php _e("Beginning directory: "); ?><br />
     <input type="text" name="root_directory" id="root_directory" value="<?php echo stripslashes(htmlentities($options['root_directory'])); ?>" class="widefloat" />  </label></p>
     
     <p><label><?php _e("Process files with these extensions: "); ?><br />
