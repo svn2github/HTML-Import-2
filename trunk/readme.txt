@@ -60,7 +60,7 @@ For example, if your directory structure is:
 
 The conferences and workshops directories will be created as parent pages, but the 2004 and 2005 directories will not.
 
-To work around this problem, you can populate your directories with dummy index.html pages. They should contain at least the HTML, HEAD, and TITLE tags, and you can give them distinctive titles (e.g. "DUMMY") so you can easily find and delete them once all your files have been imported.
+To work around this problem, you can populate your directories with dummy index.html pages. They should contain at least the `<html>`, `<head>`, and `<title>` tags, and you can give them distinctive titles (e.g. "DUMMY") so you can easily find and delete them once all your files have been imported.
 
 = Does this work on Windows servers? =
 
