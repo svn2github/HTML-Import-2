@@ -44,19 +44,19 @@ Options:
 For example, if your directory structure is:
 
     2004/
-    &nbsp;&nbsp;conferences/
-    &nbsp;&nbsp;&nbsp;&nbsp;index.html
-    &nbsp;&nbsp;&nbsp;&nbsp;hotels.html
-    &nbsp;&nbsp;workshops/
-    &nbsp;&nbsp;&nbsp;&nbsp;index.html
-    &nbsp;&nbsp;&nbsp;&nbsp;schedule.html
+        conferences/
+            index.html
+            hotels.html
+        workshops/
+            index.html
+            schedule.html
     2005/
-    &nbsp;&nbsp;conferences/
-    &nbsp;&nbsp;&nbsp;&nbsp;index.html
-    &nbsp;&nbsp;&nbsp;&nbsp;hotels.html
-    &nbsp;&nbsp;workshops/
-    &nbsp;&nbsp;&nbsp;&nbsp;index.html
-    &nbsp;&nbsp;&nbsp;&nbsp;schedule.html
+        conferences/
+            index.html
+            hotels.html
+        workshops/
+            index.html
+            schedule.html
 
 The conferences and workshops directories will be created as parent pages, but the 2004 and 2005 directories will not.
 
