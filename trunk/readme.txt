@@ -37,12 +37,39 @@ Options:
 
 == Frequently Asked Questions ==
 
+= Known bugs =
+
+1. The plugin will create an empty parent page for directories that contain the imported file types. However, it will not create parent pages for directories containing only other directories, even if those directories contain the right kinds of files.
+
+For example, if your directory structure is:
+
+2004/
+&nbsp;&nbsp;conferences/
+&nbsp;&nbsp;&nbsp;&nbsp;index.html
+&nbsp;&nbsp;&nbsp;&nbsp;hotels.html
+&nbsp;&nbsp;workshops/
+&nbsp;&nbsp;&nbsp;&nbsp;index.html
+&nbsp;&nbsp;&nbsp;&nbsp;schedule.html
+2005/
+&nbsp;&nbsp;conferences/
+&nbsp;&nbsp;&nbsp;&nbsp;index.html
+&nbsp;&nbsp;&nbsp;&nbsp;hotels.html
+&nbsp;&nbsp;workshops/
+&nbsp;&nbsp;&nbsp;&nbsp;index.html
+&nbsp;&nbsp;&nbsp;&nbsp;schedule.html
+
+The conferences and workshops directories will be created as parent pages, but the 2004 and 2005 directories will not.
+
+To work around this problem, you can populate your directories with dummy index.html pages. They should contain at least the HTML, HEAD, and TITLE tags, and you can give them distinctive titles (e.g. "DUMMY") so you can easily find and delete them once all your files have been imported.
+
 = Does this work on Windows servers? =
 
 It has not been tested on Windows. Give it a try and let me know how it goes!
 
 == Changelog ==
 
+= 1.02 =
+* Better error handling for fopen and file_get_contents
 = 1.01 =
 * jQuery bug fixed
 * better Windows compatibility (July 31, 2009)
