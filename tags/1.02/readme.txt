@@ -69,7 +69,7 @@ It has not been tested on Windows. Give it a try and let me know how it goes!
 == Changelog ==
 
 = 1.02 =
-* Better error handling for `fopen` and `file_get_contents`
+* Better error handling for `fopen` and `file_get_contents`  (July 31, 2009)
 = 1.01 =
 * jQuery bug fixed
 * better Windows compatibility (July 31, 2009)
