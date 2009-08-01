@@ -86,7 +86,7 @@ function html_import_css() {
 		if ($options['import_title'] == 'tag') echo "#title-region { display: none }";
 	}
 		echo "#tips h3 { margin-bottom: 0; }";
-		echo "#tips { -moz-border-radius: 4px; border: 1px solid #dfdfdf; background: #fff; padding: 0 2em 1em; }";
+		echo "#tips { -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; border: 1px solid #dfdfdf; background: #fff; padding: 0 2em 1em; }";
 		echo "</style>";
 }
 
