@@ -37,7 +37,7 @@ Copyright 2009  Stephanie Leary  (email : steph@sillybean.net)
 *
 * Replace "plugin" with the name of your plugin
 */
-function html_import_activation_check(){
+function html_import_activation_check() {
 	if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 		deactivate_plugins(basename(__FILE__)); // Deactivate myself
 		wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
@@ -45,14 +45,14 @@ function html_import_activation_check(){
 }
 register_activation_hook(__FILE__, 'html_import_activation_check');
 
-function html_import_plugin_actions( $links, $file ) {
- 	if( $file == 'html-import/html-import.php' && function_exists( "admin_url" ) ) {
-		$settings_link = '<a href="' . admin_url( 'options-general.php?page=html-import' ) . '">' . __('Import Files') . '</a>';
-		array_unshift( $links, $settings_link ); // before other links
+function html_import_plugin_actions($links, $file) {
+ 	if ($file == 'html-import/html-import.php' && function_exists("admin_url")) {
+		$settings_link = '<a href="' . admin_url('options-general.php?page=html-import') . '">' . __('Import Files') . '</a>';
+		array_unshift($links, $settings_link); 
 	}
 	return $links;
 }
-add_filter( 'plugin_action_links', 'html_import_plugin_actions', 10, 2 );
+add_filter('plugin_action_links', 'html_import_plugin_actions', 10, 2);
 
 // Hook for adding admin menus
 add_action('admin_menu', 'html_import_add_pages');
@@ -196,7 +196,7 @@ function html_import_options() {
     
     <p><label><?php _e("Process files with these extensions: "); ?><br />
     <input type="text" name="file_extensions" id="file_extensions" value="<?php echo stripslashes(htmlentities($options['file_extensions'])); ?>" class="widefloat" />  </label><br />
-<small><?php _e("Enter file extensions, without periods, separated by commas. All other file types will be ignored."); ?></small></p>
+	<small><?php _e("Enter file extensions, without periods, separated by commas. All other file types will be ignored."); ?></small></p>
 
     <p><label><?php _e("Skip directories with these names: "); ?><br />
         <input type="text" name="skipdirs" id="skipdirs" value="<?php echo stripslashes(htmlentities($options['skipdirs'])); ?>" class="widefloat" />  </label><br />
@@ -211,20 +211,20 @@ function html_import_options() {
 		<?php if ($options['import_content'] == "region") { ?> checked="checked" <?php  } ?> onclick="javascript: jQuery('#content-region').show('fast');" /> Dreamweaver template region</label> </p>
     
     <div id="content-switch">
-    <div id="content-tag">
-    <p class="htmlimportfloat clear"><label><?php _e("Tag"); ?><br />
-    <input type="text" name="content_tag" id="content_tag" value="<?php echo stripslashes(htmlentities($options['content_tag'])); ?>" />  </label><br />
-	<small><?php _e("The HTML tag, without brackets"); ?></small></p>
-    <p class="htmlimportfloat"><label><?php _e("Attribute"); ?><br />
-    <input type="text" name="content_tagatt" id="content_tagatt" value="<?php echo stripslashes(htmlentities($options['content_tagatt'])); ?>" />  </label><br />
-	<small><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;body&gt;"); ?></small></p>
-    <p class="htmlimportfloat"><label><?php _e("= Value"); ?><br />
-    <input type="text" name="content_attval" id="content_attval" value="<?php echo stripslashes(htmlentities($options['content_attval'])); ?>" />  </label><br />
-	<small><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes"); ?></small></p>
-    </div>
-    <p id="content-region"><label><?php _e("Dreamweaver template region"); ?><br />
-    <input type="text" name="content_region" id="content_region" value="<?php echo stripslashes(htmlentities($options['content_region'])); ?>" />  </label><br />
-	<small><?php _e("The name of the editable region (e.g. 'Main Content')"); ?></small></p> 
+        <div id="content-tag">
+            <p class="htmlimportfloat clear"><label><?php _e("Tag"); ?><br />
+            <input type="text" name="content_tag" id="content_tag" value="<?php echo stripslashes(htmlentities($options['content_tag'])); ?>" />  </label><br />
+            <small><?php _e("The HTML tag, without brackets"); ?></small></p>
+            <p class="htmlimportfloat"><label><?php _e("Attribute"); ?><br />
+            <input type="text" name="content_tagatt" id="content_tagatt" value="<?php echo stripslashes(htmlentities($options['content_tagatt'])); ?>" />  </label><br />
+            <small><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;body&gt;"); ?></small></p>
+            <p class="htmlimportfloat"><label><?php _e("= Value"); ?><br />
+            <input type="text" name="content_attval" id="content_attval" value="<?php echo stripslashes(htmlentities($options['content_attval'])); ?>" />  </label><br />
+            <small><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes"); ?></small></p>
+        </div>
+        <p id="content-region"><label><?php _e("Dreamweaver template region"); ?><br />
+        <input type="text" name="content_region" id="content_region" value="<?php echo stripslashes(htmlentities($options['content_region'])); ?>" />  </label><br />
+        <small><?php _e("The name of the editable region (e.g. 'Main Content')"); ?></small></p> 
     </div>
     
     <h3><?php _e("Title"); ?></h3>
@@ -236,20 +236,20 @@ function html_import_options() {
 		<?php if ($options['import_title'] == "region") { ?> checked="checked" <?php } ?>  onclick="javascript: jQuery('#title-region').show('fast');" /> Dreamweaver template region</label></p>
     
     <div id="title-switch">
-    <div id="title-tag">
-    <p class="htmlimportfloat clear"><label><?php _e("Tag containing page title: "); ?><br />
-    <input type="text" name="title_tag" id="title_tag" value="<?php echo stripslashes(htmlentities($options['title_tag'])); ?>" />  </label><br />
-	<small><?php _e("The HTML tag, without brackets"); ?></small></p>
-    <p class="htmlimportfloat"><label><?php _e("Attribute"); ?><br />
-    <input type="text" name="title_tagatt" id="title_tagatt" value="<?php echo stripslashes(htmlentities($options['title_tagatt'])); ?>" />  </label><br />
-	<small><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;title&gt;"); ?></small></p>
-    <p class="htmlimportfloat"><label><?php _e("= Value"); ?><br />
-    <input type="text" name="title_attval" id="title_attval" value="<?php echo stripslashes(htmlentities($options['title_attval'])); ?>" />  </label><br />
-	<small><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes"); ?></small></p>
-    </div>
-    <p id="title-region"><label><?php _e("Dreamweaver template region containing page title: "); ?><br />
-    <input type="text" name="title_region" id="title_region" value="<?php echo stripslashes(htmlentities($options['title_region'])); ?>" />  </label><br />
-	<small><?php _e("The name of the editable region (e.g. 'Page Title')"); ?></small></p>
+        <div id="title-tag">
+            <p class="htmlimportfloat clear"><label><?php _e("Tag containing page title: "); ?><br />
+            <input type="text" name="title_tag" id="title_tag" value="<?php echo stripslashes(htmlentities($options['title_tag'])); ?>" />  </label><br />
+            <small><?php _e("The HTML tag, without brackets"); ?></small></p>
+            <p class="htmlimportfloat"><label><?php _e("Attribute"); ?><br />
+            <input type="text" name="title_tagatt" id="title_tagatt" value="<?php echo stripslashes(htmlentities($options['title_tagatt'])); ?>" />  </label><br />
+            <small><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;title&gt;"); ?></small></p>
+            <p class="htmlimportfloat"><label><?php _e("= Value"); ?><br />
+            <input type="text" name="title_attval" id="title_attval" value="<?php echo stripslashes(htmlentities($options['title_attval'])); ?>" />  </label><br />
+            <small><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes"); ?></small></p>
+        </div>
+        <p id="title-region"><label><?php _e("Dreamweaver template region containing page title: "); ?><br />
+        <input type="text" name="title_region" id="title_region" value="<?php echo stripslashes(htmlentities($options['title_region'])); ?>" />  </label><br />
+        <small><?php _e("The name of the editable region (e.g. 'Page Title')"); ?></small></p>
    	</div>
    
     <p class="clear"><label><?php _e("Phrase to remove from page title: "); ?><br />
@@ -352,7 +352,7 @@ function import_html_files($rootdir, $filearr=array())   {
 			$dom->formatOutput = false;  // speed this up
 			$contents = @fopen($path);  // read entire file
 			if (empty($contents)) $contents = @file_get_contents($path);  // read entire file
-			if (empty($contents)) wp_die("fopen and file_get_contents have both failed. We can't import any files without these functions.");
+			if (empty($contents)) wp_die("The PHP functions fopen and file_get_contents have both failed. We can't import any files without these functions. Please ask your server administrator if they are enabled.");
 			$encoded = mb_convert_encoding($contents, 'HTML-ENTITIES', "UTF-8"); 
 			$doc->loadHTML($encoded);
 			$xml = simplexml_import_dom($doc);

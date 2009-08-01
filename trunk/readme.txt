@@ -4,7 +4,7 @@ Donate link: http://sillybean.net/code/wordpress/html-import/
 Tags: import, pages
 Requires at least: 2.8
 Tested up to: 2.8.2
-Stable tag: 1.01
+Stable tag: 1.02
 
 Imports well-formed HTML files into WordPress pages. 
 
