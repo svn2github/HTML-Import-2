@@ -108,3 +108,4 @@ Thanks to Tom Dyson's <a href="http://wordoff.org/">Wordoff.org</a> for inspirin
 2. Resulting pages
 3. Options screen
 4. Results: imported pages and rewrite rules
+5. New in 1.1: clean up Word HTML option
