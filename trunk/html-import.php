@@ -3,7 +3,7 @@
 Plugin Name: Import HTML Pages
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML pages into WordPress posts or pages. Requires PHP5. Now with Dreamweaver template support.
-Version: 1.1
+Version: 1.11
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 
@@ -75,6 +75,7 @@ function html_import_css() {
 		echo "p.htmlimportfloat { float: left; width: 15em; margin-right: 2em; clear: none; } \n";
 		echo "p.widefloat { width: 31.4em; } \n";	
 		echo "input.widefloat { width: 48.5em; } \n";	
+		echo "small { color: #666; }\n";
 		echo "div#tips { width: 18em; float: right; } \n";
 		echo "div#optionsform { float: left; width: 48em; } \n";	
 		echo "#importing th { width: 32% } \n";
@@ -247,10 +248,12 @@ function html_import_options() {
     <div  id="clean-region">
         <p><label><?php _e("Allowed HTML"); ?><br />
         <input type="text" name="allow_tags" id="allow_tags" value="<?php echo stripslashes(htmlentities($options['allow_tags'])); ?>" class="widefloat" />  </label><br />
-        <small><?php _e("Enter tags (with brackets) to be preserved. <br />Suggested: &lt;p&gt;&lt;br&gt;&lt;img&gt;&lt;a&gt;&lt;ul&gt;&lt;ol&gt;&lt;li&gt;&lt;blockquote&gt;&lt;cite&gt;&lt;em&gt;&lt;i&gt;&lt;strong&gt;&lt;b&gt;&lt;h2&gt;&lt;h3&gt;&lt;h4&gt;&lt;h5&gt;&lt;h6&gt;&lt;hr&gt;"); ?></small></p> 
+        <small><?php _e("Enter tags (with brackets) to be preserved. <br />Suggested: &lt;p&gt;&lt;br&gt;&lt;img&gt;&lt;a&gt;&lt;ul&gt;&lt;ol&gt;&lt;li&gt;&lt;blockquote&gt;&lt;cite&gt;&lt;em&gt;&lt;i&gt;&lt;strong&gt;&lt;b&gt;&lt;h2&gt;&lt;h3&gt;&lt;h4&gt;&lt;h5&gt;&lt;h6&gt;&lt;hr&gt;<br />
+<em>If you have data tables, also include:</em> &lt;table&gt;&lt;tbody&gt;&lt;thead&gt;&lt;tfoot&gt;&lt;tr&gt;&lt;td&gt;&lt;th&gt;&lt;caption&gt;&lt;colgroup&gt;"); ?></small></p> 
         <p><label><?php _e("Allowed attributes"); ?><br />
         <input type="text" name="allow_attributes" id="allow_attributes" value="<?php echo stripslashes(htmlentities($options['allow_attributes'])); ?>" class="widefloat" />  </label><br />
-        <small><?php _e("Enter attributes separated by commas. <br />Suggested: href,src,alt,title"); ?></small></p> 
+        <small><?php _e("Enter attributes separated by commas. <br />Suggested: href,src,alt,title<br />
+<em>If you have data tables, also include:</em> summary,rowspan,colspan,span"); ?></small></p> 
     </div></div>
     
     
