@@ -93,8 +93,14 @@ To work around this problem, you can populate your directories with dummy index.
 = 1.0 =
 * First release (July 26, 2009)
 
+== Other Notes ==
+
 = Roadmap = 
-1.1: Set tags and/or categories for imported posts (in the meantime, <a href="http://wordpress.org/extend/plugins/simple-tags/">Simple Tags</a> does a nice job on tags)
+1.2: Set tags and/or categories for imported posts (in the meantime, <a href="http://wordpress.org/extend/plugins/simple-tags/">Simple Tags</a> does a nice job on tags)
+
+= Thanks =
+
+Thanks to Tom Dyson's <a href="http://wordoff.org/">Wordoff.org</a> for inspiring the Word cleanup option in 1.1. 
 
 == Screenshots ==
 
