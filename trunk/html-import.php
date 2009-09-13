@@ -3,12 +3,15 @@
 Plugin Name: Import HTML Pages
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML pages into WordPress posts or pages. Requires PHP5. Now with Dreamweaver template support.
-Version: 1.11
+Version: 1.12
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 
 == Changelog ==
 
+= 1.12 =
+* Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
+* Added option to tag and categorize imported posts (September 13, 2009)
 = 1.11 =
 * Left some debugging code in 1.1, oops! (August 15, 2009)
 = 1.1 = 
@@ -441,10 +444,10 @@ function import_html_files($rootdir, $filearr=array())   {
 				if (!empty($tagatt))
 					$xquery .= '[@'.$tagatt.'="'.$attval.'"]';
 				$content = $xml->xpath($xquery);
-				$my_post['post_content'] = $my_post['post_content'][0]->asXML(); // asXML() preserves HTML in content
+				$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
 			}
 			if (!empty($options['clean_html']))
-				$my_post['post_content'] = clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
+				$my_post['post_content'] = html_import_clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
 			// get rid of remaining newlines
 			if (!empty($my_post['post_content'])) {
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -545,7 +548,7 @@ function html_import_parent_directory($path) {
     return $path;
 }
 	
-function clean_html($string,$allowtags=NULL,$allowattributes=NULL){
+function html_import_clean_html($string,$allowtags=NULL,$allowattributes=NULL){
     $string = strip_tags($string,$allowtags);
     if (!is_null($allowattributes)) {
         if(!is_array($allowattributes))

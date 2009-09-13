@@ -4,7 +4,7 @@ Donate link: http://sillybean.net/code/wordpress/html-import/
 Tags: import, pages, static files
 Requires at least: 2.8
 Tested up to: 2.8.4
-Stable tag: 1.11
+Stable tag: 1.12
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -76,17 +76,20 @@ To work around this problem, you can populate your directories with dummy index.
 
 == Changelog ==
 
+= 1.12 =
+* Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
+* Added option to tag and categorize imported posts (September 13, 2009)
 = 1.11 =
 * Left some debugging code in 1.1, oops! (August 15, 2009)
-= 1.1 =
-* Added option to clean up Word/Frontpage HTML (August 14, 2009)
+= 1.1 = 
+* Added Word cleanup option (August 14, 2009)
 = 1.04 =
 * Better user capability check (August 3, 2009)
 = 1.03 =
 * Still better error handling
 * minor code cleanup  (August 1, 2009)
 = 1.02 =
-* Better error handling for `fopen` and `file_get_contents` (July 31, 2009)
+* Better error handling for `fopen` and `file_get_contents`  (July 31, 2009)
 = 1.01 =
 * jQuery bug fixed
 * better Windows compatibility (July 31, 2009)
