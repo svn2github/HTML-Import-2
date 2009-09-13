@@ -131,7 +131,9 @@ function html_import_add_pages() {
 		'title_attval' => '',
 		'remove_from_title' => '',
 		'meta_desc' => 1,
-		'user' => 0
+		'user' => 0,
+		'tagwith' => '',
+		'categorize' => get_option('default_category')
 	);
 	
 	add_option('html_import', $options, '', yes);
@@ -176,6 +178,8 @@ function html_import_options() {
 			$options['meta_desc'] = $_POST['meta_desc'];
 			$options['root_parent'] = $_POST['root_parent'];
 			$options['user'] = $_POST['user'];
+			$options['tagwith'] = $_POST['tagwith'];
+			$options['categorize'] = $_POST['categorize'];
 			
 			update_option('html_import', $options);
 			
@@ -322,7 +326,14 @@ function html_import_options() {
 		echo $pages;
 	?>
     </label><br />
-	<small>Your directory hierarchy will be maintained, but your top level files will be children of the page selected here.</small></p>
+	<small><?php _e('Your directory hierarchy will be maintained, but your top level files will be children of the page selected here.'); ?></small></p>
+    
+    <p class="clear"><label><?php _e("Tag imported posts as: "); ?>
+    <input type="text" name="tagwith" id="tagwith" value="<?php echo stripslashes(htmlentities($options['tagwith'])); ?>" class="widefloat" />  </label><br />
+<small><?php _e('Enter tags separated by commas.'); ?></small></p>
+
+<p class="clear"><label><?php _e("Categorize imported posts as: "); ?>
+<?php wp_dropdown_categories(array('name' => 'categorize', 'hide_empty'=>0, 'hierarchical'=>1, 'selected'=>$options['categorize'])); ?></p>
     
     <p><label><input name="meta_desc" id="meta_desc" value="1" type="checkbox" <?php if (!empty($options['meta_desc'])) { ?> checked="checked" <?php } ?> /> <?php _e("Use meta description as excerpt"); ?> </label><br />
 	<small><?php _e("Excerpts will be stored for both posts and pages. However, to edit and/or display excerpts for pages, you will need to install a plugin such as <a href=\"http://blog.ftwr.co.uk/wordpress/page-excerpt/\">PJW Page Excerpt</a>
@@ -446,8 +457,10 @@ function import_html_files($rootdir, $filearr=array())   {
 				$content = $xml->xpath($xquery);
 				$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
 			}
+			
 			if (!empty($options['clean_html']))
 				$my_post['post_content'] = html_import_clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
+			
 			// get rid of remaining newlines
 			if (!empty($my_post['post_content'])) {
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -462,7 +475,15 @@ function import_html_files($rootdir, $filearr=array())   {
 			
 			$my_post['post_status'] = $options['status'];
 			$my_post['post_author'] = $options['user'];
-			
+				
+				
+			if ($my_post['post_type'] == 'post') {
+				$my_post['post_category'] = array($options['categorize']); // even one category must be passed as an array
+				if (!empty($options['tagwith'])) {
+					$my_post['tags_input'] = strip_tags($options['tagwith']); // no HTML, please
+				}
+			}
+
 			// Insert the post into the database
 			$newid = wp_insert_post( $my_post );
 			if (!empty($newid)) {
