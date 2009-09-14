@@ -78,7 +78,7 @@ To work around this problem, you can populate your directories with dummy index.
 
 = 1.13 =
 * Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
-* Added an option to assign a category or tag to all imported posts (September 13, 2009)
+* Added an option to assign a category or tag to all imported posts
 * This is 1.12, only uncorrupted (September 13, 2009)
 = 1.12 =
 * Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
