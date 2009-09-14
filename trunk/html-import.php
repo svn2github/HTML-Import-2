@@ -3,15 +3,12 @@
 Plugin Name: Import HTML Pages
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML pages into WordPress posts or pages. Requires PHP5. Now with Dreamweaver template support.
-Version: 1.12
+Version: 1.11
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 
 == Changelog ==
 
-= 1.12 =
-* Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
-* Added option to tag and categorize imported posts (September 13, 2009)
 = 1.11 =
 * Left some debugging code in 1.1, oops! (August 15, 2009)
 = 1.1 = 
@@ -84,18 +81,22 @@ function html_import_css() {
 		echo "#importing th { width: 32% } \n";
 		echo "#importing th#id { width: 4% }\n";
 		echo "textarea#import-result { height: 12em; width: 100%; }\n";
-		echo "#content-region, #title-region { width: 100%; height: 8em; background: #f9f9f9; z-index: 10; }";
-		echo "#content-switch, #title-switch { position: relative; height: 8em; }";
-		echo "#content-region, #content-tag, #title-region, #title-tag { position: absolute; }";
+		echo "#content-region, #title-region, #taxonomy { width: 100%; height: 8em; background: #f9f9f9; z-index: 10; }";
+		echo "#content-switch, #title-switch, #type-switch { position: relative; height: 8em; }";
+		echo "#content-region, #content-tag, #title-region, #title-tag, #taxonomy, #hierarchy { position: absolute; }";
 	if( $_POST[ $hidden_field_name ] == 'Y' ) {
 		if ($_POST['import_content'] == 'tag') echo "#content-region { display: none }";
 		if ($_POST['import_title'] == 'tag') echo "#title-region { display: none }";
-		if ($_POST['clean_html'] == 0) echo "#clean-region { display: none }";
+		if ($_POST['clean_html'] == 0) echo "#clean-region { display: none }";	
+		if ($_POST['type'] == 'page') echo "#taxonomy { display: none }";
+		//if ($_POST['type'] == 'post') echo "#hierarchy { display: none }";
 	}
 	else {
 		if ($options['import_content'] == 'tag') echo "#content-region { display: none }";
 		if ($options['import_title'] == 'tag') echo "#title-region { display: none }";
 		if ($options['clean_html'] == 0) echo "#clean-region { display: none }";
+		if ($options['type'] == 'page') echo "#taxonomy { display: none }";
+		//if ($options['type'] == 'post') echo "#hierarchy { display: none }";
 	}
 		echo "#tips h3 { margin-bottom: 0; }";
 		echo "#tips { -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; border: 1px solid #dfdfdf; background: #fff; padding: 0 2em 1em; }";
@@ -131,9 +132,7 @@ function html_import_add_pages() {
 		'title_attval' => '',
 		'remove_from_title' => '',
 		'meta_desc' => 1,
-		'user' => 0,
-		'tagwith' => '',
-		'categorize' => get_option('default_category')
+		'user' => 0
 	);
 	
 	add_option('html_import', $options, '', yes);
@@ -178,8 +177,6 @@ function html_import_options() {
 			$options['meta_desc'] = $_POST['meta_desc'];
 			$options['root_parent'] = $_POST['root_parent'];
 			$options['user'] = $_POST['user'];
-			$options['tagwith'] = $_POST['tagwith'];
-			$options['categorize'] = $_POST['categorize'];
 			
 			update_option('html_import', $options);
 			
@@ -296,11 +293,11 @@ function html_import_options() {
     <div id="metadata">
     <h3><?php _e("Metadata"); ?></h3>
     
-    <p class="htmlimportfloat clear"><label><?php _e("Import files as: "); ?>
-    <select name="type" id="type">
-    	<option value="page" <?php if ($options['type'] == 'page') echo 'selected="selected"'; ?>><?php _e("pages"); ?></option>
-        <option value="post" <?php if ($options['type'] == 'post') echo 'selected="selected"'; ?>><?php _e("posts"); ?></option>
-    </select></label></p>
+    <p class="htmlimportfloat clear"><?php _e("Import files as: "); ?><br />
+    <label><input name="type" type="radio" value="page" 
+	<?php if ($options['type'] == 'page') { ?> checked="checked" <?php } ?> onclick="javascript: jQuery('#taxonomy').hide('fast');" /> <?php _e("pages"); ?></label>&nbsp;&nbsp;
+    <label><input name="type" type="radio" value="post" 
+	<?php if ($options['type'] == "post") { ?> checked="checked" <?php  } ?> onclick="javascript: jQuery('#taxonomy').show('fast');" /> <?php _e("posts"); ?></label> </p>
     
     <p class="htmlimportfloat widefloat"><label><?php _e("Set timestamps to: "); ?>
     <select name="timestamp" id="timestamp">
@@ -319,21 +316,25 @@ function html_import_options() {
     <p class="htmlimportfloat widefloat"><label><?php _e("Set author to: "); ?>
     <?php wp_dropdown_users(array('selected' => $options['user'])); ?></label></p>
     
-    <p class="clear"><label><?php _e("Import pages as children of: "); ?>
-    <?php 
-		$pages = wp_dropdown_pages(array('echo' => 0, 'selected' => $options['root_parent'], 'name' => 'root_parent', 'show_option_none' => __('None (top level)'), 'sort_column'=> 'menu_order, post_title'));
-		if (empty($pages)) $pages = "<select name=\"root_parent\"><option value=\"0\">None (top level)</option></select>";
-		echo $pages;
-	?>
-    </label><br />
-	<small><?php _e('Your directory hierarchy will be maintained, but your top level files will be children of the page selected here.'); ?></small></p>
+    <div id="type-switch" class="clear">
+        <p class="clear" id="hierarchy"><label><?php _e("Import pages as children of: "); ?>
+        <?php 
+            $pages = wp_dropdown_pages(array('echo' => 0, 'selected' => $options['root_parent'], 'name' => 'root_parent', 'show_option_none' => __('None (top level)'), 'sort_column'=> 'menu_order, post_title'));
+            if (empty($pages)) $pages = "<select name=\"root_parent\"><option value=\"0\">None (top level)</option></select>";
+            echo $pages;
+        ?>
+        </label><br />
+        <small><?php _e('Your directory hierarchy will be maintained, but your top level files will be children of the page selected here.'); ?></small></p>
     
-    <p class="clear"><label><?php _e("Tag imported posts as: "); ?>
-    <input type="text" name="tagwith" id="tagwith" value="<?php echo stripslashes(htmlentities($options['tagwith'])); ?>" class="widefloat" />  </label><br />
-<small><?php _e('Enter tags separated by commas.'); ?></small></p>
-
-<p class="clear"><label><?php _e("Categorize imported posts as: "); ?>
-<?php wp_dropdown_categories(array('name' => 'categorize', 'hide_empty'=>0, 'hierarchical'=>1, 'selected'=>$options['categorize'])); ?></p>
+        <div id="taxonomy">
+        <p class="clear"><label><?php _e("Categorize imported posts as: "); ?>
+        <?php wp_dropdown_categories(array('name' => 'categorize', 'hide_empty'=>0, 'hierarchical'=>1, 'selected'=>$options['categorize'])); ?></p>
+        
+        <p class="clear"><label><?php _e("Tag imported posts as: "); ?>
+        <input type="text" name="tagwith" id="tagwith" value="<?php echo stripslashes(htmlentities($options['tagwith'])); ?>" class="widefloat" />  </label><br />
+    <small><?php _e('Enter tags separated by commas.'); ?></small></p>
+        </div>
+    </div>
     
     <p><label><input name="meta_desc" id="meta_desc" value="1" type="checkbox" <?php if (!empty($options['meta_desc'])) { ?> checked="checked" <?php } ?> /> <?php _e("Use meta description as excerpt"); ?> </label><br />
 	<small><?php _e("Excerpts will be stored for both posts and pages. However, to edit and/or display excerpts for pages, you will need to install a plugin such as <a href=\"http://blog.ftwr.co.uk/wordpress/page-excerpt/\">PJW Page Excerpt</a>
@@ -455,12 +456,10 @@ function import_html_files($rootdir, $filearr=array())   {
 				if (!empty($tagatt))
 					$xquery .= '[@'.$tagatt.'="'.$attval.'"]';
 				$content = $xml->xpath($xquery);
-				$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
+				$my_post['post_content'] = $my_post['post_content'][0]->asXML(); // asXML() preserves HTML in content
 			}
-			
 			if (!empty($options['clean_html']))
 				$my_post['post_content'] = html_import_clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
-			
 			// get rid of remaining newlines
 			if (!empty($my_post['post_content'])) {
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -475,15 +474,14 @@ function import_html_files($rootdir, $filearr=array())   {
 			
 			$my_post['post_status'] = $options['status'];
 			$my_post['post_author'] = $options['user'];
-				
-				
+			
 			if ($my_post['post_type'] == 'post') {
 				$my_post['post_category'] = array($options['categorize']); // even one category must be passed as an array
 				if (!empty($options['tagwith'])) {
 					$my_post['tags_input'] = strip_tags($options['tagwith']); // no HTML, please
 				}
 			}
-
+			
 			// Insert the post into the database
 			$newid = wp_insert_post( $my_post );
 			if (!empty($newid)) {
