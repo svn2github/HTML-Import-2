@@ -469,7 +469,7 @@ function import_html_files($rootdir, $filearr=array())   {
 				if (!empty($tagatt))
 					$xquery .= '[@'.$tagatt.'="'.$attval.'"]';
 				$content = $xml->xpath($xquery);
-				$my_post['post_content'] = $my_post['post_content'][0]->asXML(); // asXML() preserves HTML in content
+				$my_post['post_content'] = $content->asXML(); // asXML() preserves HTML in content
 			}
 			if (!empty($options['clean_html']))
 				$my_post['post_content'] = html_import_clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
