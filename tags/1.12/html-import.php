@@ -3,12 +3,15 @@
 Plugin Name: Import HTML Pages
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML pages into WordPress posts or pages. Requires PHP5. Now with Dreamweaver template support.
-Version: 1.11
+Version: 1.12
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 
 == Changelog ==
 
+= 1.12 =
+* Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
+* Added an option to assign a category or tag to all imported posts (September 13, 2009)
 = 1.11 =
 * Left some debugging code in 1.1, oops! (August 15, 2009)
 = 1.1 = 
@@ -132,7 +135,9 @@ function html_import_add_pages() {
 		'title_attval' => '',
 		'remove_from_title' => '',
 		'meta_desc' => 1,
-		'user' => 0
+		'user' => 0,
+		'tagwith' => '',
+		'categorize' => get_option('default_category')
 	);
 	
 	add_option('html_import', $options, '', yes);
@@ -177,6 +182,8 @@ function html_import_options() {
 			$options['meta_desc'] = $_POST['meta_desc'];
 			$options['root_parent'] = $_POST['root_parent'];
 			$options['user'] = $_POST['user'];
+			$options['tagwith'] = $_POST['tagwith'];
+			$options['categorize'] = $_POST['categorize'];
 			
 			update_option('html_import', $options);
 			
@@ -435,6 +442,12 @@ function import_html_files($rootdir, $filearr=array())   {
 					$my_post['post_parent'] = array_search($parentdir, $filearr);
 				else $my_post['post_parent'] = $options['root_parent'];
 			}
+			else {
+				$my_post['post_category'] = array($options['categorize']); // even one category must be passed as an array
+				if (!empty($options['tagwith'])) {
+					$my_post['tags_input'] = strip_tags($options['tagwith']); // no HTML, please
+				}
+			}
 			
 			if ($options['timestamp'] == 'filemtime')
 				$date = filemtime($path);
@@ -474,13 +487,6 @@ function import_html_files($rootdir, $filearr=array())   {
 			
 			$my_post['post_status'] = $options['status'];
 			$my_post['post_author'] = $options['user'];
-			
-			if ($my_post['post_type'] == 'post') {
-				$my_post['post_category'] = array($options['categorize']); // even one category must be passed as an array
-				if (!empty($options['tagwith'])) {
-					$my_post['tags_input'] = strip_tags($options['tagwith']); // no HTML, please
-				}
-			}
 			
 			// Insert the post into the database
 			$newid = wp_insert_post( $my_post );
