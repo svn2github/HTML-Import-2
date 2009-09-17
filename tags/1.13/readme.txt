@@ -26,6 +26,7 @@ Options:
 * specify file extensions to import (e.g. html, htm, php)
 * specify directories to exclude (e.g. images, css)
 * if importing pages, specify whether your top-level files should become top-level pages or children of an existing page
+* set tags and/or category for imported posts
 * choose status, author, and timestamp
 * use meta descriptions as excerpts
 
@@ -39,7 +40,11 @@ Options:
 
 = Does this work on Windows servers? =
 
-It has not been tested on Windows. Give it a try and let me know how it goes!
+Yes! Let me know if you encounter any problems.
+
+= Will this work on large numbers of HTML files? =
+
+Yes, it has been used to import about a thousand pages, and did so in a couple of minutes. However, you might need to adjust PHP's max execution time setting as described below.
 
 = I import a few files and then the script times out. What can I do? =
 
@@ -101,9 +106,6 @@ To work around this problem, you can populate your directories with dummy index.
 * First release (July 26, 2009)
 
 == Other Notes ==
-
-= Roadmap = 
-1.2: Set tags and/or categories for imported posts (in the meantime, <a href="http://wordpress.org/extend/plugins/simple-tags/">Simple Tags</a> does a nice job on tags)
 
 = Thanks =
 
