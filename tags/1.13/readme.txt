@@ -107,6 +107,11 @@ To work around this problem, you can populate your directories with dummy index.
 
 == Other Notes ==
 
+= Roadmap =
+
+1.2: improve the import process for single files
+1.3: import images and other media files along with the text
+
 = Thanks =
 
 Thanks to Tom Dyson's <a href="http://wordoff.org/">Wordoff.org</a> for inspiring the Word cleanup option in 1.1. 
