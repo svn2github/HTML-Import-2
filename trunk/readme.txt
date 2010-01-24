@@ -1,7 +1,7 @@
 === Import HTML Pages ===
 Contributors: sillybean
 Donate link: http://sillybean.net/code/wordpress/html-import/
-Tags: import, pages, static files
+Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 2.8
 Tested up to: 2.9.1
 Stable tag: 1.2
