@@ -7,6 +7,12 @@ Version: 1.13
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 
+== TODO ==
+
+Custom taxonomies
+* add a box for each: http://justintadlock.com/archives/2009/05/02/creating-a-page-template-that-lists-all-of-your-wordpress-taxonomies
+* add the autocomplete js?
+
 == Changelog ==
 
 = 1.13 =
@@ -514,7 +520,7 @@ function import_html_files($rootdir, $filearr=array())   {
 				foreach ($files as $file) {
 					$ext = strrchr($file,'.');
 					$ext = trim($ext,'.'); // dratted double dots
-					if (!empty($ext)) $exts[] = $ext;
+					if (!empty($ext)) $exts[] .= $ext;
 				}
 				
 				// allowed extensions only, please
