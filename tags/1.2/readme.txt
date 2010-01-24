@@ -10,7 +10,7 @@ Imports well-formed HTML files into WordPress pages.
 
 == Description ==
 
-Imports well-formed static HTML files into WordPress pages. Requires PHP 5.
+Imports well-formed static HTML files into WordPress. Requires PHP 5.
 
 This plugin will import a directory of files as either pages or posts. You may specify the HTML tag (e.g. `<body>`, `<div id="content">`, or `<td width="732">`) or Dreamweaver template region (e.g. 'Main Content') containing the content you want to import.
 
