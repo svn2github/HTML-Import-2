@@ -3,8 +3,8 @@ Contributors: sillybean
 Donate link: http://sillybean.net/code/wordpress/html-import/
 Tags: import, pages, static files
 Requires at least: 2.8
-Tested up to: 2.8.4
-Stable tag: 1.13
+Tested up to: 2.9.1
+Stable tag: 1.2
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -26,7 +26,7 @@ Options:
 * specify file extensions to import (e.g. html, htm, php)
 * specify directories to exclude (e.g. images, css)
 * if importing pages, specify whether your top-level files should become top-level pages or children of an existing page
-* set tags and/or category for imported posts
+* set tags, categories, and custom taxonomies
 * choose status, author, and timestamp
 * use meta descriptions as excerpts
 
@@ -81,6 +81,11 @@ To work around this problem, you can populate your directories with dummy index.
 
 == Changelog ==
 
+= 1.2 =
+* Added custom taxonomy options
+* Better handling of mb encoding function and asXML
+* Better security checking
+* Added translation support (January 24, 2010)
 = 1.13 =
 * Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
 * Added an option to assign a category or tag to all imported posts
@@ -109,8 +114,8 @@ To work around this problem, you can populate your directories with dummy index.
 
 = Roadmap =
 
-1.2: improve the import process for single files
-1.3: import images and other media files along with the text
+1.3: improve the import process for single files
+and import images and other media files along with the text
 
 = Thanks =
 
