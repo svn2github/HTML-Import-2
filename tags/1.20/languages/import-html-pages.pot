@@ -1,0 +1,392 @@
+# Translation of the WordPress plugin   by .
+# Copyright (C) 2010 
+# This file is distributed under the same license as the  package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/import-html-pages\n"
+"POT-Creation-Date: 2010-01-24 16:36+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: html-import.php:90
+msgid "Import Files"
+msgstr ""
+
+#: html-import.php:136
+msgid "HTML Import"
+msgstr ""
+
+#: html-import.php:143
+msgid "/path/to/files"
+msgstr ""
+
+#: html-import.php:145
+msgid ".,..,images"
+msgstr ""
+
+#: html-import.php:152
+msgid "div"
+msgstr ""
+
+#: html-import.php:153
+msgid "id"
+msgstr ""
+
+#: html-import.php:154
+msgid "content"
+msgstr ""
+
+#: html-import.php:160
+msgid "title"
+msgstr ""
+
+#: html-import.php:193
+msgid "Importing..."
+msgstr ""
+
+#: html-import.php:197
+msgid "ID"
+msgstr ""
+
+#: html-import.php:198
+msgid "Old path"
+msgstr ""
+
+#: html-import.php:199
+msgid "New path"
+msgstr ""
+
+#: html-import.php:200 html-import.php:390
+msgid "Title"
+msgstr ""
+
+#: html-import.php:241
+msgid ".htaccess Redirects"
+msgstr ""
+
+#: html-import.php:242
+msgid ""
+"if you need to redirect visitors from the old file locations to your new "
+"WordPress pages, copy these redirects \r\n"
+"\t\t\t\t\t\t\t   into your .htaccess file above the WordPress rules. "
+"<strong>Note:</strong> You might need to search &amp; replace \r\n"
+"\t\t\t\t\t\t\t   first if your import root directory was not the same as "
+"your web root. Also, if you imported many files, the complete \r\n"
+"\t\t\t\t\t\t\t   list of redirects might slow your web server's performance. "
+"Consider copying only essential ones, or if there's a \r\n"
+"\t\t\t\t\t\t\t   pattern to your file or directory names, create a \r\n"
+"\t\t\t\t\t\t\t   <a href=\"http://www.workingwith.me.uk/articles/scripting/"
+"mod_rewrite\">RewriteRule</a> instead."
+msgstr ""
+
+#: html-import.php:254
+msgid "Imported "
+msgstr ""
+
+#: html-import.php:256
+msgid " files in "
+msgstr ""
+
+#: html-import.php:258
+msgid ""
+" seconds. See above for any pages that did not automatically import and need "
+"your attention."
+msgstr ""
+
+#: html-import.php:268
+msgid "HTML Page Import Options "
+msgstr ""
+
+#: html-import.php:275
+msgid "Beginning directory: "
+msgstr ""
+
+#: html-import.php:278
+msgid ""
+"This should be a full path from the server root, on the same server where "
+"WordPress is running now."
+msgstr ""
+
+#: html-import.php:280
+msgid "Process files with these extensions: "
+msgstr ""
+
+#: html-import.php:283
+msgid ""
+"Enter file extensions, without periods, separated by commas. All other file "
+"types will be ignored."
+msgstr ""
+
+#: html-import.php:285
+msgid "Skip directories with these names: "
+msgstr ""
+
+#: html-import.php:288
+msgid ""
+"Enter directory names, without slashes, separated by commas. All files in "
+"these directories will be ignored."
+msgstr ""
+
+#: html-import.php:290
+msgid "Content"
+msgstr ""
+
+#: html-import.php:291
+msgid "Select content by:"
+msgstr ""
+
+#: html-import.php:295 html-import.php:395
+msgid "HTML tag"
+msgstr ""
+
+#: html-import.php:298 html-import.php:323 html-import.php:398
+msgid "Dreamweaver template region"
+msgstr ""
+
+#: html-import.php:302
+msgid "Tag"
+msgstr ""
+
+#: html-import.php:306 html-import.php:404
+msgid "The HTML tag, without brackets"
+msgstr ""
+
+#: html-import.php:308 html-import.php:406
+msgid "Attribute"
+msgstr ""
+
+#: html-import.php:312
+msgid ""
+"Leave blank to use a tag without an attribute, or when the attributes don't "
+"matter, such as &lt;body&gt;"
+msgstr ""
+
+#: html-import.php:315 html-import.php:411
+msgid "= Value"
+msgstr ""
+
+#: html-import.php:319 html-import.php:414
+msgid ""
+"Enter the attribute's value (such as width, ID, or class name) without quotes"
+msgstr ""
+
+#: html-import.php:326
+msgid "The name of the editable region (e.g. 'Main Content')"
+msgstr ""
+
+#: html-import.php:330
+msgid "Clean up bad (Word, Frontpage) HTML?"
+msgstr ""
+
+#: html-import.php:333
+msgid "yes"
+msgstr ""
+
+#: html-import.php:336
+msgid "no"
+msgstr ""
+
+#: html-import.php:342
+msgid "Allowed HTML"
+msgstr ""
+
+#: html-import.php:345
+msgid "Enter tags (with brackets) to be preserved. <br />Suggested: "
+msgstr ""
+
+#: html-import.php:367
+msgid "If you have data tables, also include:"
+msgstr ""
+
+#: html-import.php:380
+msgid "Allowed attributes"
+msgstr ""
+
+#: html-import.php:383
+msgid ""
+"Enter attributes separated by commas. <br />Suggested: href,src,alt,"
+"title<br />\r\n"
+"    \t\t\t<em>If you have data tables, also include:</em> summary,rowspan,"
+"colspan,span"
+msgstr ""
+
+#: html-import.php:392
+msgid "Select title by:"
+msgstr ""
+
+#: html-import.php:402
+msgid "Tag containing page title: "
+msgstr ""
+
+#: html-import.php:409
+msgid ""
+"Leave blank to use a tag without an attribute, or when the attributes don't "
+"matter, such as &lt;title&gt;"
+msgstr ""
+
+#: html-import.php:416
+msgid "Dreamweaver template region containing page title: "
+msgstr ""
+
+#: html-import.php:419
+msgid "The name of the editable region (e.g. 'Page Title')"
+msgstr ""
+
+#: html-import.php:422
+msgid "Phrase to remove from page title: "
+msgstr ""
+
+#: html-import.php:425
+msgid ""
+"Any common title phrase (such as the site name, which WordPress will "
+"duplicate)"
+msgstr ""
+
+#: html-import.php:428
+msgid "Metadata"
+msgstr ""
+
+#: html-import.php:430
+msgid "Import files as: "
+msgstr ""
+
+#: html-import.php:433
+msgid "pages"
+msgstr ""
+
+#: html-import.php:436
+msgid "posts"
+msgstr ""
+
+#: html-import.php:438
+msgid "Set timestamps to: "
+msgstr ""
+
+#: html-import.php:440
+msgid "now"
+msgstr ""
+
+#: html-import.php:442
+msgid "last time the file was modified"
+msgstr ""
+
+#: html-import.php:445
+msgid "Set status to: "
+msgstr ""
+
+#: html-import.php:447
+msgid "publish"
+msgstr ""
+
+#: html-import.php:448
+msgid "draft"
+msgstr ""
+
+#: html-import.php:449
+msgid "private"
+msgstr ""
+
+#: html-import.php:450
+msgid "pending"
+msgstr ""
+
+#: html-import.php:453
+msgid "Set author to: "
+msgstr ""
+
+#: html-import.php:457
+msgid "Import pages as children of: "
+msgstr ""
+
+#: html-import.php:460 html-import.php:461
+msgid "None (top level)"
+msgstr ""
+
+#: html-import.php:465
+msgid ""
+"Your directory hierarchy will be maintained, but your top level files will "
+"be children of the page selected here."
+msgstr ""
+
+#: html-import.php:469
+msgid "Categorize imported posts as: "
+msgstr ""
+
+#: html-import.php:473
+msgid "Tag imported posts as: "
+msgstr ""
+
+#: html-import.php:477
+msgid "Enter tags separated by commas."
+msgstr ""
+
+#: html-import.php:486
+msgid "Custom Taxonomies"
+msgstr ""
+
+#: html-import.php:503
+msgid "Use meta description as excerpt"
+msgstr ""
+
+#: html-import.php:504
+msgid ""
+"Excerpts will be stored for both posts and pages. However, to edit and/or "
+"display excerpts for pages, you will need to install \r\n"
+"\t\t\t\t\ta plugin such as <a href=\"http://blog.ftwr.co.uk/wordpress/page-"
+"excerpt/\">PJW Page Excerpt</a>\r\n"
+"\t\t\t\t\tor <a href=\"http://www.laptoptips.ca/projects/wordpress-excerpt-"
+"editor/\">Excerpt Editor</a>."
+msgstr ""
+
+#: html-import.php:513
+msgid "Import using these options"
+msgstr ""
+
+#: html-import.php:519 html-import.php:530
+msgid "Tips"
+msgstr ""
+
+#: html-import.php:520
+msgid "(of the technical sort)"
+msgstr ""
+
+#: html-import.php:522
+msgid ""
+"You should see the options again once the import has finished. If you don't, "
+"the importer encountered a serious problem \r\n"
+"\t\t\t\t\t with one of your files and could not continue."
+msgstr ""
+
+#: html-import.php:524
+msgid ""
+"If things didn't work out the way you intended and you need to delete all "
+"the posts or pages you just imported, make a \r\n"
+"\t\t\t\t\t note of the first and last IDs imported and use the <a "
+"href='http://www.wesg.ca/2008/07/wordpress-plugin-mass-page-remover/'>\r\n"
+"\t\t\t\t\t Mass Page Remover plugin</a> to remove them all at once."
+msgstr ""
+
+#: html-import.php:527
+msgid ""
+"Need to import both posts and pages? Run the importer on a subdirectory (e."
+"g. 'news'), then move those files somewhere else \r\n"
+"\t\t\t\t\ttemporarily while you run the importer again."
+msgstr ""
+
+#: html-import.php:531
+msgid "(of the monetary sort)"
+msgstr ""
+
+#: html-import.php:532
+msgid ""
+"Did this plugin save you hours and hours of copying? Buy me a cookie, if you "
+"don't mind!"
+msgstr ""
