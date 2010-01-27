@@ -633,7 +633,7 @@ function import_html_files($rootdir, $filearr=array())   {
 				$content = $xml->xpath($xquery);
 				if (is_array($content) && is_object($content[0]))
 					$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
-				else $my_post['post_content'] = '';
+				else $my_post['post_content'] = $content;
 			}
 			if (!empty($options['clean_html']))
 				$my_post['post_content'] = html_import_clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
