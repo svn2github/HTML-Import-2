@@ -47,14 +47,14 @@ function html_import_activation_check() {
 	add_option('html_import', $options, '', 'yes');
 }
 register_activation_hook(__FILE__, 'html_import_activation_check');
-//*
+
 // when uninstalled, remove option
 register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 
 function html_import_remove_options() {
 	delete_option('html_import');
 }
-/**/
+
 // i18n
 $plugin_dir = basename(dirname(__FILE__)). '/languages';
 load_plugin_textdomain( 'html_import', 'wp-content/plugins/' . $plugin_dir, $plugin_dir );
@@ -70,9 +70,6 @@ add_filter('plugin_action_links', 'html_import_plugin_actions', 10, 2);
 
 // Hook for adding admin menus
 add_action('admin_menu', 'html_import_add_pages');
-
-// Add jQuery
-//add_action('admin_init','jquery');
 
 function html_import_css() {
 	$options = get_option('html_import'); ?>
