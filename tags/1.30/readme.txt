@@ -123,7 +123,7 @@ To work around this problem, you can populate your directories with dummy index.
 
 = Roadmap =
 
-2.0: improve the import process for single files
+1.3: improve the import process for single files
 and import images and other media files along with the text
 
 = Thanks =
