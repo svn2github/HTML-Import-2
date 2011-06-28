@@ -499,7 +499,7 @@ class HTML_Import extends WP_Importer {
 					$imgpath = $matches[1][$i];			
 				}
 				// src="/images/foo"
-				elseif ('/' == substr($src, 1, 1) ||) { 
+				elseif ('/' == substr($src, 1, 1)) { 
 					$imgpath = $options['root_directory']. '/' . $src;
 				}
 				// src="../../images/foo" or src="images/foo" or no $path
