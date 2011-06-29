@@ -16,6 +16,7 @@ function html_import_get_options() {
 		'content_tagatt' => __('id', 'import-html-pages'),
 		'content_attval' => __('content', 'import-html-pages'),
 		'clean_html' => 0,
+		'encode' => 0,
 		'allow_tags' => '<p><br><img><a><ul><ol><li><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
 		'import_title' => 'tag',
@@ -177,6 +178,13 @@ function html_import_options_page() { ?>
 						 </label>
 					<span class="description"><?php /* printf(__('Excerpts will be stored for both posts and pages. However, to edit and/or display excerpts for pages, you will need to install a plugin such as <a href="%s">PJW Page Excerpt</a>
 	or <a href="%s">Excerpt Editor</a>.', 'import-html-pages'), 'http://blog.ftwr.co.uk/wordpress/page-excerpt/', 'http://www.laptoptips.ca/projects/wordpress-excerpt-editor/'); */ ?></span>
+				</td>
+				</tr>
+				<tr>
+				<th><?php _e("Convert character set to UTF-8", 'import-html-pages'); ?></th>
+				<td>
+					<label><input name="html_import[encode]" id="encode"  type="checkbox" value="1" 
+						<?php checked($options['encode'], '1'); ?> /> </label>
 				</td>
 				</tr>
 				<tr>

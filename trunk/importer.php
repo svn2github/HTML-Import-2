@@ -102,37 +102,32 @@ class HTML_Import extends WP_Importer {
 	}
 	
 	function handle_accents($str) {
-		$charmap = array(
-		    '‘' => '&lsquo;', '’' => '&rsquo;', '‚' => '&sbquo;', '“' => '&ldquo;', '”' => '&rdquo;', '„' => '&bdquo;',
-			'†' => '&dagger;', '‡' => '&Dagger;', '‰' => '&permil;', '‹' => '&lsaquo;', '›' => '&rsaquo;', '♠' => '&spades;',
-			'♣' => '&clubs;', '♥' => '&hearts;', '♦' => '&diams;', '‾' => '&oline;', '←' => '&larr;', '↑' => '&uarr;',
-			'→' => '&rarr;', '↓' => '&darr;', '™' => '&trade;', '–' => '&ndash;', '—' => '&mdash;', '¡' => '&iexcl;',
-			'¢' => '&cent;', '£' => '&pound;', '¤' => '&curren;', '¥' => '&yen;', '¦' => '&brkbar;', '§' => '&sect;',
-			'¨' => '&uml;', '©' => '&copy;', 'ª' => '&ordf;', '«' => '&laquo;', '¬' => '&not;', '­' => '&shy;',
-			'®' => '&reg;', '¯' => '&hibar;', '°' => '&deg;', '±' => '&plusmn;', '²' => '&sup2;', '³' => '&sup3;',
-			'´' => '&acute;', 'µ' => '&micro;', '¶' => '&para;', '·' => '&middot;', '¸' => '&cedil;', '¹' => '&sup1;', 
-			'º' => '&ordm;', '»' => '&raquo;', '¼' => '&frac14;', '½' => '&frac12;', '¾' => '&frac34;', '¿' => '&iquest;', 
-			'À' => '&Agrave;', 'Á' => '&Aacute;', 'Â' => '&Acirc;', 'Ã' => '&Atilde;', 'Ä' => '&Auml;', 'Å' => '&Aring;', 
-			'Æ' => '&AElig;', 'Ç' => '&Ccedil;', 'È' => '&Egrave;', 'É' => '&Eacute;', 'Ê' => '&Ecirc;', 'Ë' => '&Euml;', 
-			'Ì' => '&Igrave;', 'Í' => '&Iacute;', 'Î' => '&Icirc;', 'Ï' => '&Iuml;', 'Ð' => '&ETH;', 'Ñ' => '&Ntilde;', 
-			'Ò' => '&Ograve;', 'Ó' => '&Oacute;', 'Ô' => '&Ocirc;', 'Õ' => '&Otilde;', 'Ö' => '&Ouml;', '×' => '&times;', 
-			'Ø' => '&Oslash;', 'Ù' => '&Ugrave;', 'Ú' => '&Uacute;', 'Û' => '&Ucirc;', 'Ü' => '&Uuml;', 'Ý' => '&Yacute;', 
-			'Þ' => '&THORN;', 'ß' => '&szlig;', 'à' => '&agrave;', 'á' => '&aacute;', 'â' => '&acirc;', 'ã' => '&atilde;', 
-			'ä' => '&auml;', 'å' => '&aring;', 'æ' => '&aelig;', 'ç' => '&ccedil;', 'è' => '&egrave;', 'é' => '&eacute;', 
-			'ê' => '&ecirc;', 'ë' => '&euml;', 'ì' => '&igrave;', 'í' => '&iacute;', 'î' => '&icirc;', 'ï' => '&iuml;', 
-			'ð' => '&eth;', 'ñ' => '&ntilde;', 'ò' => '&ograve;', 'ó' => '&oacute;', 'ô' => '&ocirc;', 'õ' => '&otilde;', 
-			'ö' => '&ouml;', '÷' => '&divide;', 'ø' => '&oslash;', 'ù' => '&ugrave;', 'ú' => '&uacute;', 'û' => '&ucirc;', 
-			'ü' => '&uuml;', 'ý' => '&yacute;', 'þ' => '&thorn;', 'ÿ' => '&yuml;', 'Α' => '&Alpha;', 'α' => '&alpha;', 
-			'Β' => '&Beta;', 'β' => '&beta;', 'Γ' => '&Gamma;', 'γ' => '&gamma;', 'Δ' => '&Delta;', 'δ' => '&delta;', 
-			'Ε' => '&Epsilon;', 'ε' => '&epsilon;', 'Ζ' => '&Zeta;', 'ζ' => '&zeta;', 'Η' => '&Eta;', 'η' => '&eta;', 
-			'Θ' => '&Theta;', 'θ' => '&theta;', 'Ι' => '&Iota;', 'ι' => '&iota;', 'Κ' => '&Kappa;', 'κ' => '&kappa;', 
-			'Λ' => '&Lambda;', 'λ' => '&lambda;', 'Μ' => '&Mu;', 'μ' => '&mu;', 'Ν' => '&Nu;', 'ν' => '&nu;', 'Ξ' => '&Xi;', 
-			'ξ' => '&xi;', 'Ο' => '&Omicron;', 'ο' => '&omicron;', 'Π' => '&Pi;', 'π' => '&pi;', 'Ρ' => '&Rho;', 'ρ' => '&rho;', 
-			'Σ' => '&Sigma;', 'σ' => '&sigma;', 'Τ' => '&Tau;', 'τ' => '&tau;', 'Υ' => '&Upsilon;', 'υ' => '&upsilon;', 
-			'Φ' => '&Phi;', 'φ' => '&phi;', 'Χ' => '&Chi;', 'χ' => '&chi;', 'Ψ' => '&Psi;', 'ψ' => '&psi;', 'Ω' => '&Omega;', 
-			'ω' => '&omega;', '●' => '&#9679;', '•' => '&#8226;',
-		);
-	    return strtr($str, $charmap);
+		$str = htmlentities($str,ENT_NOQUOTES,'UTF-8',false);
+		$str = str_replace("&lt;","<",$str);
+	    $str = str_replace("&gt;",">",$str);
+	    $str = str_replace("&amp;",'&',$str);
+		return $str;
+	}
+	
+ 	function url_remove_dot_segments( $path ) {
+		$inSegs  = preg_split( '!/!u', $path );
+		$outSegs = array( );
+		foreach ( $inSegs as $seg )
+		{
+		    if ( empty( $seg ) || $seg == '.' )
+		        continue;
+		    if ( $seg == '..' )
+		        array_pop( $outSegs );
+		    else
+		        array_push( $outSegs, $seg );
+		}
+		$outPath = implode( '/', $outSegs );
+		if ( $path[0] == '/' )
+		    $outPath = '/' . $outPath;
+		if ( $outPath != '/' &&
+		    (mb_strlen($path)-1) == mb_strrpos( $path, '/', 'UTF-8' ) )
+		    $outPath .= '/';
+		return $outPath;
 	}
 	
 	function get_single_file() {
@@ -296,8 +291,8 @@ class HTML_Import extends WP_Importer {
 				if (!empty($options['clean_html']))
 					$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
 
-				// convert special characters other than HTML tags	
-				$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
+				if (!empty($options['encode']))
+					$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
 				
 				// get rid of remaining newlines; basic HTML cleanup
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -310,7 +305,8 @@ class HTML_Import extends WP_Importer {
 			$excerpt = $options['meta_desc'];
 			if (!empty($excerpt)) {
 				 $my_post['post_excerpt'] = $xml->xpath('//meta[@name="description"]');
-				 $my_post['post_excerpt'] = (string)$my_post['post_excerpt'][0]['content'];
+				 if (isset($my_post['post_excerpt'][0]))
+				    $my_post['post_excerpt'] = (string)$my_post['post_excerpt'][0]['content'];
 			}
 			
 			$my_post['post_status'] = $options['status'];
@@ -436,8 +432,6 @@ class HTML_Import extends WP_Importer {
 			'post_date_gmt' => $post_date_gmt
 		);
 
-		$attachment = apply_filters('afs-import_details', $attachment, $file, $post_id, $import_date);
-
 		//Win32 fix:
 		$new_file = str_replace( strtolower(str_replace('\\', '/', $uploads['basedir'])), $uploads['basedir'], $new_file);
 
@@ -544,8 +538,8 @@ class HTML_Import extends WP_Importer {
 					else
 						$imgpath = dirname($path) . '/' . $src;
 						
-					// intersect base path and src. see php.net realpath()
-					$imgpath = preg_replace('/\w+\/\.\.\//', '', $imgpath);
+					// intersect base path and src. 
+					$imgpath = $this->url_remove_dot_segments($imgpath);
 				}
 			 
 				//  load the image from $imgpath
@@ -558,7 +552,9 @@ class HTML_Import extends WP_Importer {
 					//  replace paths in the content <img> tags	
 					if (!is_wp_error($imgpath)) {	
 						$trans = preg_quote($src, "/");
+						//echo '<p>'.$trans.','.$imgpath.'</p>';
 						$content = preg_replace('/(<img[^>]* src=[\'"]?)('.$trans.')/', '$1'.$imgpath, $post->post_content);
+						// this is fetching every OTHER <img src=""> match.
 			
 						$my_post = array();
 						$my_post['ID'] = $id;
@@ -572,6 +568,7 @@ class HTML_Import extends WP_Importer {
 	
 	function find_images() {
 		echo '<h2>'.__( 'Importing images...', 'import-html-pages').'</h2>';
+		$results = '';
 		foreach ($this->filearr as $id => $path) {
 			$results .= $this->import_images($id, $path);
 		}
