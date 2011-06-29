@@ -89,6 +89,7 @@ To work around this problem, you can populate your directories with dummy index.
 * The options form is now separate from the importer. The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import.
 * Now makes proper use of the Settings API for better security and data validation.
 * New help screen.
+* Much better handling of special characters.
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
 * The beginning directory default is now based on the path to your WordPress installation. There's also a hint shown below the field. This should help people locate their import directory correctly.

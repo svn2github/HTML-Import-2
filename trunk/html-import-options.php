@@ -18,7 +18,6 @@ function html_import_get_options() {
 		'clean_html' => 0,
 		'allow_tags' => '<p><br><img><a><ul><ol><li><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
-		'encode' => 0,
 		'import_title' => 'tag',
 		'title_region' => '',
 		'title_tag' => __('title', 'import-html-pages'),
@@ -171,13 +170,6 @@ function html_import_options_page() { ?>
 				        <span class="description"><?php _e("The name of the editable region (e.g. 'Main Content')", 'import-html-pages'); ?></span>
 					</td>
 				</tr>
-				<tr>
-					<th><?php _e("Convert character set to UTF-8", 'import-html-pages'); ?> </th>
-					<td>
-					<label><input name="html_import[encode]" id="encode" value="1" type="checkbox" 
-						<?php checked($options['encode']); ?> /> </label>
-					<span class="description"><?php // _e("Check this option if your special characters are not imported correctly.", 'import-html-pages'); ?></span>
-				</td></tr>
 				<tr>
 				<th><?php _e("Use meta description as excerpt", 'import-html-pages'); ?></th>
 				<td>

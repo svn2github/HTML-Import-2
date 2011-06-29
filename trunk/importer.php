@@ -163,11 +163,7 @@ class HTML_Import extends WP_Importer {
 				if (empty($contents)) 
 					wp_die("The PHP functions fopen() and file_get_contents() have both failed. We can't import any files without these functions. Please ask your server administrator if they are enabled.");
 				
-			/*	if (function_exists('mb_convert_encoding') && ($options['encode'] == 1)) 
-					$this->file = mb_convert_encoding($contents, 'HTML-ENTITIES', "UTF-8"); 
-				else 
-				*/	$this->file = $contents;
-				
+				$this->file = $contents;
 				$this->get_post($path, false); 
 			}
 	      }
@@ -296,13 +292,14 @@ class HTML_Import extends WP_Importer {
 				else $my_post['post_content'] = '';
 			}
 			
-			if (!empty($options['clean_html']))
-				$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
-				
-			$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
-				
-			// get rid of remaining newlines; basic HTML cleanup
 			if (!empty($my_post['post_content'])) {
+				if (!empty($options['clean_html']))
+					$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
+
+				// convert special characters other than HTML tags	
+				$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
+				
+				// get rid of remaining newlines; basic HTML cleanup
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
 				$my_post['post_content'] = ereg_replace("[\n\r]", " ", $my_post['post_content']); 
 				$my_post['post_content'] = preg_replace_callback('|<(/?[A-Z]+)|', create_function('$match', 'return "<" . strtolower($match[1]);'), $my_post['post_content']);
