@@ -15,6 +15,9 @@ p.taginput input { width: 100%; }
 td.taginput { width: 33%; }
 .clean-region th { text-indent: 2em; }
 body.settings_page_html-import #footer { display: none; }
+/* Help screen */
+#contextual-help-wrap dt { font-weight: bold; }
+#contextual-help-wrap dd { padding-left: 1em; }
 /* jQuery tabs */
 .ui-tabs-nav { border-bottom: 1px solid #ccc; height: 27px; margin: 20px 0; padding: 0; }
 .ui-tabs-nav li { display: block; float: left; margin: 0; }

@@ -48,16 +48,16 @@ register_activation_hook(__FILE__, 'html_import_set_defaults');
 
 //register our settings
 function register_html_import_settings() {
-	register_setting( 'html_import', 'html_import', 'html_import_sanitize_options');
+	register_setting( 'html_import', 'html_import', 'html_import_validate_options');
 }
 
 // when uninstalled, remove option
 function html_import_remove_options() {
 	delete_option('html_import');
 }
-//register_uninstall_hook( __FILE__, 'html_import_remove_options' );
+register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 // for testing only
-register_deactivation_hook( __FILE__, 'html_import_remove_options' );
+// register_deactivation_hook( __FILE__, 'html_import_remove_options' );
 
 // Add option page to admin menu
 function html_import_add_pages() {
@@ -69,21 +69,19 @@ function html_import_add_pages() {
 	add_action( 'admin_init', 'register_html_import_settings' );
 		
 // Help screen 
-	$text = "<h3>Tips</h3>
-    
+	$text = '<h3>'.__('Tips', 'html-import-pages')."</h3>
     <ol>
-    	<li>" . __("You should see the options again once the import has finished. If you don't, the importer encountered a serious problem 
-					 with one of your files and could not continue.", 'import-html-pages' )."</li>
         <li>" . __("If things didn't work out the way you intended and you need to delete all the posts or pages you just imported, make a 
 					 note of the first and last IDs imported and use the <a href='http://www.wesg.ca/2008/07/wordpress-plugin-mass-page-remover/'>
 					 Mass Page Remover plugin</a> to remove them all at once.", 'import-html-pages' )."</li>
       	<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
     </ol>";
-	$text .= '<p><strong>' . __( 'For more information:', 'import-html-pages' ) . '</strong></p>';
+	$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
 
 	$text .= '<ul>';
-	$text .= '<li><a href="http://yoursite.com/theme-documentation">' . __( 'Documentation', 'import-html-pages' ) . '</a></li>';
-	$text .= '<li><a href="http://yoursite.com/support">' . __( 'Support Forums', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
 	$text .= '</ul>';
 
 	$text .= "Did this plugin save you hours and hours of copying? Buy me a cookie, if you don't mind!</p>";

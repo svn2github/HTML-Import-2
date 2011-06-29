@@ -79,6 +79,27 @@ class HTML_Import extends WP_Importer {
 	    if ($win) $path = str_replace('/', '\\', $path);
 	    return $path;
 	}
+	
+	function url_remove_dot_segments( $path ) {
+		$inSegs  = preg_split( '!/!u', $path );
+		$outSegs = array( );
+		foreach ( $inSegs as $seg )
+		{
+		    if ( empty( $seg ) || $seg == '.' )
+		        continue;
+		    if ( $seg == '..' )
+		        array_pop( $outSegs );
+		    else
+		        array_push( $outSegs, $seg );
+		}
+		$outPath = implode( '/', $outSegs );
+		if ( $path[0] == '/' )
+		    $outPath = '/' . $outPath;
+		if ( $outPath != '/' &&
+		    (mb_strlen($path)-1) == mb_strrpos( $path, '/', 'UTF-8' ) )
+		    $outPath .= '/';
+		return $outPath;
+	}
 
 	function clean_html( $string, $allowtags = NULL, $allowattributes = NULL ) {
 		// from: http://us3.php.net/manual/en/function.strip-tags.php#91498
@@ -107,27 +128,6 @@ class HTML_Import extends WP_Importer {
 	    $str = str_replace("&gt;",">",$str);
 	    $str = str_replace("&amp;",'&',$str);
 		return $str;
-	}
-	
- 	function url_remove_dot_segments( $path ) {
-		$inSegs  = preg_split( '!/!u', $path );
-		$outSegs = array( );
-		foreach ( $inSegs as $seg )
-		{
-		    if ( empty( $seg ) || $seg == '.' )
-		        continue;
-		    if ( $seg == '..' )
-		        array_pop( $outSegs );
-		    else
-		        array_push( $outSegs, $seg );
-		}
-		$outPath = implode( '/', $outSegs );
-		if ( $path[0] == '/' )
-		    $outPath = '/' . $outPath;
-		if ( $outPath != '/' &&
-		    (mb_strlen($path)-1) == mb_strrpos( $path, '/', 'UTF-8' ) )
-		    $outPath .= '/';
-		return $outPath;
 	}
 	
 	function get_single_file() {
@@ -487,6 +487,9 @@ class HTML_Import extends WP_Importer {
 				$this->find_images();
 		}
 		elseif ($_POST['import_files'] == 'directory') {
+			if (validate_file($options['root_directory']) > 0)
+				wp_die(__("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages'));
+			
 			$this->table = '';
 			$this->redirects = '';
 			$this->filearr = array();
@@ -602,7 +605,7 @@ class HTML_Import extends WP_Importer {
 		$this->footer();
 	}
 	
-	function admin_head() {
+	function importer_styles() {
 		?>
 		<style type="text/css">
 		textarea#import-result { height: 12em; width: 100%; }
@@ -613,7 +616,7 @@ class HTML_Import extends WP_Importer {
 	}
 
 	function HTML_Import() {
-		add_action('admin_head', array(&$this, 'admin_head'));
+		add_action('admin_head', array(&$this, 'importer_styles'));
 	}
 }
 

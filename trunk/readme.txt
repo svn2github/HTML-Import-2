@@ -16,23 +16,27 @@ This plugin will import a directory of files as either pages or posts. You may s
 
 If importing pages, the directory hierarchy will be preserved. Directories containing the specified file types will be imported as empty parent pages. Directories that do not contain the specified file types will be ignored.
 
-As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress posts or pages.
+As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks.
 
 Options:
 
-* import pages or posts
-* specify content and title as HTML tags or Dreamweaver template regions
+* import files into <del>pages or posts</del> any post type
+* import linked image files to the media library
+* select content and title by HTML tag or Dreamweaver template region
 * remove a common phrase (such as the site name) from imported titles
+* upload a single file or scan a directory for files to import
 * specify file extensions to import (e.g. html, htm, php)
 * specify directories to exclude (e.g. images, css)
-* if importing pages, specify whether your top-level files should become top-level pages or children of an existing page
+* if importing pages (or any hierarchical post type), specify whether your top-level files should become top-level pages or children of an existing page
 * set tags, categories, and custom taxonomies
 * choose status, author, and timestamp
 * use meta descriptions as excerpts
+* clean up imported HTML and strip unwanted tags and attributes
+* convert unencoded special characters to HTML entities
 
 == Installation ==
 
-1. Unzip the files and upload the html-import directory to `/wp-content/plugins/` 
+1. Unzip the files and upload the plugin directory to `/wp-content/plugins/` 
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Go to Settings &rarr; HTML Import to begin.
 
@@ -42,9 +46,13 @@ Options:
 
 Yes! Let me know if you encounter any problems.
 
+= Will the importer duplicate the design of my old site? =
+
+No. The importer simply extracts the relevant part of each HTML file and copies it into a WordPress post. You'll need to <a href="http://codex.wordpress.org/Theme_Development">create a custom theme</a> if you want to preserve the site's appearance.
+
 = Will this work on large numbers of HTML files? =
 
-Yes, it has been used to import about a thousand pages, and did so in a couple of minutes. However, you might need to adjust PHP's max execution time setting as described below.
+Yes, it has been used to import about a thousand pages, and did so in a couple of minutes. However, you might need to adjust PHP's max_execution_time setting as described below.
 
 = I import a few files and then the script times out. What can I do? =
 
@@ -84,12 +92,13 @@ To work around this problem, you can populate your directories with dummy index.
 = 2.0 =
 * New option to import images linked in the imported HTML files.
 * Now supports all public custom post types and taxonomies (including hierarchical ones).
-* The import screen now lets you choose whether to upload a single file or (the old way) import all files in a specified directory.
-* New user interface. The options form is now broken up into several tabbed sections. Categories and other hierarchical taxonomies are selected with checkboxes.
-* The options form is now separate from the importer. The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import.
-* Now makes proper use of the Settings API for better security and data validation.
-* New help screen.
 * Much better handling of special characters.
+* The import screen now lets you upload a single file.
+* New user interface. The options form is now broken up into several tabbed sections. Categories and other hierarchical taxonomies are selected with checkboxes.
+* The options form is now separate from the importer. It will now check your settings before the importer runs -- for example, you'll get a warning if your beginning directory isn't readable.
+* The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).
+* Now makes proper use of the Settings API for better security and data validation.
+* New help screen and user guide.
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
 * The beginning directory default is now based on the path to your WordPress installation. There's also a hint shown below the field. This should help people locate their import directory correctly.
@@ -132,8 +141,7 @@ To work around this problem, you can populate your directories with dummy index.
 
 = Roadmap =
 
-1.3: improve the import process for single files
-and import images and other media files along with the text
+2.1: support for custom fields
 
 = Thanks =
 

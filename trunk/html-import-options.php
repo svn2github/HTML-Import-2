@@ -2,7 +2,7 @@
 
 function html_import_get_options() {
 	$defaults = array(
-		'root_directory' => __(ABSPATH.'html-files-to-import', 'import-html-pages'),
+		'root_directory' => ABSPATH.__('html-files-to-import', 'import-html-pages'),
 		'old_url' => '',
 		'file_extensions' => 'html,htm,shtml',
 		'skipdirs' => __('images,includes', 'import-html-pages'),
@@ -17,7 +17,7 @@ function html_import_get_options() {
 		'content_attval' => __('content', 'import-html-pages'),
 		'clean_html' => 0,
 		'encode' => 0,
-		'allow_tags' => '<p><br><img><a><ul><ol><li><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
+		'allow_tags' => '<p><br><img><a><ul><ol><li><dl><dt><dd><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
 		'import_title' => 'tag',
 		'title_region' => '',
@@ -65,21 +65,15 @@ function html_import_options_page() { ?>
 							 	value="<?php esc_attr_e($options['root_directory']); ?>" class="widefloat" />
 							</label><br />
 							<span class="description">
-							<?php _e('This should be a full path from the server root, on the same server where WordPress 
-								is running now. Leave blank to upload a single file later.', 'import-html-pages'); ?><br />
-								<?php _e('Hint: the full path to this WordPress installation is: '); ?><kbd><?php echo ABSPATH; ?></kbd>
+								<?php printf(__('Hint: the full path to this WordPress installation is: %s', 'html-import-pages'), '<kbd>'.ABSPATH.'</kbd>'); ?>
 							</span>
 						</p></td>
 		        </tr>
 							
 				<tr valign="top">
-			        <th scope="row"><?php _e("Old URL", 'import-html-pages'); ?></th>
+			        <th scope="row"><?php _e("Old site URL", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[old_url]" id="old_url" 
 						value="<?php esc_attr_e($options['old_url']); ?>" class="widefloat" /> </label><br />
-						<span class="description">
-						<?php _e('The old URL should correspond with your beginning directory. With this URL, 
-							.htaccess redirects will be generated for you.', 'import-html-pages'); ?>
-						</span>
 					</p></td>
 		        </tr>
 		
@@ -88,7 +82,7 @@ function html_import_options_page() { ?>
 			        <td><p><label><input type="text" name="html_import[file_extensions]" id="file_extensions" 
 						value="<?php esc_attr_e($options['file_extensions']); ?>" class="widefloat" /> </label><br />
 						<span class="description">
-						<?php _e("Enter file extensions without periods, separated by commas. All other file types will 
+						<?php _e("File extensions, without periods, separated by commas. All other file types will 
 							be ignored.", 'import-html-pages'); ?>
 						</span>
 					</p></td>
@@ -99,7 +93,7 @@ function html_import_options_page() { ?>
 			        <td><p><label><input type="text" name="html_import[skipdirs]" id="skipdirs" 
 						value="<?php esc_attr_e($options['skipdirs']); ?>" class="widefloat" />  </label><br />
 						<span class="description">
-						<?php _e("Enter directory names, without slashes, separated by commas. All files in these directories 
+						<?php _e("Directory names, without slashes, separated by commas. All files in these directories 
 							will be ignored.", 'import-html-pages'); ?>
 						</span>
 					</p></td>
@@ -208,6 +202,9 @@ function html_import_options_page() { ?>
 			                &lt;ul&gt;
 			                &lt;ol&gt;
 			                &lt;li&gt;
+							&lt;dl&gt;
+							&lt;dt&gt;
+							&lt;dd&gt;
 			                &lt;blockquote&gt;
 			                &lt;cite&gt;
 			                &lt;em&gt;
@@ -447,27 +444,80 @@ function html_import_options_page() { ?>
 	<?php 
 }
 
-function html_import_sanitize_options($input) {
-	$msg = '';
+function html_import_validate_options($input) {
+	// Validation/sanitization. Add errors to $msg[].
+	$msg = array();
 	$type = 'error';
-	// Validation goes here. Append errors to $msg.
 	
-	// trim the extensions, skipped dirs, post tags, tag/attr/value
-	// if post type is post and default category wasn't set, set it
+	if (validate_file($input['root_directory']) > 0) {
+		$msg[] = __("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages');
+		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
+	}
+	elseif (!file_exists($input['root_directory'])) {
+		$msg[] = __("The beginning directory you entered is not readable. Please check its permissions and try again.", 'import-html-pages');
+		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
+	}
+		
+	$input['old_url'] = esc_url($input['old_url']);
+	
+	// trim the extensions, skipped dirs, allowed attributes. Invalid ones will not cause problems.
+	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
+	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
+	$input['allow_attributes'] = str_replace(' ', '', $input['allow_attributes']);
+	
+	if ( !in_array($input['status'], get_post_stati()) ) 
+		$input['status'] = 'publish';
+	
+	$post_types = get_post_types(array('public' => true),'names');
+	if (!in_array($post_types, $input['type']))
+		$input['type'] = 'page';
+		
+	if (!in_array(array('now', 'filemtime'), $input['timestamp']))
+		$input['timestamp'] = 'filemtime';
+		
+	if (!in_array(array('tag', 'region'), $input['import_content']))
+		$input['import_content'] = 'tag';
+	if (!in_array(array('tag', 'region'), $input['import_title']))
+		$input['import_title'] = 'tag';
+	
+	// trim region/tag/attr/value
+	$input['content_region'] = trim($input['content_region']);
+	$input['content_tag'] = trim($input['content_tag']);
+	$input['content_tagatt'] = trim($input['content_tagatt']);
+	$input['content_attval'] = esc_attr(trim($input['content_attval']));
+	$input['title_region'] = trim($input['title_region']);
+	$input['title_tag'] = trim($input['title_tag']);
+	$input['title_tagatt'] = trim($input['title_tagatt']);
+	$input['title_attval'] = esc_attr(trim($input['title_attval']));
 	
 	if (!isset($input['root_parent']))
 		$input['root_parent'] = 0;
 	
+	// $input['remove_from_title'] could be anything, including unencoded characters or HTML tags
+	// it's a search pattern; leave it alone
+	
+	// these should all be zero or one
+	$input['clean_html'] = absint($input['clean_html']);
+	if ($input['clean_html'] > 1) $input['clean_html'] = 0;
+	$input['encode'] = absint($input['encode']);
+	if ($input['encode'] > 1) $input['encode'] = 0;
+	$input['meta_desc'] = absint($input['meta_desc']);
+	if ($input['meta_desc'] > 1) $input['meta_desc'] = 1;
+	
+	// see if this is a real user
+	$input['user'] = absint($input['user']);
+	$user_info = get_userdata($input['user']);
+	if ($user_info === false)
+		$msg[] = "The author you specified does not exist.";
+	
+	$msg = implode('<br />', $msg);
+	
 	if (empty($msg)) {
 		$msg = sprintf(__('Settings saved. <a href="%s">Ready to import files?</a>'), 'admin.php?import=html');
-/*
-		$msg .= '<pre>';
-		$msg .= print_r($input, true);
-		$msg .= '</pre>';
-/**/
+		// $msg .= '<pre>'. print_r($input, false) .'</pre>';
 		$type = 'updated';
 	}
-	// Custom updated message
+	// Send custom updated message
 	add_settings_error( 'html_import', 'html_import', $msg, $type );
 	return $input;
 }
@@ -476,8 +526,8 @@ function html_import_sanitize_options($input) {
 // mostly a duplicate of Walker_Category_Checklist
 class HTML_Import_Walker_Category_Checklist extends Walker {
      var $tree_type = 'category';
-     var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
- 
+     var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); 
+
  	function start_lvl(&$output, $depth, $args) {
          $indent = str_repeat("\t", $depth);
          $output .= "$indent<ul class='children'>\n";
