@@ -376,17 +376,18 @@ class HTML_Import extends WP_Importer {
 		extract( $wp_filetype );
 		
 		if ( ( !$type || !$ext ) && !current_user_can( 'unfiltered_upload' ) )
-			return new WP_Error('wrong_file_type', __( 'Sorry, this file type is not permitted for security reasons.' ) ); //A WP-core string..
+			return new WP_Error('wrong_file_type', __( 'Sorry, this file type is not permitted for security reasons.' ) );
 
 		$filename = wp_unique_filename( $uploads['path'], basename($file));
 
 		// copy the file to the uploads dir
 		$new_file = $uploads['path'] . '/' . $filename;
 		if ( false === @copy( $file, $new_file ) )
-			return new WP_Error('upload_error', __('Could not find the right path to the image (tried '.$file.'), so could not be copied to the uploads directory.', 'html-import-pages') );
+			return new WP_Error('upload_error', __('Could not find the right path to the image (tried '.$file.'). It could not be imported. Please upload it manually.', 'html-import-pages') );
+/*
 		else
-		 	printf(__('<p><em>%s</em> is being copied to the uploads directory as <em>%s</em>.</p>', 'html-import-pages'), $file, $new_file);
-
+		 	printf(__('<br /><em>%s</em> is being copied to the uploads directory as <em>%s</em>.', 'html-import-pages'), $file, $new_file);
+/**/
 		// Set correct file permissions
 		$stat = stat( dirname( $new_file ));
 		$perms = $stat['mode'] & 0000666;
@@ -445,6 +446,89 @@ class HTML_Import extends WP_Importer {
 		return $id;
 	}
 	
+	// largely borrowed from the Add Linked Images to Gallery plugin, except we do a simple str_replace at the end
+	function import_images($id, $path) {
+		$post = get_post($id);
+		$options = get_option('html_import');
+		$result = array();
+		$srcs = array();
+		$content = $post->post_content;
+		$update = false;
+		
+		// find all src attributes
+		preg_match_all('/<img[^>]* src=[\'"]?([^>\'" ]+)/', $post->post_content, $matches);
+		for ($i=0; $i<count($matches[0]); $i++) {
+			$srcs[] = $matches[1][$i];
+		}
+		if (!empty($srcs)) {
+			$count = count($srcs);
+			
+			echo "<p>";
+			printf(_n("Found %d image in %s. Importing... ", "Found %d images in %s. Importing... ", $count, 'html-import-pages'), $count, $post->post_title);
+			foreach ($srcs as $src) {
+				// src="http://foo.com/images/foo"
+				if (preg_match('/^http:\/\//', $src)) { 
+					$imgpath = $matches[1][$i];			
+				}
+				// src="/images/foo"
+				elseif ('/' == substr($src, 1, 1)) { 
+					$imgpath = $options['root_directory']. '/' . $src;
+				}
+				// src="../../images/foo" or src="images/foo" or no $path
+				else { 
+					if (empty($path)) 
+						$imgpath = $options['root_directory']. '/' . $src;
+					else
+						$imgpath = dirname($path) . '/' . $src;
+						
+					// intersect base path and src
+					$imgpath = $this->url_remove_dot_segments($imgpath);
+				}
+			 
+				//  load the image from $imgpath
+				$imgid = $this->handle_import_image_file($imgpath, $id);
+				if ( is_wp_error( $imgid ) )
+					echo '<p>'.$imgid->get_error_message().'</p>';
+				else {
+					$imgpath = wp_get_attachment_url($imgid);
+			
+					//  replace paths in the content
+					if (!is_wp_error($imgpath)) {			
+						$content = str_replace($src, $imgpath, $content);
+						$update = true;
+					}
+					
+				} // is_wp_error else
+				
+			} // foreach
+			
+			// update the post only once
+			if ($update == true) {
+				$my_post = array();
+				$my_post['ID'] = $id;
+				$my_post['post_content'] = $content;
+				wp_update_post($my_post);
+			}
+			
+			_e('done.', 'html-import-images');
+			echo '</p>';
+			flush();
+		} // if empty
+	}
+	
+	function find_images() {
+		echo '<h2>'.__( 'Importing images...', 'import-html-pages').'</h2>';
+		$results = '';
+		foreach ($this->filearr as $id => $path) {
+			$results .= $this->import_images($id, $path);
+		}
+		if (!empty($results))
+			echo $results;
+		echo '<h3>';
+		printf(__('All done. <a href="%s">Have fun!</a>'), 'media.php');
+		echo '</h3>';
+	}
+	
 	function print_results($posttype) {
 		if (!empty($this->single_result))
 			echo $this->single_result;
@@ -458,7 +542,10 @@ class HTML_Import extends WP_Importer {
 			<th><?php _e('Title', 'import-html-pages'); ?></th>
 			</tr></thead><tbody> <?php echo $this->table; ?> </tbody></table> 
 		
-			<?php if (!empty($this->redirects)) { ?>
+			<?php
+			flush();
+			
+			if (!empty($this->redirects)) { ?>
 			<h3><?php _e('.htaccess Redirects', 'import-html-pages'); ?></h3>
 			<textarea id="import-result"><?php echo $this->redirects; ?></textarea>
 			<?php }
@@ -466,6 +553,7 @@ class HTML_Import extends WP_Importer {
 		echo '<h3>';
 		printf(__('All done. <a href="%s">Have fun!</a>', 'import-html-pages'),  'edit.php?post_type='.$posttype);
 		echo '</h3>';
+		flush();
 	}
 	
 	function import() {
@@ -510,78 +598,6 @@ class HTML_Import extends WP_Importer {
 		do_action('import_done', 'html');
 	}
 	
-	// largely borrowed from the Add Linked Images to Gallery plugin
-	function import_images($id, $path) {
-		$post = get_post($id);
-		$options = get_option('html_import');
-		$result = array();
-		$srcs = array();
-		
-		// find all <img> tags
-		preg_match_all('/<img[^>]* src=[\'"]?([^>\'" ]+)/', $post->post_content, $matches);
-		for ($i=0; $i<count($matches[0]); $i++) {
-			$srcs[] = $matches[1][$i];
-		}
-		if (!empty($srcs)) {
-			$count = count($srcs);
-		
-			foreach ($srcs as $src) {
-				// src="http://foo.com/images/foo"
-				if (preg_match('/^http:\/\//', $src)) { 
-					$imgpath = $matches[1][$i];			
-				}
-				// src="/images/foo"
-				elseif ('/' == substr($src, 1, 1)) { 
-					$imgpath = $options['root_directory']. '/' . $src;
-				}
-				// src="../../images/foo" or src="images/foo" or no $path
-				else { 
-					if (empty($path)) 
-						$imgpath = $options['root_directory']. '/' . $src;
-					else
-						$imgpath = dirname($path) . '/' . $src;
-						
-					// intersect base path and src. 
-					$imgpath = $this->url_remove_dot_segments($imgpath);
-				}
-			 
-				//  load the image from $imgpath
-				$imgid = $this->handle_import_image_file($imgpath, $id);
-				if ( is_wp_error( $imgid ) )
-					echo $imgid->get_error_message();
-				else {
-					$imgpath = wp_get_attachment_url($imgid);
-			
-					//  replace paths in the content <img> tags	
-					if (!is_wp_error($imgpath)) {	
-						$trans = preg_quote($src, "/");
-						//echo '<p>'.$trans.','.$imgpath.'</p>';
-						$content = preg_replace('/(<img[^>]* src=[\'"]?)('.$trans.')/', '$1'.$imgpath, $post->post_content);
-						// this is fetching every OTHER <img src=""> match.
-			
-						$my_post = array();
-						$my_post['ID'] = $id;
-						$my_post['post_content'] = $content;
-						wp_update_post($my_post);
-					} // if
-				} // else
-			} // foreach
-		} // if empty
-	}
-	
-	function find_images() {
-		echo '<h2>'.__( 'Importing images...', 'import-html-pages').'</h2>';
-		$results = '';
-		foreach ($this->filearr as $id => $path) {
-			$results .= $this->import_images($id, $path);
-		}
-		if (!empty($results))
-			echo $results;
-		echo '<h3>';
-		printf(__('All done. <a href="%s">Have fun!</a>'), 'media.php');
-		echo '</h3>';
-	}
-
 	function dispatch() {
 		if (empty ($_GET['step']))
 			$step = 0;

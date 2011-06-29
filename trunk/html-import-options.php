@@ -175,7 +175,7 @@ function html_import_options_page() { ?>
 				</td>
 				</tr>
 				<tr>
-				<th><?php _e("Convert character set to UTF-8", 'import-html-pages'); ?></th>
+				<th><?php _e("Convert unencoded special characters to HTML entities", 'import-html-pages'); ?></th>
 				<td>
 					<label><input name="html_import[encode]" id="encode"  type="checkbox" value="1" 
 						<?php checked($options['encode'], '1'); ?> /> </label>
