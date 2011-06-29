@@ -81,7 +81,7 @@ class HTML_Import extends WP_Importer {
 	}
 
 	function clean_html( $string, $allowtags = NULL, $allowattributes = NULL ) {
-		// from PHP manual comment: http://us3.php.net/manual/en/function.strip-tags.php#91498
+		// from: http://us3.php.net/manual/en/function.strip-tags.php#91498
 	    $string = strip_tags($string,$allowtags);
 	    if (!is_null($allowattributes)) {
 	        if(!is_array($allowattributes))
@@ -99,6 +99,40 @@ class HTML_Import extends WP_Importer {
 		$string = str_replace( '\n', ' ', $string ); 
 		$string = preg_replace( "/<[^\/>]*>([\s]?)*<\/[^>]*>/", ' ', $string );
 		return $string;
+	}
+	
+	function handle_accents($str) {
+		$charmap = array(
+		    '‘' => '&lsquo;', '’' => '&rsquo;', '‚' => '&sbquo;', '“' => '&ldquo;', '”' => '&rdquo;', '„' => '&bdquo;',
+			'†' => '&dagger;', '‡' => '&Dagger;', '‰' => '&permil;', '‹' => '&lsaquo;', '›' => '&rsaquo;', '♠' => '&spades;',
+			'♣' => '&clubs;', '♥' => '&hearts;', '♦' => '&diams;', '‾' => '&oline;', '←' => '&larr;', '↑' => '&uarr;',
+			'→' => '&rarr;', '↓' => '&darr;', '™' => '&trade;', '–' => '&ndash;', '—' => '&mdash;', '¡' => '&iexcl;',
+			'¢' => '&cent;', '£' => '&pound;', '¤' => '&curren;', '¥' => '&yen;', '¦' => '&brkbar;', '§' => '&sect;',
+			'¨' => '&uml;', '©' => '&copy;', 'ª' => '&ordf;', '«' => '&laquo;', '¬' => '&not;', '­' => '&shy;',
+			'®' => '&reg;', '¯' => '&hibar;', '°' => '&deg;', '±' => '&plusmn;', '²' => '&sup2;', '³' => '&sup3;',
+			'´' => '&acute;', 'µ' => '&micro;', '¶' => '&para;', '·' => '&middot;', '¸' => '&cedil;', '¹' => '&sup1;', 
+			'º' => '&ordm;', '»' => '&raquo;', '¼' => '&frac14;', '½' => '&frac12;', '¾' => '&frac34;', '¿' => '&iquest;', 
+			'À' => '&Agrave;', 'Á' => '&Aacute;', 'Â' => '&Acirc;', 'Ã' => '&Atilde;', 'Ä' => '&Auml;', 'Å' => '&Aring;', 
+			'Æ' => '&AElig;', 'Ç' => '&Ccedil;', 'È' => '&Egrave;', 'É' => '&Eacute;', 'Ê' => '&Ecirc;', 'Ë' => '&Euml;', 
+			'Ì' => '&Igrave;', 'Í' => '&Iacute;', 'Î' => '&Icirc;', 'Ï' => '&Iuml;', 'Ð' => '&ETH;', 'Ñ' => '&Ntilde;', 
+			'Ò' => '&Ograve;', 'Ó' => '&Oacute;', 'Ô' => '&Ocirc;', 'Õ' => '&Otilde;', 'Ö' => '&Ouml;', '×' => '&times;', 
+			'Ø' => '&Oslash;', 'Ù' => '&Ugrave;', 'Ú' => '&Uacute;', 'Û' => '&Ucirc;', 'Ü' => '&Uuml;', 'Ý' => '&Yacute;', 
+			'Þ' => '&THORN;', 'ß' => '&szlig;', 'à' => '&agrave;', 'á' => '&aacute;', 'â' => '&acirc;', 'ã' => '&atilde;', 
+			'ä' => '&auml;', 'å' => '&aring;', 'æ' => '&aelig;', 'ç' => '&ccedil;', 'è' => '&egrave;', 'é' => '&eacute;', 
+			'ê' => '&ecirc;', 'ë' => '&euml;', 'ì' => '&igrave;', 'í' => '&iacute;', 'î' => '&icirc;', 'ï' => '&iuml;', 
+			'ð' => '&eth;', 'ñ' => '&ntilde;', 'ò' => '&ograve;', 'ó' => '&oacute;', 'ô' => '&ocirc;', 'õ' => '&otilde;', 
+			'ö' => '&ouml;', '÷' => '&divide;', 'ø' => '&oslash;', 'ù' => '&ugrave;', 'ú' => '&uacute;', 'û' => '&ucirc;', 
+			'ü' => '&uuml;', 'ý' => '&yacute;', 'þ' => '&thorn;', 'ÿ' => '&yuml;', 'Α' => '&Alpha;', 'α' => '&alpha;', 
+			'Β' => '&Beta;', 'β' => '&beta;', 'Γ' => '&Gamma;', 'γ' => '&gamma;', 'Δ' => '&Delta;', 'δ' => '&delta;', 
+			'Ε' => '&Epsilon;', 'ε' => '&epsilon;', 'Ζ' => '&Zeta;', 'ζ' => '&zeta;', 'Η' => '&Eta;', 'η' => '&eta;', 
+			'Θ' => '&Theta;', 'θ' => '&theta;', 'Ι' => '&Iota;', 'ι' => '&iota;', 'Κ' => '&Kappa;', 'κ' => '&kappa;', 
+			'Λ' => '&Lambda;', 'λ' => '&lambda;', 'Μ' => '&Mu;', 'μ' => '&mu;', 'Ν' => '&Nu;', 'ν' => '&nu;', 'Ξ' => '&Xi;', 
+			'ξ' => '&xi;', 'Ο' => '&Omicron;', 'ο' => '&omicron;', 'Π' => '&Pi;', 'π' => '&pi;', 'Ρ' => '&Rho;', 'ρ' => '&rho;', 
+			'Σ' => '&Sigma;', 'σ' => '&sigma;', 'Τ' => '&Tau;', 'τ' => '&tau;', 'Υ' => '&Upsilon;', 'υ' => '&upsilon;', 
+			'Φ' => '&Phi;', 'φ' => '&phi;', 'Χ' => '&Chi;', 'χ' => '&chi;', 'Ψ' => '&Psi;', 'ψ' => '&psi;', 'Ω' => '&Omega;', 
+			'ω' => '&omega;', '●' => '&#9679;', '•' => '&#8226;',
+		);
+	    return strtr($str, $charmap);
 	}
 	
 	function get_single_file() {
@@ -129,10 +163,10 @@ class HTML_Import extends WP_Importer {
 				if (empty($contents)) 
 					wp_die("The PHP functions fopen() and file_get_contents() have both failed. We can't import any files without these functions. Please ask your server administrator if they are enabled.");
 				
-				if (function_exists('mb_convert_encoding') && ($options['encode'] == 1)) 
+			/*	if (function_exists('mb_convert_encoding') && ($options['encode'] == 1)) 
 					$this->file = mb_convert_encoding($contents, 'HTML-ENTITIES', "UTF-8"); 
 				else 
-					$this->file = $contents;
+				*/	$this->file = $contents;
 				
 				$this->get_post($path, false); 
 			}
@@ -261,8 +295,12 @@ class HTML_Import extends WP_Importer {
 					$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
 				else $my_post['post_content'] = '';
 			}
+			
 			if (!empty($options['clean_html']))
 				$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
+				
+			$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
+				
 			// get rid of remaining newlines; basic HTML cleanup
 			if (!empty($my_post['post_content'])) {
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -454,6 +492,8 @@ class HTML_Import extends WP_Importer {
 			$this->get_single_file();
 			$this->print_results($options['type']);
 			wp_import_cleanup($file['id']);
+			if ($options['import_images'])
+				$this->find_images();
 		}
 		elseif ($_POST['import_files'] == 'directory') {
 			$this->table = '';
@@ -466,14 +506,12 @@ class HTML_Import extends WP_Importer {
 			echo '<h2>'.__( 'Importing...', 'import-html-pages').'</h2>';
 			$this->get_files_from_directory($options['root_directory']);
 			$this->print_results($options['type']);
+			if ($options['import_images'])
+				$this->find_images();
 		}
 		else {
 			_e("Your file upload didn't work. Try again?", 'html-import-pages');
 		}
-		
-		// do images?
-		if ($options['import_images'])
-			$this->find_images();
 
 		do_action('import_done', 'html');
 	}
