@@ -18,7 +18,7 @@ If importing pages, the directory hierarchy will be preserved. Directories conta
 
 As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks.
 
-Options:
+Options in 2.0:
 
 * import files into <del>pages or posts</del> any post type
 * import linked image files to the media library
