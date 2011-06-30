@@ -1,8 +1,8 @@
-=== Import HTML Pages ===
+=== HTML Import 2 ===
 Contributors: sillybean
-Donate link: http://sillybean.net/code/wordpress/html-import/
+Donate link: http://sillybean.net/code/wordpress/html-import-2/
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
-Requires at least: 2.8
+Requires at least: 3.0
 Tested up to: 3.2
 Stable tag: 1.30
 
@@ -87,6 +87,11 @@ The conferences and workshops directories will be created as parent pages, but t
 
 To work around this problem, you can populate your directories with dummy index.html pages. They should contain at least the `<html>`, `<head>`, and `<title>` tags, and you can give them distinctive titles (e.g. "DUMMY") so you can easily find and delete them once all your files have been imported.
 
+== Upgrade Notice ==
+
+= 2.0 =
+This version requires at least WP 3.0. Now handles linked images, single file uploads, and custom post types and taxonomies.
+
 == Changelog ==
 
 = 2.0 =
@@ -100,6 +105,7 @@ To work around this problem, you can populate your directories with dummy index.
 * Files' old URLs are now stored as custom fields in the imported posts. There's now an option to regenerate the redirects for your imported files, which is handy if you changed your permalink structure after you finished importing.
 * Now makes proper use of the Settings API for better security and data validation.
 * New help screen and user guide.
+* Now requires at least WP 3.0.
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
 * The beginning directory default is now based on the path to your WordPress installation. There's also a hint shown below the field. This should help people locate their import directory correctly.
