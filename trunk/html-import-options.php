@@ -27,6 +27,7 @@ function html_import_get_options() {
 		'remove_from_title' => '',
 		'meta_desc' => 1,
 		'user' => 0,
+		'firstrun' => true,
 	);
 	$options = get_option('html_import');
 	if (!is_array($options)) $options = array();
@@ -35,7 +36,7 @@ function html_import_get_options() {
 
 function html_import_options_page() { ?>
 	<div class="wrap">
-		<h2><?php _e( 'HTML Import Settings', 'import-html-pages'); ?></h2> 
+		<h2><?php _e( 'HTML Import Settings', 'import-html-pages'); ?></h2>
 		<form method="post" id="html_import" action="options.php">
 			<?php 
 			settings_fields('html_import');
@@ -167,26 +168,25 @@ function html_import_options_page() { ?>
 					</td>
 				</tr>
 				<tr>
-				<th><?php _e("Use meta description as excerpt", 'import-html-pages'); ?></th>
+				<th><?php _e("More content options", 'import-html-pages'); ?></th>
 				<td>
 					<label><input name="html_import[meta_desc]" id="meta_desc" value="1" type="checkbox" <?php checked($options['meta_desc']); ?> /> 
-						 </label>
-					<span class="description"><?php /* printf(__('Excerpts will be stored for both posts and pages. However, to edit and/or display excerpts for pages, you will need to install a plugin such as <a href="%s">PJW Page Excerpt</a>
-	or <a href="%s">Excerpt Editor</a>.', 'import-html-pages'), 'http://blog.ftwr.co.uk/wordpress/page-excerpt/', 'http://www.laptoptips.ca/projects/wordpress-excerpt-editor/'); */ ?></span>
+						 <?php _e("Use meta description as excerpt", 'import-html-pages'); ?></label>
 				</td>
 				</tr>
 				<tr>
-				<th><?php _e("Convert unencoded special characters to HTML entities", 'import-html-pages'); ?></th>
+				<th></th>
 				<td>
 					<label><input name="html_import[encode]" id="encode"  type="checkbox" value="1" 
-						<?php checked($options['encode'], '1'); ?> /> </label>
+						<?php checked($options['encode'], '1'); ?> /> <?php _e("Convert unencoded special characters to HTML entities", 'import-html-pages'); ?> </label>
 				</td>
 				</tr>
 				<tr>
-				<th><?php _e("Clean up bad (Word, Frontpage) HTML", 'import-html-pages'); ?></th>
+				<th></th>
 				<td>
 					<label><input name="html_import[clean_html]" id="clean_html"  type="checkbox" value="1" 
-						<?php checked($options['clean_html'], '1'); ?> onclick="jQuery(this).is(':checked') && jQuery('.clean-region').show('fast') || jQuery('.clean-region').hide('fast');" /> </label>
+						<?php checked($options['clean_html'], '1'); ?> onclick="jQuery(this).is(':checked') && jQuery('.clean-region').show('fast') || jQuery('.clean-region').hide('fast');" />
+						<?php _e("Clean up bad (Word, Frontpage) HTML", 'import-html-pages'); ?> </label>
 				</td>
 				</tr>
 				<tr class="clean-region" <?php if ($options['clean_html'] == '1') echo "style=display:table-row;"; ?>>
@@ -449,7 +449,9 @@ function html_import_options_page() { ?>
 	</div>	<!-- UI tabs wrapper -->	
 			<p class="submit">
 				<input type="submit" class="button-primary" value="<?php _e('Save settings', 'import-html-pages') ?>" />
+				<?php if (!$options['firstrun']) { ?>
 				<a href="admin.php?import=html" class="button-secondary">Import files</a>
+				<?php } ?>
 			</p>
 		</form>
 	</div> <!-- .ui-tabs -->
@@ -483,9 +485,11 @@ function html_import_validate_options($input) {
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
 		
-	$input['old_url'] = esc_url($input['old_url']);
+	$input['root_directory'] = rtrim($input['root_directory'], '/');
+	$input['old_url'] = esc_url(rtrim($input['old_url'], '/'));
 	
 	// trim the extensions, skipped dirs, allowed attributes. Invalid ones will not cause problems.
+	$input['file_extensions'] = str_replace('.', '', $input['file_extensions']);
 	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
 	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
 	$input['allow_attributes'] = str_replace(' ', '', $input['allow_attributes']);
@@ -559,6 +563,9 @@ function html_import_validate_options($input) {
 		// $msg .= '<pre>'. print_r($input, false) .'</pre>';
 		$msgtype = 'updated';
 	}
+	
+	// If settings have been saved at least once, we can turn this off.
+	$input['firstrun'] = false;
 	
 	// Send custom updated message
 	add_settings_error( 'html_import', 'html_import', $msg, $msgtype );

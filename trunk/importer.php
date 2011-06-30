@@ -31,9 +31,12 @@ class HTML_Import extends WP_Importer {
 	function greet() {
 		?>
 		<div class="narrow">
-		<p><?php _e('This importer allows you to import HTML files as posts or pages. ', 'import-html-pages');
-		printf(__('If you have not yet visited the <a href="%s">HTML Import options page</a>, please do so now. You need to specify which portions of your HTML files should be imported before you proceed.', 'import-html-pages'), 'options-general.php?page=html-import.php'); ?></p>
-		
+		<p><?php _e('This importer allows you to import HTML files as posts or pages. ', 'import-html-pages'); ?></p>
+		<?php 
+		if (!$options['firstrun']) {
+		echo '<p>'.sprintf(__('If you have not yet visited the <a href="%s">HTML Import options page</a>, please do so now. You need to specify which portions of your HTML files should be imported before you proceed.', 'import-html-pages'), 'options-general.php?page=html-import.php').'</p>'; 
+		} 
+		else { ?>
 		<h4><?php _e('What are you importing today?'); ?></h4>
 		<form enctype="multipart/form-data" method="post" action="admin.php?import=html&amp;step=1">
 		<p>
@@ -64,7 +67,7 @@ class HTML_Import extends WP_Importer {
 		<?php wp_nonce_field('html-import'); ?>
 		</form>
 		</div>
-	<?php
+	<?php } // else
 	}
 	
 	function regenerate_redirects() {
@@ -380,6 +383,8 @@ class HTML_Import extends WP_Importer {
 		$this->filearr[$post_id] = $path;
 	}
 	
+	
+	
 	//Handle an individual file import. Borrowed almost entirely from dd32's Add From Server plugin
 	function handle_import_image_file($file, $post_id = 0) {
 		// see if the attachment already exists
@@ -407,7 +412,7 @@ class HTML_Import extends WP_Importer {
 			// copy the file to the uploads dir
 			$new_file = $uploads['path'] . '/' . $filename;
 			if ( false === @copy( $file, $new_file ) )
-				return new WP_Error('upload_error', __('Could not find the right path to the image (tried '.$file.'). It could not be imported. Please upload it manually.', 'html-import-pages') );
+				return new WP_Error('upload_error', sprintf(__('Could not find the right path to %s (tried %s). It could not be imported. Please upload it manually.', 'html-import-pages'), basename($file), $file));
 		//	else
 		//	 	printf(__('<br /><em>%s</em> is being copied to the uploads directory as <em>%s</em>.', 'html-import-pages'), $file, $new_file);
 	
@@ -490,7 +495,7 @@ class HTML_Import extends WP_Importer {
 			$count = count($srcs);
 			
 			echo "<p>";
-			printf(_n("Found %d image in %s. Importing... ", "Found %d images in %s. Importing... ", $count, 'html-import-pages'), $count, $post->post_title);
+			printf(_n('Found %d image in <a href="%s">%s</a>. Importing... ', 'Found %d images in <a href="%s">%s</a>. Importing... ', $count, 'html-import-pages'), $count, get_permalink($post->ID), $post->post_title);
 			foreach ($srcs as $src) {
 				// src="http://foo.com/images/foo"
 				if (preg_match('/^http:\/\//', $src)) { 
@@ -593,7 +598,7 @@ class HTML_Import extends WP_Importer {
 				return;
 			}
 
-			echo '<h2>'.__( 'Importing HTML files...', 'import-html-pages').'</h2>';
+			echo '<h2>'.__( 'Importing HTML file...', 'import-html-pages').'</h2>';
 			$this->file = $file['file'];
 			$this->get_single_file();
 			$this->print_results($options['type']);
@@ -602,7 +607,7 @@ class HTML_Import extends WP_Importer {
 				$this->find_images();
 		}
 		elseif ($_POST['import_files'] == 'directory') {
-			// in case they entered something dumb and didn't fix it when we showed an error...
+			// in case they entered something dumb and didn't fix it when we showed an error on the options page...
 			if (validate_file($options['root_directory']) > 0)
 				wp_die(__("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages'));
 			
@@ -613,7 +618,7 @@ class HTML_Import extends WP_Importer {
 			$this->skip = array_merge($skipdirs, array('.','..'));
 			$this->allowed = explode(",", $options['file_extensions']);
 			
-			echo '<h2>'.__( 'Importing...', 'import-html-pages').'</h2>';
+			echo '<h2>'.__( 'Importing HTML files...', 'import-html-pages').'</h2>';
 			$this->get_files_from_directory($options['root_directory']);
 			$this->print_results($options['type']);
 			if ($options['import_images'])
@@ -655,10 +660,10 @@ class HTML_Import extends WP_Importer {
 	function importer_styles() {
 		?>
 		<style type="text/css">
-		textarea#import-result { height: 12em; width: 100%; }
-		#importing th { width: 32% } 
-		#importing th#id { width: 4% }
-		span.imgerror { display: block; padding-left: 2em; color: #f60; }
+			textarea#import-result { height: 12em; width: 100%; }
+			#importing th { width: 32% } 
+			#importing th#id { width: 4% }
+			span.imgerror { display: block; padding-left: 2em; color: #d54e21; /* WP orange */ }
 		</style>
 		<?php
 	}

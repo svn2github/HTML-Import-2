@@ -55,9 +55,9 @@ function register_html_import_settings() {
 function html_import_remove_options() {
 	delete_option('html_import');
 }
-register_uninstall_hook( __FILE__, 'html_import_remove_options' );
+//register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 // for testing only
-// register_deactivation_hook( __FILE__, 'html_import_remove_options' );
+ register_deactivation_hook( __FILE__, 'html_import_remove_options' );
 
 // Add option page to admin menu
 function html_import_add_pages() {
@@ -79,8 +79,8 @@ function html_import_add_pages() {
 	$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
 
 	$text .= '<ul>';
-	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
-	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
 	$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
 	$text .= '</ul>';
 

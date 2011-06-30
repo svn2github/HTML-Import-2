@@ -12,7 +12,7 @@ ul.categorychecklist { height: 15em; width: 20em; overflow-y: scroll; border: 1p
 ul.categorychecklist ul.children { margin-left: 1em; }
 p.taginput { float: left; margin: 1em 1em 1em 0; width: 22.2em; }
 p.taginput input { width: 100%; }
-td.taginput { width: 33%; }
+td.taginput { width: 33%; vertical-align: top; }
 .clean-region th { text-indent: 2em; }
 body.settings_page_html-import #footer { display: none; }
 /* jQuery tabs */

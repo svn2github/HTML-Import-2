@@ -16,7 +16,7 @@ This plugin will import a directory of files as either pages or posts. You may s
 
 If importing pages, the directory hierarchy will be preserved. Directories containing the specified file types will be imported as empty parent pages. Directories that do not contain the specified file types will be ignored.
 
-As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
+As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your `.htaccess` file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
 
 Options in 2.0:
 
@@ -33,6 +33,8 @@ Options in 2.0:
 * use meta descriptions as excerpts
 * clean up imported HTML and strip unwanted tags and attributes
 * convert unencoded special characters to HTML entities
+
+See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details on all the options.
 
 == Installation ==
 
@@ -52,15 +54,19 @@ No. The importer simply extracts the relevant part of each HTML file and copies 
 
 = Will this work on large numbers of HTML files? =
 
-Yes, it has been used to import about a thousand pages, and did so in a couple of minutes. However, you might need to adjust PHP's max_execution_time setting as described below.
+Yes, it has been used to import over a thousand pages, and did so in a couple of minutes. However, you might need to adjust PHP's `max_execution_time` setting as described below.
 
 = I import a few files and then the script times out. What can I do? =
 
-The importer will attempt to work around your server's max_execution_time setting for PHP, but some servers don't allow this. You can try to increase it by adding a line to your .htaccess file:
+The importer will attempt to work around your server's max_execution_time setting for PHP, but some servers don't allow this. You can try to increase it by adding a line to your `.htaccess` file:
 
 `php_value max_execution_time 160`
 
 If that gets you further but still doesn't finish, just increase the number (it's in seconds). However, note that your host might get irritated with you for hogging the server's resources. If you have a _lot_ of files to import, it's best to install WordPress on your desktop (XAMPP for Windows and MAMP for Macs make it pretty easy) and do the heavy lifting there.
+
+It's also quite possible that the script is trying to use more memory than your server allows. You can try to change that setting, too, in `.htaccess`:
+
+`php_value memory_limit 1024M`
 
 = Known bugs =
 
@@ -104,7 +110,7 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 * The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).
 * Files' old URLs are now stored as custom fields in the imported posts. There's now an option to regenerate the redirects for your imported files, which is handy if you changed your permalink structure after you finished importing.
 * Now makes proper use of the Settings API for better security and data validation.
-* New help screen and user guide.
+* New help screen and <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">user guide</a>.
 * Now requires at least WP 3.0.
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
@@ -148,11 +154,14 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 
 = Roadmap =
 
-2.1: support for custom fields
+2.1: fix internal liks? and support for custom fields
 
 = Thanks =
 
-Thanks to Tom Dyson's <a href="http://wordoff.org/">Wordoff.org</a> for inspiring the Word cleanup option in 1.1. 
+Thanks to...
+
+* Tom Dyson's <a href="http://wordoff.org/">Wordoff.org</a> for inspiring the Word cleanup option in 1.1. 
+* Dion Hulse's <a href="http://wordpress.org/extend/plugins/add-from-server/">Add from Server</a> plugin and bbqiguana's <a href="http://wordpress.org/extend/plugins/add-linked-images-to-gallery-v01/">Add Linked Images To Gallery</a> plugin, from which I borrowed a lot of the logic behind the image import feature in 2.0
 
 == Screenshots ==
 
