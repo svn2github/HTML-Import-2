@@ -447,6 +447,7 @@ function html_import_options_page() { ?>
 function html_import_validate_options($input) {
 	// Validation/sanitization. Add errors to $msg[].
 	$msg = array();
+	$linkmsg = '';
 	$type = 'error';
 	
 	if (validate_file($input['root_directory']) > 0) {
@@ -469,27 +470,37 @@ function html_import_validate_options($input) {
 		$input['status'] = 'publish';
 	
 	$post_types = get_post_types(array('public' => true),'names');
-	if (!in_array($post_types, $input['type']))
+	if (!in_array($input['type'], $post_types))
 		$input['type'] = 'page';
 		
-	if (!in_array(array('now', 'filemtime'), $input['timestamp']))
+	if (!in_array( $input['timestamp'], array('now', 'filemtime')))
 		$input['timestamp'] = 'filemtime';
 		
-	if (!in_array(array('tag', 'region'), $input['import_content']))
+	if (!in_array($input['import_content'], array('tag', 'region')))
 		$input['import_content'] = 'tag';
-	if (!in_array(array('tag', 'region'), $input['import_title']))
+	if (!in_array($input['import_title'], array('tag', 'region')))
 		$input['import_title'] = 'tag';
 	
 	// trim region/tag/attr/value
-	$input['content_region'] = trim($input['content_region']);
-	$input['content_tag'] = trim($input['content_tag']);
-	$input['content_tagatt'] = trim($input['content_tagatt']);
-	$input['content_attval'] = esc_attr(trim($input['content_attval']));
-	$input['title_region'] = trim($input['title_region']);
-	$input['title_tag'] = trim($input['title_tag']);
-	$input['title_tagatt'] = trim($input['title_tagatt']);
-	$input['title_attval'] = esc_attr(trim($input['title_attval']));
+	if (!empty($input['content_region']))	$input['content_region'] = 	trim($input['content_region']);
+	if (!empty($input['content_tag']))		$input['content_tag'] = 	trim($input['content_tag']);
+	if (!empty($input['content_tagatt']))	$input['content_tagatt'] = 	trim($input['content_tagatt']);
+	if (!empty($input['content_attval']))	$input['content_attval'] = 	esc_attr(trim($input['content_attval']));
+	if (!empty($input['title_region']))		$input['title_region'] = 	trim($input['title_region']);
+	if (!empty($input['title_tag']))		$input['title_tag'] = 		trim($input['title_tag']);
+	if (!empty($input['title_tagatt']))		$input['title_tagatt'] = 	trim($input['title_tagatt']);
+	if (!empty($input['title_attval']))		$input['title_attval'] = 	esc_attr(trim($input['title_attval']));
 	
+	// must have something to look for in the HTML
+	if ($input['import_content'] == 'tag' && empty($input['content_tag']))
+		$msg[] = __("You did not enter an HTML content tag to import.", 'import-html-pages');
+	if ($input['import_content'] == 'region' && empty($input['content_region']))
+		$msg[] = __("You did not enter a Dreamweaver content template region to import.", 'import-html-pages');
+	if ($input['import_title'] == 'tag' && empty($input['title_tag']))
+		$msg[] = __("You did not enter an HTML title tag to import.", 'import-html-pages');
+	if ($input['import_title'] == 'region' && empty($input['title_region']))
+		$msg[] = __("You did not enter a Dreamweaver title template region to import.", 'import-html-pages');
+		
 	if (!isset($input['root_parent']))
 		$input['root_parent'] = 0;
 	
@@ -513,7 +524,9 @@ function html_import_validate_options($input) {
 	$msg = implode('<br />', $msg);
 	
 	if (empty($msg)) {
-		$msg = sprintf(__('Settings saved. <a href="%s">Ready to import files?</a>'), 'admin.php?import=html');
+		if (empty($options['permalink_structure']))
+			$linkmsg = sprintf(__('If you intend to <a href="%s">set a permalink structure</a>, you should do it before importing so the redirects will be accurate.', 'import-html-pages'), 'options-permalink.php');
+		$msg = sprintf(__('Settings saved. %s <a href="%s">Ready to import files?</a>', 'import-html-pages'), $linkmsg, 'admin.php?import=html');
 		// $msg .= '<pre>'. print_r($input, false) .'</pre>';
 		$type = 'updated';
 	}
