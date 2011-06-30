@@ -337,6 +337,17 @@ class HTML_Import extends WP_Importer {
 				wp_set_post_terms( $post_id, $options[$tax->name], $tax->name, false);
 		}
 		
+		// create redirects from old and new paths; store old path in custom field
+		if (!empty($path)) {
+			$url = esc_url($options['old_url']);
+			$url = rtrim($url, '/');
+			if (!empty($url)) 
+				$old = str_replace($options['root_directory'], $url, $path);
+			else $old = $path;
+			$this->redirects .= "Redirect\t".$old."\t".get_permalink($post_id)."\t[R=301,NC,L]\n";
+			add_post_meta($post_id, 'URL_before_HTML_Import', $old, true);
+		}
+		
 		// create the results table row
 		if (!empty($path)) {
 			if ($post_id & 1) $class = ' class="alternate"'; else $class = '';
@@ -345,16 +356,6 @@ class HTML_Import extends WP_Importer {
 		}
 		else {
 			$this->single_result = sprintf( __('Imported the file as %s.', 'import-html-pages'), '<a href="post.php?action=edit&post='.$post_id.'">'.$my_post['post_title'].'</a>');
-		}
-		
-		// create redirects from old and new paths
-		if (!empty($path)) {
-			$url = esc_url($options['old_url']);
-			$url = rtrim($url, '/');
-			if (!empty($url)) 
-				$old = str_replace($options['root_directory'], $url, $path);
-			else $old = $path;
-			$this->redirects .= "Redirect\t".$old."\t".get_permalink($post_id)."\t[R=301,NC,L]\n";
 		}
 		
 		// store path so we can check for parents later (even if it's empty; need that info for image imports)

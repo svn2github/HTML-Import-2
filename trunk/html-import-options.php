@@ -156,11 +156,11 @@ function html_import_options_page() { ?>
 				</table><td>
 				</tr>
 				
-				<tr id="content-region" <?php if ($options['import_content'] == 'region') echo "style=display:block;"; ?>>
+				<tr id="content-region" <?php if ($options['import_content'] == 'region') echo "style=display:table-row;"; ?>>
 					<th></th>
-					<td>
+					<td colspan="3">
 						<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
-				        <input type="text" name="html_import[content_region]" id="content_region" value="<?php esc_attr_e($options['content_region']); ?>" />  
+				        <input type="text" name="html_import[content_region]" value="<?php esc_attr_e($options['content_region']); ?>" />  
 				        </label><br />
 				        <span class="description"><?php _e("The name of the editable region (e.g. 'Main Content')", 'import-html-pages'); ?></span>
 					</td>
@@ -291,11 +291,11 @@ function html_import_options_page() { ?>
 			</table><td>
 			</tr>
 			
-			<tr id="title-region" <?php if ($options['import_content'] == 'region') echo "style=display:table-row;"; ?>>
+			<tr id="title-region" <?php if ($options['import_title'] == 'region') echo "style=display:table-row;"; ?>>
 				<th></th>
-				<td>
+				<td colspan="3">
 					<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
-			        <input type="text" name="html_import[content_region]" id="content_region" value="<?php esc_attr_e($options['content_region']); ?>" />  
+			        <input type="text" name="html_import[title_region]" id="title_region" value="<?php esc_attr_e($options['title_region']); ?>" />  
 			        </label><br />
 			        <span class="description"><?php _e("The name of the editable region (e.g. 'Page Title')", 'import-html-pages'); ?></span>
 				</td>
