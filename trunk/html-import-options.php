@@ -448,7 +448,7 @@ function html_import_validate_options($input) {
 	// Validation/sanitization. Add errors to $msg[].
 	$msg = array();
 	$linkmsg = '';
-	$type = 'error';
+	$msgtype = 'error';
 	
 	if (validate_file($input['root_directory']) > 0) {
 		$msg[] = __("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages');
@@ -524,14 +524,20 @@ function html_import_validate_options($input) {
 	$msg = implode('<br />', $msg);
 	
 	if (empty($msg)) {
-		if (empty($options['permalink_structure']))
-			$linkmsg = sprintf(__('If you intend to <a href="%s">set a permalink structure</a>, you should do it before importing so the redirects will be accurate.', 'import-html-pages'), 'options-permalink.php');
-		$msg = sprintf(__('Settings saved. %s <a href="%s">Ready to import files?</a>', 'import-html-pages'), $linkmsg, 'admin.php?import=html');
+		
+		$linkstructure = get_option('permalink_structure');
+		if (empty($linkstructure))
+			$linkmsg = sprintf(__('If you intend to <a href="%s">set a permalink structure</a>, you should do it 
+				before importing so the <kbd>.htaccess</kbd> redirects will be accurate.', 'import-html-pages'), 'options-permalink.php');
+		
+		$msg = sprintf(__('Settings saved. %s <a href="%s">Ready to import files?</a>', 'import-html-pages'), 
+				$linkmsg, 'admin.php?import=html');
 		// $msg .= '<pre>'. print_r($input, false) .'</pre>';
-		$type = 'updated';
+		$msgtype = 'updated';
 	}
+	
 	// Send custom updated message
-	add_settings_error( 'html_import', 'html_import', $msg, $type );
+	add_settings_error( 'html_import', 'html_import', $msg, $msgtype );
 	return $input;
 }
 

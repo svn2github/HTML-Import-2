@@ -42,7 +42,7 @@ function html_import_scripts() {
 // set default options 
 function html_import_set_defaults() {
 	$options = html_import_get_options();
-	add_option( 'html_import', $options, '', 'yes' );
+	add_option( 'html_import', $options, '', 'no' );
 }
 register_activation_hook(__FILE__, 'html_import_set_defaults');
 

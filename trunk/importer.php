@@ -176,7 +176,7 @@ class HTML_Import extends WP_Importer {
 				// allowed extensions only, please. If there are files of the proper type, we should create a placeholder parent page.
 				$createpage = @array_intersect($exts, $this->allowed); // suppress warnings about not being an array
 
-				if (!empty($createpage)) { 
+				if (!empty($createpage) && is_post_type_hierarchical($options['type'])) { 
 					$this->get_post($path, true);
 				}
 				
