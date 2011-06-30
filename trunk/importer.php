@@ -69,17 +69,19 @@ class HTML_Import extends WP_Importer {
 	
 	function regenerate_redirects() {
 		$newredirects = ''; 
-		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import'));
-		foreach( $imported as $post ) {
+		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import', 'post_type' => 'any'));
+		foreach( $imported as $post ) { 
 			$old = get_post_custom($post->ID);
 			$old = implode('',$old['URL_before_HTML_Import']);
 			$newredirects .= "Redirect\t".$old."\t".get_permalink($post->ID)."\t[R=301,NC,L]\n";
 		}
 		if (!empty($newredirects)) { ?>
 		<h3><?php _e('.htaccess Redirects', 'import-html-pages'); ?></h3>
+		<p><?php _e('Copy these lines into your <kbd>.htaccess</kbd> <em>above</em> the WordPress section.', 'import-html-pages'); ?></p>
 		<textarea id="import-result"><?php echo $newredirects; ?></textarea>
-		<p><?php printf(__('You can <a href="%s">change your permalink structure</a> and <a href="%s">regenerate the redirects again</a>, or <a href="%s">start over</a>.', 'import-html-pages'), 'options-permalink.php', wp_nonce_url( 'admin.php?import=html&step=2', 'html_import_regenerate' ), 'admin.php?import=html') ?></p>
+		<h3><?php printf(__('All done! You can <a href="%s">change your permalink structure</a> and <a href="%s">regenerate the redirects again</a>, or <a href="%s">start over</a>.', 'import-html-pages'), 'options-permalink.php', wp_nonce_url( 'admin.php?import=html&step=2', 'html_import_regenerate' ), 'admin.php?import=html') ?></h3>
 		<?php }
+		else _e('No posts were found with the URL_before_HTML_Import custom field. Could not generate rewrite rules.', 'import-html-pages');
 	}
 
 	function parent_directory($path) {
@@ -139,6 +141,7 @@ class HTML_Import extends WP_Importer {
 	
 	function handle_accents($str) {
 		$str = htmlentities($str,ENT_NOQUOTES,'UTF-8',false);
+		// now undo some of that...
 		$str = str_replace("&lt;","<",$str);
 	    $str = str_replace("&gt;",">",$str);
 	    $str = str_replace("&amp;",'&',$str);
@@ -379,91 +382,93 @@ class HTML_Import extends WP_Importer {
 	
 	//Handle an individual file import. Borrowed almost entirely from dd32's Add From Server plugin
 	function handle_import_image_file($file, $post_id = 0) {
-		set_time_limit(120);
-		$post = get_post($post_id);
-		$time = $post->post_date_gmt;
-		
-		// A writable uploads dir will pass this test. Again, there's no point overriding this one.
-		if ( ! ( ( $uploads = wp_upload_dir($time) ) && false === $uploads['error'] ) )
-			return new WP_Error( 'upload_error', $uploads['error']);
-
-		$wp_filetype = wp_check_filetype( $file, null );
-
-		extract( $wp_filetype );
-		
-		if ( ( !$type || !$ext ) && !current_user_can( 'unfiltered_upload' ) )
-			return new WP_Error('wrong_file_type', __( 'Sorry, this file type is not permitted for security reasons.' ) );
-
-		$filename = wp_unique_filename( $uploads['path'], basename($file));
-
-		// copy the file to the uploads dir
-		$new_file = $uploads['path'] . '/' . $filename;
-		if ( false === @copy( $file, $new_file ) )
-			return new WP_Error('upload_error', __('Could not find the right path to the image (tried '.$file.'). It could not be imported. Please upload it manually.', 'html-import-pages') );
-/*
-		else
-		 	printf(__('<br /><em>%s</em> is being copied to the uploads directory as <em>%s</em>.', 'html-import-pages'), $file, $new_file);
-/**/
-		// Set correct file permissions
-		$stat = stat( dirname( $new_file ));
-		$perms = $stat['mode'] & 0000666;
-		@chmod( $new_file, $perms );
-		// Compute the URL
-		$url = $uploads['url'] . '/' . $filename;
-		
-		//Apply upload filters
-		$return = apply_filters( 'wp_handle_upload', array( 'file' => $new_file, 'url' => $url, 'type' => $type ) );
-		$new_file = $return['file'];
-		$url = $return['url'];
-		$type = $return['type'];
-
-		$title = preg_replace('!\.[^.]+$!', '', basename($file));
-		$content = '';
-
-		// use image exif/iptc data for title and caption defaults if possible
-		if ( $image_meta = @wp_read_image_metadata($new_file) ) {
-			if ( '' != trim($image_meta['title']) )
-				$title = trim($image_meta['title']);
-			if ( '' != trim($image_meta['caption']) )
-				$content = trim($image_meta['caption']);
-		}
-
-		if ( $time ) {
-			$post_date_gmt = $time;
-			$post_date = $time;
-		} 
-		else {
-			$post_date = current_time('mysql');
-			$post_date_gmt = current_time('mysql', 1);
-		}
-
-		// Construct the attachment array
-		$attachment = array(
-			'post_mime_type' => $type,
-			'guid' => $url,
-			'post_parent' => $post_id,
-			'post_title' => $title,
-			'post_name' => $title,
-			'post_content' => $content,
-			'post_date' => $post_date,
-			'post_date_gmt' => $post_date_gmt
-		);
-
-		//Win32 fix:
-		$new_file = str_replace( strtolower(str_replace('\\', '/', $uploads['basedir'])), $uploads['basedir'], $new_file);
-
 		// see if the attachment already exists
-		$id = array_search($new_file, $this->filearr);
-		if ($id === false) {		
+		$id = array_search($file, $this->filearr);	
+		if ($id === false) { 
+		
+			set_time_limit(120);
+			$post = get_post($post_id);
+			$time = $post->post_date_gmt;
+	
+			// A writable uploads dir will pass this test. Again, there's no point overriding this one.
+			if ( ! ( ( $uploads = wp_upload_dir($time) ) && false === $uploads['error'] ) )
+				return new WP_Error( 'upload_error', $uploads['error']);
+
+			$wp_filetype = wp_check_filetype( $file, null );
+
+			extract( $wp_filetype );
+	
+			if ( ( !$type || !$ext ) && !current_user_can( 'unfiltered_upload' ) )
+				return new WP_Error('wrong_file_type', __( 'Sorry, this file type is not permitted for security reasons.' ) );
+
+
+			$filename = wp_unique_filename( $uploads['path'], basename($file));
+
+			// copy the file to the uploads dir
+			$new_file = $uploads['path'] . '/' . $filename;
+			if ( false === @copy( $file, $new_file ) )
+				return new WP_Error('upload_error', __('Could not find the right path to the image (tried '.$file.'). It could not be imported. Please upload it manually.', 'html-import-pages') );
+		//	else
+		//	 	printf(__('<br /><em>%s</em> is being copied to the uploads directory as <em>%s</em>.', 'html-import-pages'), $file, $new_file);
+	
+			// Set correct file permissions
+			$stat = stat( dirname( $new_file ));
+			$perms = $stat['mode'] & 0000666;
+			@chmod( $new_file, $perms );
+			// Compute the URL
+			$url = $uploads['url'] . '/' . $filename;
+
+			//Apply upload filters
+			$return = apply_filters( 'wp_handle_upload', array( 'file' => $new_file, 'url' => $url, 'type' => $type ) );
+			$new_file = $return['file'];
+			$url = $return['url'];
+			$type = $return['type'];
+
+			$title = preg_replace('!\.[^.]+$!', '', basename($file));
+			$content = '';
+
+			// use image exif/iptc data for title and caption defaults if possible
+			if ( $image_meta = @wp_read_image_metadata($new_file) ) {
+				if ( '' != trim($image_meta['title']) )
+					$title = trim($image_meta['title']);
+				if ( '' != trim($image_meta['caption']) )
+					$content = trim($image_meta['caption']);
+			}
+
+			if ( $time ) {
+				$post_date_gmt = $time;
+				$post_date = $time;
+			} 
+			else {
+				$post_date = current_time('mysql');
+				$post_date_gmt = current_time('mysql', 1);
+			}
+
+			// Construct the attachment array
+			$attachment = array(
+				'post_mime_type' => $type,
+				'guid' => $url,
+				'post_parent' => $post_id,
+				'post_title' => $title,
+				'post_name' => $title,
+				'post_content' => $content,
+				'post_date' => $post_date,
+				'post_date_gmt' => $post_date_gmt
+			);
+
+			//Win32 fix:
+			$new_file = str_replace( strtolower(str_replace('\\', '/', $uploads['basedir'])), $uploads['basedir'], $new_file);
+
+	
 			// Insert attachment
 			$id = wp_insert_attachment($attachment, $new_file, $post_id);
 			if ( !is_wp_error($id) ) {
 				$data = wp_generate_attachment_metadata( $id, $new_file );
 				wp_update_attachment_metadata( $id, $data );
-				$this->filearr[$id] = $new_file;
+				$this->filearr[$id] = $file; // $file contains the original, absolute path to the file
 			}
-		}
-
+			
+		} // if attachment already exists
 		return $id;
 	}
 	
@@ -501,15 +506,14 @@ class HTML_Import extends WP_Importer {
 						$imgpath = $options['root_directory']. '/' . $src;
 					else
 						$imgpath = dirname($path) . '/' . $src;
-						
-					// intersect base path and src
-					$imgpath = $this->url_remove_dot_segments($imgpath);
 				}
+				// intersect base path and src, or just clean up junk
+				$imgpath = $this->url_remove_dot_segments($imgpath);
 			 
 				//  load the image from $imgpath
 				$imgid = $this->handle_import_image_file($imgpath, $id);
 				if ( is_wp_error( $imgid ) )
-					echo '<p>'.$imgid->get_error_message().'</p>';
+					echo '<span class="imgerror">'.$imgid->get_error_message().'</span>';
 				else {
 					$imgpath = wp_get_attachment_url($imgid);
 			
@@ -546,8 +550,9 @@ class HTML_Import extends WP_Importer {
 		if (!empty($results))
 			echo $results;
 		echo '<h3>';
-		printf(__('All done. <a href="%s">Have fun!</a>'), 'media.php');
+		printf(__('All done. <a href="%s">Manage your media files.</a>'), 'media.php');
 		echo '</h3>';
+		//echo '<pre>'.print_r($this->filearr, true).'</pre>';
 	}
 	
 	function print_results($posttype) {
@@ -588,7 +593,7 @@ class HTML_Import extends WP_Importer {
 				return;
 			}
 
-			echo '<h2>'.__( 'Importing...', 'import-html-pages').'</h2>';
+			echo '<h2>'.__( 'Importing HTML files...', 'import-html-pages').'</h2>';
 			$this->file = $file['file'];
 			$this->get_single_file();
 			$this->print_results($options['type']);
@@ -597,6 +602,7 @@ class HTML_Import extends WP_Importer {
 				$this->find_images();
 		}
 		elseif ($_POST['import_files'] == 'directory') {
+			// in case they entered something dumb and didn't fix it when we showed an error...
 			if (validate_file($options['root_directory']) > 0)
 				wp_die(__("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages'));
 			
@@ -652,6 +658,7 @@ class HTML_Import extends WP_Importer {
 		textarea#import-result { height: 12em; width: 100%; }
 		#importing th { width: 32% } 
 		#importing th#id { width: 4% }
+		span.imgerror { display: block; padding-left: 2em; color: #f60; }
 		</style>
 		<?php
 	}
