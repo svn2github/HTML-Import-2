@@ -16,7 +16,7 @@ This plugin will import a directory of files as either pages or posts. You may s
 
 If importing pages, the directory hierarchy will be preserved. Directories containing the specified file types will be imported as empty parent pages. Directories that do not contain the specified file types will be ignored.
 
-As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks.
+As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your .htaccess file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
 
 Options in 2.0:
 
@@ -90,13 +90,14 @@ To work around this problem, you can populate your directories with dummy index.
 == Changelog ==
 
 = 2.0 =
-* New option to import images linked in the imported HTML files.
+* New option to import images linked in the imported HTML files. It can handle most relative paths as well as absolute URLs. The report includes a list of the image paths that couldn't be resolved.
 * Now supports all public custom post types and taxonomies (including hierarchical ones).
 * Much better handling of special characters.
 * The import screen now lets you upload a single file.
 * New user interface. The options form is now broken up into several tabbed sections. Categories and other hierarchical taxonomies are selected with checkboxes.
 * The options form is now separate from the importer. It will now check your settings before the importer runs -- for example, you'll get a warning if your beginning directory isn't readable.
 * The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).
+* Files' old URLs are now stored as custom fields in the imported posts. There's now an option to regenerate the redirects for your imported files, which is handy if you changed your permalink structure after you finished importing.
 * Now makes proper use of the Settings API for better security and data validation.
 * New help screen and user guide.
 = 1.30 =

@@ -66,6 +66,21 @@ class HTML_Import extends WP_Importer {
 		</div>
 	<?php
 	}
+	
+	function regenerate_redirects() {
+		$newredirects = ''; 
+		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import'));
+		foreach( $imported as $post ) {
+			$old = get_post_custom($post->ID);
+			$old = implode('',$old['URL_before_HTML_Import']);
+			$newredirects .= "Redirect\t".$old."\t".get_permalink($post->ID)."\t[R=301,NC,L]\n";
+		}
+		if (!empty($newredirects)) { ?>
+		<h3><?php _e('.htaccess Redirects', 'import-html-pages'); ?></h3>
+		<textarea id="import-result"><?php echo $newredirects; ?></textarea>
+		<p><?php printf(__('You can <a href="%s">change your permalink structure</a> and <a href="%s">regenerate the redirects again</a>, or <a href="%s">start over</a>.', 'import-html-pages'), 'options-permalink.php', wp_nonce_url( 'admin.php?import=html&step=2', 'html_import_regenerate' ), 'admin.php?import=html') ?></p>
+		<?php }
+	}
 
 	function parent_directory($path) {
 		$win = false;
@@ -437,11 +452,16 @@ class HTML_Import extends WP_Importer {
 		//Win32 fix:
 		$new_file = str_replace( strtolower(str_replace('\\', '/', $uploads['basedir'])), $uploads['basedir'], $new_file);
 
-		// Save the data
-		$id = wp_insert_attachment($attachment, $new_file, $post_id);
-		if ( !is_wp_error($id) ) {
-			$data = wp_generate_attachment_metadata( $id, $new_file );
-			wp_update_attachment_metadata( $id, $data );
+		// see if the attachment already exists
+		$id = array_search($new_file, $this->filearr);
+		if ($id === false) {		
+			// Insert attachment
+			$id = wp_insert_attachment($attachment, $new_file, $post_id);
+			if ( !is_wp_error($id) ) {
+				$data = wp_generate_attachment_metadata( $id, $new_file );
+				wp_update_attachment_metadata( $id, $data );
+				$this->filearr[$id] = $new_file;
+			}
 		}
 
 		return $id;
@@ -549,6 +569,7 @@ class HTML_Import extends WP_Importer {
 			if (!empty($this->redirects)) { ?>
 			<h3><?php _e('.htaccess Redirects', 'import-html-pages'); ?></h3>
 			<textarea id="import-result"><?php echo $this->redirects; ?></textarea>
+			<p><?php printf(__('If you need to <a href="%s">change your permalink structure</a>, you can <a href="%s">regenerate the redirects</a> (or do it later from the <a href="%s">options screen</a> under Tools).', 'import-html-pages'), 'options-permalink.php', wp_nonce_url( 'admin.php?import=html&step=2', 'html_import_regenerate' ), 'options-general.php?page=html-import.php') ?></p>
 			<?php }
 		}
 		echo '<h3>';
@@ -616,6 +637,9 @@ class HTML_Import extends WP_Importer {
 				$result = $this->import();
 				if ( is_wp_error( $result ) )
 					echo $result->get_error_message();
+				break;
+			case 2 :
+				$this->regenerate_redirects();
 				break;
 		}
 
