@@ -55,9 +55,9 @@ function register_html_import_settings() {
 function html_import_remove_options() {
 	delete_option('html_import');
 }
-//register_uninstall_hook( __FILE__, 'html_import_remove_options' );
+register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 // for testing only
- register_deactivation_hook( __FILE__, 'html_import_remove_options' );
+// register_deactivation_hook( __FILE__, 'html_import_remove_options' );
 
 // Add option page to admin menu
 function html_import_add_pages() {
