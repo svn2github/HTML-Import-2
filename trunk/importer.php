@@ -21,7 +21,7 @@ class HTML_Import extends WP_Importer {
 	function header() {
 		echo '<div class="wrap">';
 		screen_icon();
-		echo '<h2>'.__('Import HTML Files', 'import-html-pages').'</h2>';
+		echo '<h2>'.__('HTML Importer', 'import-html-pages').'</h2>';
 	}
 
 	function footer() {
@@ -195,7 +195,7 @@ class HTML_Import extends WP_Importer {
 					if (!empty($ext)) $exts[] .= $ext;
 				}
 
-				// allowed extensions only, please. If there are files of the proper type, we should create a placeholder parent page.
+				// allowed extensions only, please. If there are files of the proper type, we should create a parent page using the index file.
 				$createpage = @array_intersect($exts, $this->allowed); // suppress warnings about not being an array
 
 				if (!empty($createpage) && is_post_type_hierarchical($options['type'])) { 
@@ -213,6 +213,7 @@ class HTML_Import extends WP_Importer {
 		// this gets the content AND imports the post because we have to build $this->filearr as we go so we can find the new post IDs of files' parent directories
 		set_time_limit(540);
 		$options = get_option('html_import');
+		$updatepost = false;
 		
 		if ($placeholder) {
 			$title = trim(strrchr($path,'/'),'/');
@@ -254,7 +255,7 @@ class HTML_Import extends WP_Importer {
 				// appending strings unnecessarily so this plugin can be edited in Dreamweaver if needed
 				$titlematch = '/<'.'!-- InstanceBeginEditable name="'.$options['title_region'].'" --'.'>(.*)<'.'!-- InstanceEndEditable --'.'>/isU';
 				preg_match($titlematch, $this->file, $titlematches);
-				$my_post['post_title'] = strip_tags($titlematches[1]);
+				$my_post['post_title'] = strip_tags(trim($titlematches[1]));
 			}
 			else { // it's a tag
 				$titletag = $options['title_tag'];
@@ -264,7 +265,7 @@ class HTML_Import extends WP_Importer {
 				if (!empty($titletagatt))
 					$titlequery .= '[@'.$titletagatt.'="'.$titleattval.'"]';
 				$my_post['post_title'] = $xml->xpath($titlequery);
-				$my_post['post_title'] = strip_tags($my_post['post_title'][0]);
+				$my_post['post_title'] = strip_tags(trim($my_post['post_title'][0]));
 			}
 		
 			$remove = $options['remove_from_title'];
@@ -341,16 +342,27 @@ class HTML_Import extends WP_Importer {
 		
 		// see if the post already exists
 		if ($post_id = post_exists($my_post['post_title'], $my_post['post_content'], $my_post['post_date']))
-			$this->table .= "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("%s (%s) has already been imported", 'html-import-pages'), $my_post['post_title'], $handle) . "</td></tr>";
+			$this->table[] = "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("%s (%s) has already been imported", 'html-import-pages'), $my_post['post_title'], $handle) . "</td></tr>";
 		
-		// insert the post
-		$post_id = wp_insert_post($my_post);
+		// if we're doing hierarchicals and this is an index file of a subdirectory, instead of importing this as a separate page, update the content of the placeholder page we created for the directory
+		if (is_post_type_hierarchical($options['type']) && dirname($path) != $options['root_directory'] && basename($path) == $options['index_file']) {
+			$post_id = array_search(dirname($path), $this->filearr);
+			if ($post_id !== 0)
+				$updatepost = true;
+		}
+		
+		if ($updatepost) { 
+			$my_post['ID'] = $post_id; 
+			wp_update_post( $my_post );
+		}
+		else // insert new post
+			$post_id = wp_insert_post($my_post);
 		
 		// handle errors
 		if ( is_wp_error( $post_id ) )
-			$this->table .= "<tr><th class='error'>--</th><td colspan='3' class='error'> " . $post_id /* error msg */ . "</td></tr>";
+			$this->table[] = "<tr><th class='error'>--</th><td colspan='3' class='error'> " . $post_id /* error msg */ . "</td></tr>";
 		if (!$post_id) 
-			$this->table .= "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("Could not import %s. You should copy its contents manually.", 'html-import-pages'), $handle) . "</td></tr>";
+			$this->table[] = "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("Could not import %s. You should copy its contents manually.", 'html-import-pages'), $handle) . "</td></tr>";
 		
 		// if no errors, handle all the taxonomies
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects', 'and' );
@@ -360,7 +372,7 @@ class HTML_Import extends WP_Importer {
 		}
 		
 		// create redirects from old and new paths; store old path in custom field
-		if (!empty($path)) {
+		if (!empty($path) && !$updatepost) {
 			$url = esc_url($options['old_url']);
 			$url = rtrim($url, '/');
 			if (!empty($url)) 
@@ -373,15 +385,17 @@ class HTML_Import extends WP_Importer {
 		// create the results table row
 		if (!empty($path)) {
 			if ($post_id & 1) $class = ' class="alternate"'; else $class = '';
-			$this->table .= " <tr".$class."><th>".$post_id."</th><td>".$path."</td><td>".get_permalink($post_id).'</td><td>
+			$this->table[$post_id] = " <tr".$class."><th>".$post_id."</th><td>".$path."</td><td>".get_permalink($post_id).'</td><td>
 				<a href="post.php?action=edit&post='.$post_id.'">'.esc_html($my_post['post_title'])."</a></td></tr>";
 		}
 		else {
 			$this->single_result = sprintf( __('Imported the file as %s.', 'import-html-pages'), '<a href="post.php?action=edit&post='.$post_id.'">'.$my_post['post_title'].'</a>');
 		}
 		
-		// store path so we can check for parents later (even if it's empty; need that info for image imports)
-		$this->filearr[$post_id] = $path;
+		// store path so we can check for parents later (even if it's empty; need that info for image imports). 
+		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
+		if (!$updatepost)
+			$this->filearr[$post_id] = $path;
 	}
 	
 	
@@ -572,7 +586,7 @@ class HTML_Import extends WP_Importer {
 			<th><?php _e('Old path', 'import-html-pages'); ?></th>
 			<th><?php _e('New path', 'import-html-pages'); ?></th>
 			<th><?php _e('Title', 'import-html-pages'); ?></th>
-			</tr></thead><tbody> <?php echo $this->table; ?> </tbody></table> 
+			</tr></thead><tbody> <?php foreach ($this->table as $row) echo $row; ?> </tbody></table> 
 		
 			<?php
 			flush();

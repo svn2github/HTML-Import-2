@@ -109,6 +109,7 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 * The options form is now separate from the importer. It will now check your settings before the importer runs -- for example, you'll get a warning if your beginning directory isn't readable.
 * The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).
 * Files' old URLs are now stored as custom fields in the imported posts. There's now an option to regenerate the redirects for your imported files, which is handy if you changed your permalink structure after you finished importing.
+* When importing directories as hierarchical post types (like pages), the importer now uses the default directory file (like index.html) for the parent page's contents
 * Now makes proper use of the Settings API for better security and data validation.
 * New help screen and <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">user guide</a>.
 * Now requires at least WP 3.0.

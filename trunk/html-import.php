@@ -2,8 +2,8 @@
 /*
 Plugin Name: Import HTML Pages
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
-Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup.
-Version: 2.0-beta
+Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
+Version: 2.0-beta2
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 License: GPL 2
@@ -69,33 +69,24 @@ function html_import_add_pages() {
 	add_action( 'admin_init', 'register_html_import_settings' );
 		
 	// Help screen 
-	$text = '<div id="donation">';
-	$text .= '<h3>' . __( 'Donate', 'import-html-pages' ) . '</h3>';
-	$text .= '<p>'.__("Did this plugin save you hours and hours of copying? Buy me a cookie, if you don't mind!", 'import-html-pages' ).'</p>';
-	$text .= '<!-- Donation link -->
-    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-        <input type="hidden" name="cmd" value="_s-xclick">
-        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-        </form>';
-	$text .= '</div>';
+	$text .= '<p>'.sprintf(__('This is a complicated importer with lots of options. If you have never used this importer before, you should take a look at the <a href="%s">User Guide</a>.', 'import-html-pages' ), 'http://sillybean.net/code/wordpress/html-import-2/user-guide/').'</p>';
+	$text .= '<p>'.__("You need to look through the first five tabs and save your settings before you run the importer. The sixth (Tools) contains links to some tools that are helpful after you've imported.", 'import-html-pages' ).'</p>';
 	
-		$text .= '<h3>'.__('Tips', 'html-import-pages')."</h3>
-	    <ol>
-	        <li>" . __("If things didn't work out the way you intended and you need to delete all the posts or pages you just imported, make a 
-						 note of the first and last IDs imported and use the <a href='http://www.wesg.ca/2008/07/wordpress-plugin-mass-page-remover/'>
-						 Mass Page Remover plugin</a> to remove them all at once.", 'import-html-pages' )."</li>
-	      	<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
-	    </ol>";
-		$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
+	$text .= '<h3>'.__('Tips', 'html-import-pages')."</h3>
+    <ol>
+		<li>" . __("If there is already some content in this site, you should back up before you import.", 'import-html-pages' )."</li>        
+		<li>" . __("Before you import, deactivate any crosspost or notification plugins.", 'import-html-pages' )."</li>
+		<li>" . __("Try uploading a single file before you run the importer on the whole directory. Check the imported page and see whether you need to adjust your content and/or title settings.", 'import-html-pages' )."</li>
+		<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
+    </ol>";
+	$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
 
-		$text .= '<ul>';
-		$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
-		$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
-		$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
-		$text .= '</ul>';
-
+	$text .= '<ul>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
+	$text .= '</ul>';
+	
 	add_contextual_help( $pg, $text );
 }
 add_action('admin_menu', 'html_import_add_pages');

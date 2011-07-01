@@ -4,6 +4,7 @@ function html_import_get_options() {
 	$defaults = array(
 		'root_directory' => ABSPATH.__('html-files-to-import', 'import-html-pages'),
 		'old_url' => '',
+		'index_file' => 'index.html',
 		'file_extensions' => 'html,htm,shtml',
 		'skipdirs' => __('images,includes', 'import-html-pages'),
 		'status' => 'publish',
@@ -83,6 +84,16 @@ function html_import_options_page() { ?>
 					</p></td>
 		        </tr>
 		
+				<tr valign="top">
+			        <th scope="row"><?php _e("Default file", 'import-html-pages'); ?></th>
+			        <td><p><label><input type="text" name="html_import[index_file]" id="index_file" 
+						value="<?php esc_attr_e($options['index_file']); ?>" class="widefloat" /> </label><br />
+						<span class="description">
+						<?php _e("Enter the name of the default file (index.html, default.htm) for directories on this server.", 'import-html-pages'); ?>
+						</span>
+					</p></td>
+		        </tr>
+				
 				<tr valign="top">
 			        <th scope="row"><?php _e("File extensions to include", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[file_extensions]" id="file_extensions" 
@@ -446,6 +457,11 @@ function html_import_options_page() { ?>
 						<p><?php printf(__('<a href="%s">Add Linked Images to Gallery</a> is helpful if you have imported data using other plugins and you would like to import linked images. However, it handles only images that are referenced with complete URLs; relative paths will not work.', 'import-html-pages'), 'http://wordpress.org/extend/plugins/add-linked-images-to-gallery-v01/'); ?></p>
 					</td>
 				</tr>
+				<tr>
+					<th><?php _e( 'Donate', 'import-html-pages' ) ?></th>
+					<td>
+						<p><?php printf(__('If this importer has saved you hours of copying and pasting, a <a href="%s">donation toward future development</a> would be much appreciated!', 'import-html-pages'), 'http://sillybean.net/code/wordpress/html-import-2/'); ?></p>
+					</td>
 			</table>
 			
 	

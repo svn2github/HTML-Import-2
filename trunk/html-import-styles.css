@@ -14,7 +14,6 @@ p.taginput { float: left; margin: 1em 1em 1em 0; width: 22.2em; }
 p.taginput input { width: 100%; }
 td.taginput { width: 33%; vertical-align: top; }
 .clean-region th { text-indent: 2em; }
-div#donation { float: right; width: 120px; margin: 0 0 1em 1em; }
 body.settings_page_html-import #footer { display: none; }
 /* jQuery tabs */
 .ui-tabs-nav { border-bottom: 1px solid #ccc; height: 27px; margin: 20px 0; padding: 0; }
