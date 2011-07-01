@@ -58,7 +58,7 @@ Yes, it has been used to import over a thousand pages, and did so in a couple of
 
 = I import a few files and then the script times out. What can I do? =
 
-The importer will attempt to work around your server's max_execution_time setting for PHP, but some servers don't allow this. You can try to increase it by adding a line to your `.htaccess` file:
+The importer will attempt to work around your server's `max_execution_time` setting for PHP (usually 30 seconds), but some servers don't allow this. You can try to increase it by adding a line to your `.htaccess` file:
 
 `php_value max_execution_time 160`
 
@@ -157,7 +157,6 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 
 2.1: 
 * support for custom fields
-* use index.html or other default file as directory parent page
 * fix internal links? 
 
 = Thanks =
