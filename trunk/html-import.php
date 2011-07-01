@@ -68,23 +68,10 @@ function html_import_add_pages() {
 // register setting
 	add_action( 'admin_init', 'register_html_import_settings' );
 		
-// Help screen 
-	$text = '<h3>'.__('Tips', 'html-import-pages')."</h3>
-    <ol>
-        <li>" . __("If things didn't work out the way you intended and you need to delete all the posts or pages you just imported, make a 
-					 note of the first and last IDs imported and use the <a href='http://www.wesg.ca/2008/07/wordpress-plugin-mass-page-remover/'>
-					 Mass Page Remover plugin</a> to remove them all at once.", 'import-html-pages' )."</li>
-      	<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
-    </ol>";
-	$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
-
-	$text .= '<ul>';
-	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
-	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
-	$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
-	$text .= '</ul>';
-
-	$text .= "Did this plugin save you hours and hours of copying? Buy me a cookie, if you don't mind!</p>";
+	// Help screen 
+	$text = '<div id="donation">';
+	$text .= '<h3>' . __( 'Donate', 'import-html-pages' ) . '</h3>';
+	$text .= '<p>'.__("Did this plugin save you hours and hours of copying? Buy me a cookie, if you don't mind!", 'import-html-pages' ).'</p>';
 	$text .= '<!-- Donation link -->
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
         <input type="hidden" name="cmd" value="_s-xclick">
@@ -92,6 +79,22 @@ function html_import_add_pages() {
         <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
         </form>';
+	$text .= '</div>';
+	
+		$text .= '<h3>'.__('Tips', 'html-import-pages')."</h3>
+	    <ol>
+	        <li>" . __("If things didn't work out the way you intended and you need to delete all the posts or pages you just imported, make a 
+						 note of the first and last IDs imported and use the <a href='http://www.wesg.ca/2008/07/wordpress-plugin-mass-page-remover/'>
+						 Mass Page Remover plugin</a> to remove them all at once.", 'import-html-pages' )."</li>
+	      	<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
+	    </ol>";
+		$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
+
+		$text .= '<ul>';
+		$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
+		$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
+		$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
+		$text .= '</ul>';
 
 	add_contextual_help( $pg, $text );
 }

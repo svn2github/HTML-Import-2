@@ -484,7 +484,7 @@ function html_import_validate_options($input) {
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
 	elseif (!file_exists($input['root_directory'])) {
-		$msg[] = __("The beginning directory you entered is not readable. Please check its permissions and try again.", 'import-html-pages');
+		$msg[] = __("The beginning directory you entered is not readable. Please check its permissions and try again. (You may ignore this warning if you plan to upload a single file to import.)", 'import-html-pages');
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
 		
