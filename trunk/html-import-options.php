@@ -548,7 +548,12 @@ function html_import_validate_options($input) {
 	$user_info = get_userdata($input['user']);
 	if ($user_info === false)
 		$msg[] = "The author you specified does not exist.";
+		
+	// If settings have been saved at least once, we can turn this off.
+	$input['firstrun'] = false;
 	
+	
+	// Send custom updated message
 	$msg = implode('<br />', $msg);
 	
 	if (empty($msg)) {
@@ -564,10 +569,6 @@ function html_import_validate_options($input) {
 		$msgtype = 'updated';
 	}
 	
-	// If settings have been saved at least once, we can turn this off.
-	$input['firstrun'] = false;
-	
-	// Send custom updated message
 	add_settings_error( 'html_import', 'html_import', $msg, $msgtype );
 	return $input;
 }

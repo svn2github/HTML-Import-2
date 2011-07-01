@@ -29,11 +29,12 @@ class HTML_Import extends WP_Importer {
 	}
 	
 	function greet() {
+		$options = get_option('html_import');
 		?>
 		<div class="narrow">
 		<p><?php _e('This importer allows you to import HTML files as posts or pages. ', 'import-html-pages'); ?></p>
 		<?php 
-		if (!$options['firstrun']) {
+		if ($options['firstrun'] === true) {
 		echo '<p>'.sprintf(__('If you have not yet visited the <a href="%s">HTML Import options page</a>, please do so now. You need to specify which portions of your HTML files should be imported before you proceed.', 'import-html-pages'), 'options-general.php?page=html-import.php').'</p>'; 
 		} 
 		else { ?>
@@ -54,7 +55,7 @@ class HTML_Import extends WP_Importer {
 		</p>
 		
 		<p id="directory">
-			<?php $options = get_option('html_import');
+			<?php
 			printf(__('Your files will be imported from <kbd>%s</kbd>. <a href="%s">Change directories</a>.', 'import-html-pages'),
 			esc_html($options['root_directory']), 'options-general.php?page=html-import.php'); ?>
 		</p>
