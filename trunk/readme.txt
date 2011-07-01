@@ -168,8 +168,7 @@ Thanks to...
 
 == Screenshots ==
 
-1. Directory to be imported
-2. Resulting pages
-3. Options screen
-4. Results: imported pages and rewrite rules
-5. New in 1.1: clean up Word HTML option
+1. Settings for files to import
+2. Content settings
+3. Importer screen
+4. Completed import: pages, rewrite rules, and images

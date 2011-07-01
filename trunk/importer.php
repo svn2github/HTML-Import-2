@@ -556,7 +556,7 @@ class HTML_Import extends WP_Importer {
 		if (!empty($results))
 			echo $results;
 		echo '<h3>';
-		printf(__('All done. <a href="%s">Manage your media files.</a>'), 'media.php');
+		printf(__('All done. <a href="%s">Go to the Media Library.</a>'), 'media.php');
 		echo '</h3>';
 		//echo '<pre>'.print_r($this->filearr, true).'</pre>';
 	}
