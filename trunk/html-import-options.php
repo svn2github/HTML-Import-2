@@ -100,14 +100,6 @@ function html_import_options_page() { ?>
 						</span>
 					</p></td>
 		        </tr>
-		
-				<tr valign="top">
-			        <th><?php _e("Import images", 'import-html-pages'); ?></th>
-					<td>
-						<label><input name="html_import[import_images]" id="import_images"  type="checkbox" value="1" 
-							<?php checked($options['import_images'], '1'); ?> /> </label>
-					</td>
-		        </tr>
 		    </table>
 		
 		
@@ -169,6 +161,13 @@ function html_import_options_page() { ?>
 				</tr>
 				<tr>
 				<th><?php _e("More content options", 'import-html-pages'); ?></th>
+				<td>
+					<label><input name="html_import[import_images]" id="import_images"  type="checkbox" value="1" 
+						<?php checked($options['import_images'], '1'); ?> /> <?php _e("Import linked images", 'import-html-pages'); ?></label>
+				</td>
+				</tr>
+				<tr>
+				<th></th>
 				<td>
 					<label><input name="html_import[meta_desc]" id="meta_desc" value="1" type="checkbox" <?php checked($options['meta_desc']); ?> /> 
 						 <?php _e("Use meta description as excerpt", 'import-html-pages'); ?></label>

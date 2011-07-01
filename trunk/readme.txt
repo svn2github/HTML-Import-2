@@ -154,7 +154,10 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 
 = Roadmap =
 
-2.1: fix internal liks? and support for custom fields
+2.1: 
+* support for custom fields
+* use index.html or other default file as directory parent page
+* fix internal links? 
 
 = Thanks =
 
