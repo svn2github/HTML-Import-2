@@ -69,7 +69,7 @@ function html_import_options_page() { ?>
 							</label><br />
 							<span class="description">
 								<?php _e('The absolute path to the files you want to import.', 'html-import-pages'); ?><br />
-								<?php printf(__('Hint: the absolute path to this WordPress installation is: %s', 'html-import-pages'), '<kbd>'.ABSPATH.'</kbd>'); ?>
+								<?php printf(__('Hint: the absolute path to this WordPress installation is: %s', 'html-import-pages'), '<kbd>'.rtrim(ABSPATH, '/').'</kbd>'); ?>
 							</span>
 						</p></td>
 		        </tr>
@@ -495,15 +495,19 @@ function html_import_validate_options($input) {
 	$linkmsg = '';
 	$msgtype = 'error';
 	
-	if (validate_file($input['root_directory']) > 0) {
+	// sanitize path for Win32
+	$input['root_directory'] = str_replace('\\' ,'/', $input['root_directory']); 
+	$input['root_directory'] = preg_replace('|/+|', '/', $input['root_directory']);
+	
+	if (validate_import_file($input['root_directory']) > 0) {
 		$msg[] = __("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages');
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
-	elseif (!file_exists($input['root_directory'])) {
+/*	elseif (!file_exists($input['root_directory'])) {
 		$msg[] = __("The beginning directory you entered is not readable. Please check its permissions and try again. (You may ignore this warning if you plan to upload a single file to import.)", 'import-html-pages');
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
-		
+*/		
 	$input['root_directory'] = rtrim($input['root_directory'], '/');
 	$input['old_url'] = esc_url(rtrim($input['old_url'], '/'));
 	
@@ -590,6 +594,24 @@ function html_import_validate_options($input) {
 	
 	add_settings_error( 'html_import', 'html_import', $msg, $msgtype );
 	return $input;
+}
+
+// custom file validator to accommodate Win32 paths starting with drive letter
+// based on validate_file
+function validate_import_file( $file, $allowed_files = '' ) {
+   if ( false !== strpos( $file, '..' ))
+       return 1;
+
+    if ( false !== strpos( $file, './' ))
+       return 1;
+
+   if (!empty ( $allowed_files ) && (!in_array( $file, $allowed_files ) ) )
+       return 3;
+/*
+    if (':' == substr( $file, 1, 1 ))
+        return 2;
+*/
+   return 0;
 }
 
 // custom walker so we can change the name attribute of the category checkboxes (until #16437 is fixed)

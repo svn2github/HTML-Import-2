@@ -623,7 +623,7 @@ class HTML_Import extends WP_Importer {
 		}
 		elseif ($_POST['import_files'] == 'directory') {
 			// in case they entered something dumb and didn't fix it when we showed an error on the options page...
-			if (validate_file($options['root_directory']) > 0)
+			if (validate_import_file($options['root_directory']) > 0)
 				wp_die(__("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages'));
 			
 			$this->table = '';
