@@ -515,6 +515,8 @@ function html_import_validate_options($input) {
 	$input['file_extensions'] = str_replace('.', '', $input['file_extensions']);
 	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
 	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
+	$input['allow_tags'] = str_replace('/', '', $input['allow_tags']);
+	$input['allow_tags'] = str_replace(' ', '', $input['allow_tags']);
 	$input['allow_attributes'] = str_replace(' ', '', $input['allow_attributes']);
 	
 	if ( !in_array($input['status'], get_post_stati()) ) 

@@ -59,16 +59,18 @@ register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 // for testing only
 // register_deactivation_hook( __FILE__, 'html_import_remove_options' );
 
-// Add option page to admin menu
 function html_import_add_pages() {
+// Add option page to admin menu
 	$pg = add_options_page(__('HTML Import', 'import-html-pages'), __('HTML Import', 'import-html-pages'), 'manage_options', basename(__FILE__), 'html_import_options_page');
+	
+// Add styles and scripts
 	add_action( 'admin_print_styles-'.$pg, 'add_html_import_styles' );
 	add_action( 'admin_print_scripts-'.$pg, 'html_import_scripts' );
 
 // register setting
 	add_action( 'admin_init', 'register_html_import_settings' );
 		
-	// Help screen 
+// Help screen 
 	$text = '<p>'.sprintf(__('This is a complicated importer with lots of options. If you have never used this importer before, you should take a look at the <a href="%s">User Guide</a>.', 'import-html-pages' ), 'http://sillybean.net/code/wordpress/html-import-2/user-guide/').'</p>';
 	$text .= '<p>'.__("You need to look through the first five tabs and save your settings before you run the importer. The sixth (Tools) contains links to some tools that are helpful after you've imported.", 'import-html-pages' ).'</p>';
 	
