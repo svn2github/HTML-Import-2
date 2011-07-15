@@ -1,15 +1,15 @@
 <?php
 /*
-Plugin Name: Import HTML Pages
+Plugin Name: HTML Import 2
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
-Version: 2.0-beta2
+Version: 2.0-beta3
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 License: GPL 2
 */
 
-require_once ('importer.php');
+require_once ('html-importer.php');
 require_once ('html-import-options.php');
 
 // plugin_activation_check() by Otto
@@ -69,15 +69,15 @@ function html_import_add_pages() {
 	add_action( 'admin_init', 'register_html_import_settings' );
 		
 	// Help screen 
-	$text .= '<p>'.sprintf(__('This is a complicated importer with lots of options. If you have never used this importer before, you should take a look at the <a href="%s">User Guide</a>.', 'import-html-pages' ), 'http://sillybean.net/code/wordpress/html-import-2/user-guide/').'</p>';
+	$text = '<p>'.sprintf(__('This is a complicated importer with lots of options. If you have never used this importer before, you should take a look at the <a href="%s">User Guide</a>.', 'import-html-pages' ), 'http://sillybean.net/code/wordpress/html-import-2/user-guide/').'</p>';
 	$text .= '<p>'.__("You need to look through the first five tabs and save your settings before you run the importer. The sixth (Tools) contains links to some tools that are helpful after you've imported.", 'import-html-pages' ).'</p>';
 	
 	$text .= '<h3>'.__('Tips', 'html-import-pages')."</h3>
     <ol>
-		<li>" . __("If there is already some content in this site, you should back up before you import.", 'import-html-pages' )."</li>        
+		<li>" . __("If there is already some content in this site, you should back up your database before you import.", 'import-html-pages' )."</li>        
 		<li>" . __("Before you import, deactivate any crosspost or notification plugins.", 'import-html-pages' )."</li>
 		<li>" . __("Try uploading a single file before you run the importer on the whole directory. Check the imported page and see whether you need to adjust your content and/or title settings.", 'import-html-pages' )."</li>
-		<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then skip that directory when you run the importer again on the parent directory.", 'import-html-pages' )."</li>
+		<li>" . __("Need to import both posts and pages? Run the importer on a subdirectory (e.g. 'news'), then add the subdirectory name to the list of skipped directories and run the importer again on the parent directory.", 'import-html-pages' )."</li>
     </ol>";
 	$text .= '<h3>' . __( 'More Help', 'import-html-pages' ) . '</h3>';
 

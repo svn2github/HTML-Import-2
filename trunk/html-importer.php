@@ -73,7 +73,7 @@ class HTML_Import extends WP_Importer {
 	
 	function regenerate_redirects() {
 		$newredirects = ''; 
-		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import', 'post_type' => 'any'));
+		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import', 'post_type' => 'any', 'post_status' => 'any', 'numberposts' => '-1'));
 		foreach( $imported as $post ) { 
 			$old = get_post_custom($post->ID);
 			$old = implode('',$old['URL_before_HTML_Import']);
@@ -86,6 +86,29 @@ class HTML_Import extends WP_Importer {
 		<h3><?php printf(__('All done! You can <a href="%s">change your permalink structure</a> and <a href="%s">regenerate the redirects again</a>, or <a href="%s">start over</a>.', 'import-html-pages'), 'options-permalink.php', wp_nonce_url( 'admin.php?import=html&step=2', 'html_import_regenerate' ), 'admin.php?import=html') ?></h3>
 		<?php }
 		else _e('No posts were found with the URL_before_HTML_Import custom field. Could not generate rewrite rules.', 'import-html-pages');
+	}
+	
+	function fix_hierarchy($postid, $path) {
+		$options = get_option('html_import');
+		$parentdir = rtrim($this->parent_directory($path), '/');
+		
+		// create array of parent directories, starting with the index file's parent and moving up to the root directory
+		while ($parentdir != $options['root_directory']) {
+			$parentID = array_search($parentdir, $this->filearr);
+			if ($parentID === false)
+				$parentarr[] = $parentdir;
+			$parentdir = rtrim($this->parent_directory($parentdir), '/');
+		}
+		// reverse the array so we start at the root -- this way the parents can be found when we search in $this->get_post
+		$parentarr = array_reverse($parentarr);
+		foreach ($parentarr as $parentdir)
+			$parentID = $this->get_post($parentdir, true);
+		
+		// now fix the parent ID of the original index file (in $postid)
+		$parentdir = array_pop($parentarr);
+		$my_post['ID'] = $postid;
+		$my_post['post_parent'] = array_search($parentdir, $this->filearr);
+		wp_update_post( $my_post );
 	}
 
 	function parent_directory($path) {
@@ -143,13 +166,23 @@ class HTML_Import extends WP_Importer {
 		return $string;
 	}
 	
-	function handle_accents($str) {
-		$str = htmlentities($str,ENT_NOQUOTES,'UTF-8',false);
-		// now undo some of that...
-		$str = str_replace("&lt;","<",$str);
-	    $str = str_replace("&gt;",">",$str);
-	    $str = str_replace("&amp;",'&',$str);
-		return $str;
+	function handle_accents() {
+		// from: http://www.php.net/manual/en/domdocument.loadhtml.php#91513
+		$content = $this->file;
+		if (!empty($content) && function_exists('mb_convert_encoding')) {
+			mb_detect_order("ASCII,UTF-8,ISO-8859-1,windows-1252,iso-8859-15");
+            if (empty($encod))
+                $encod = mb_detect_encoding($content);
+            	$headpos = mb_strpos($content,'<head>');
+            if (FALSE === $headpos)
+                $headpos= mb_strpos($content,'<HEAD>');
+            if (FALSE !== $headpos) {
+                $headpos+=6;
+                $content = mb_substr($content,0,$headpos) . '<meta http-equiv="Content-Type" content="text/html; charset='.$encod.'">' .mb_substr($content,$headpos);
+            }
+            $content = mb_convert_encoding($content, 'HTML-ENTITIES', $encod);
+        }
+		return $content;
 	}
 	
 	function get_single_file() {
@@ -245,7 +278,12 @@ class HTML_Import extends WP_Importer {
 			$doc->strictErrorChecking = false; // ignore invalid HTML, we hope
 			$doc->preserveWhiteSpace = false;  
 			$doc->formatOutput = false;  // speed this up
-			@$doc->loadHTML($this->file);
+			if (!empty($options['encode'])) {  // we have to deal with character encoding BEFORE calling loadHTML() - eureka!
+				$content = $this->handle_accents();
+				@$doc->loadHTML($content);
+			}
+			else
+				@$doc->loadHTML($this->file);
 			$xml = @simplexml_import_dom($doc);
 			
 			// start building the WP post object to insert
@@ -313,9 +351,6 @@ class HTML_Import extends WP_Importer {
 			if (!empty($my_post['post_content'])) {
 				if (!empty($options['clean_html']))
 					$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
-
-				if (!empty($options['encode']))
-					$my_post['post_content'] = $this->handle_accents($my_post['post_content']);
 				
 				// get rid of remaining newlines; basic HTML cleanup
 				$my_post['post_content'] = str_replace('&#13;', ' ', $my_post['post_content']); 
@@ -396,6 +431,8 @@ class HTML_Import extends WP_Importer {
 		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
 		if (!$updatepost)
 			$this->filearr[$post_id] = $path;
+		else  // index files will have an incomplete hierarchy if there were empty directories in its path
+			$this->fix_hierarchy($post_id, $path);	
 	}
 	
 	
@@ -630,7 +667,7 @@ class HTML_Import extends WP_Importer {
 			$this->redirects = '';
 			$this->filearr = array();
 			$skipdirs = explode(",", $options['skipdirs']);
-			$this->skip = array_merge($skipdirs, array('.','..'));
+			$this->skip = array_merge($skipdirs, array( '.', '..', '_vti_cnf', '_notes' ));
 			$this->allowed = explode(",", $options['file_extensions']);
 			
 			echo '<h2>'.__( 'Importing HTML files...', 'import-html-pages').'</h2>';

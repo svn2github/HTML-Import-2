@@ -6,7 +6,7 @@ function html_import_get_options() {
 		'old_url' => '',
 		'index_file' => 'index.html',
 		'file_extensions' => 'html,htm,shtml',
-		'skipdirs' => __('images,includes', 'import-html-pages'),
+		'skipdirs' => __('images,includes,Templates', 'import-html-pages'),
 		'status' => 'publish',
 		'root_parent' => 0,
 		'type' => 'page',
@@ -17,7 +17,7 @@ function html_import_get_options() {
 		'content_tagatt' => __('id', 'import-html-pages'),
 		'content_attval' => __('content', 'import-html-pages'),
 		'clean_html' => 0,
-		'encode' => 0,
+		'encode' => 1,
 		'allow_tags' => '<p><br><img><a><ul><ol><li><dl><dt><dd><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
 		'import_title' => 'tag',
@@ -375,7 +375,7 @@ function html_import_options_page() { ?>
 			<tr>
 			<th><?php _e("Set author to", 'import-html-pages'); ?></th>
 			<td>
-				<?php wp_dropdown_users(array('selected' => $options['user'], 'name' => 'html_import[user]')); ?>
+				<?php wp_dropdown_users(array('selected' => $options['user'], 'name' => 'html_import[user]', 'who' => 'authors')); ?>
 			</td>
 			</tr>
 			<tr id="hierarchy" <?php if (!is_post_type_hierarchical($options['type'])) echo "style=display:none;"; ?>>
@@ -406,15 +406,15 @@ function html_import_options_page() { ?>
 					<?php foreach ( $taxonomies as $tax ) :
 						if (!is_taxonomy_hierarchical($tax->name)) :
 						// non-hierarchical
-							$nonhierarchical .= '<p class="taginput"><label>'.esc_html($tax->label).'<br />';
+							$nonhierarchical .= '<p class="taxoinput"><label>'.esc_html($tax->label).'<br />';
 							$nonhierarchical .= '<input type="text" name="html_import['.esc_attr($tax->name).']" 
 							 	value="'.esc_attr($options[$tax->name]).'" /></label></p>';
 						else:
 						// hierarchical 
 						?>
-						 	<div class="categorychecklistbox">
-								<label><?php echo esc_html($tax->label); ?><br />
-					        <ul class="categorychecklist">
+						 	<div class="taxochecklistbox">
+								<?php echo esc_html($tax->label); ?><br />
+					        <ul class="taxochecklist">
 					     	<?php
 							if (!isset($options[$tax->name])) $selected = '';
 							else $selected = $options[$tax->name];
@@ -484,8 +484,7 @@ function html_import_options_page() { ?>
 			});
 			$(".ui-tabs").tabs({ fx: { opacity: "toggle", duration: "fast" } });
 		});
-	</script>    
-	
+	</script>
 	<?php 
 }
 
@@ -503,7 +502,8 @@ function html_import_validate_options($input) {
 		$msg[] = __("The beginning directory you entered is not an absolute path. Relative paths are not allowed here.", 'import-html-pages');
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
-/*	elseif (!file_exists($input['root_directory'])) {
+/*	// removed for Win32 compatibility
+	elseif (!file_exists($input['root_directory'])) {
 		$msg[] = __("The beginning directory you entered is not readable. Please check its permissions and try again. (You may ignore this warning if you plan to upload a single file to import.)", 'import-html-pages');
 		$input['root_directory'] = ABSPATH.__('html-files-to-import', 'import-html-pages');
 	}
@@ -569,8 +569,11 @@ function html_import_validate_options($input) {
 	// see if this is a real user
 	$input['user'] = absint($input['user']);
 	$user_info = get_userdata($input['user']);
-	if ($user_info === false)
+	if ($user_info === false) {
 		$msg[] = "The author you specified does not exist.";
+		$currentuser = wp_get_current_user();
+		$input['user'] = $currentuser->ID;
+	}
 		
 	// If settings have been saved at least once, we can turn this off.
 	$input['firstrun'] = false;
@@ -597,7 +600,7 @@ function html_import_validate_options($input) {
 }
 
 // custom file validator to accommodate Win32 paths starting with drive letter
-// based on validate_file
+// based on WP's validate_file()
 function validate_import_file( $file, $allowed_files = '' ) {
    if ( false !== strpos( $file, '..' ))
        return 1;

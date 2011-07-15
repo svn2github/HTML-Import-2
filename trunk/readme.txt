@@ -68,31 +68,6 @@ It's also quite possible that the script is trying to use more memory than your 
 
 `php_value memory_limit 1024M`
 
-= Known bugs =
-
-1. The plugin will create an empty parent page for directories that contain the imported file types. However, it will not create parent pages for directories containing only other directories, even if those directories contain the right kinds of files.
-
-For example, if your directory structure is:
-
-    2004/
-        conferences/
-            index.html
-            hotels.html
-        workshops/
-            index.html
-            schedule.html
-    2005/
-        conferences/
-            index.html
-            hotels.html
-        workshops/
-            index.html
-            schedule.html
-
-The conferences and workshops directories will be created as parent pages, but the 2004 and 2005 directories will not.
-
-To work around this problem, you can populate your directories with dummy index.html pages. They should contain at least the `<html>`, `<head>`, and `<title>` tags, and you can give them distinctive titles (e.g. "DUMMY") so you can easily find and delete them once all your files have been imported.
-
 == Upgrade Notice ==
 
 = 2.0 =
@@ -103,21 +78,22 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 = 2.0 =
 * New option to import images linked in the imported HTML files. It can handle most relative paths as well as absolute URLs. The report includes a list of the image paths that couldn't be resolved.
 * Now supports all public custom post types and taxonomies (including hierarchical ones).
-* Much better handling of special characters.
+* Completely different, much better handling of special characters.
 * The import screen now lets you upload a single file.
 * New user interface. The options form is now broken up into several tabbed sections. Categories and other hierarchical taxonomies are selected with checkboxes.
 * The options form is now separate from the importer. It will now check your settings before the importer runs -- for example, you'll get a warning if your beginning directory isn't readable.
 * The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).
 * Files' old URLs are now stored as custom fields in the imported posts. There's now an option to regenerate the redirects for your imported files, which is handy if you changed your permalink structure after you finished importing.
-* When importing directories as hierarchical post types (like pages), the importer now uses the default directory file (like index.html) for the parent page's contents
+* When importing directories as hierarchical post types (like pages), the importer now uses the default directory file (like index.html) for the parent page's contents.
+* Now skips Dreamweaver `_notes` and Frontpage `_vti_cnf` directories automatically.
 * Now makes proper use of the Settings API for better security and data validation.
-* New help screen and <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">user guide</a>.
-* Now requires at least WP 3.0.
+* Help screen and <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">user guide</a>.
+* Now requires at least WP 3.0. (July 15, 2011)
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
 * The beginning directory default is now based on the path to your WordPress installation. There's also a hint shown below the field. This should help people locate their import directory correctly.
 * There's now an option to enter your old URL. If you enter it, your .htaccess redirects should work as displayed. If you leave it blank, you'll have to doctor the paths afterward, as before.
-* Character encoding IS now optional. If your special characters did not import correctly before, try again with this option unchecked (which is now the default).
+* Character encoding is now optional. If your special characters did not import correctly before, try again with this option unchecked (which is now the default).
 * Options are now deleted on plugin uninstall instead of deactivate. (Sorry about that.)
 * Code cleanup in preparation for version 2.0. (June 24, 2011)
 = 1.21 =
