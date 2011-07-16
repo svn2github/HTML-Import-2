@@ -430,7 +430,15 @@ class HTML_Import extends WP_Importer {
 			add_post_meta($post_id, 'URL_before_HTML_Import', $old, true);
 		}
 		
-		// create the results table row
+		// store path so we can check for parents later (even if it's empty; need that info for image imports). 
+		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
+		if (!$updatepost)
+			$this->filearr[$post_id] = $path;
+		else {  // index files will have an incomplete hierarchy if there were empty directories in their path
+			$this->fix_hierarchy($post_id, $path);
+		}
+		
+		// create the results table row AFTER fixing hierarchy
 		if (!empty($path)) {
 			if ($post_id & 1) $class = ' class="alternate"'; else $class = '';
 			$this->table[$post_id] = " <tr".$class."><th>".$post_id."</th><td>".$path."</td><td>".get_permalink($post_id).'</td><td>
@@ -438,14 +446,6 @@ class HTML_Import extends WP_Importer {
 		}
 		else {
 			$this->single_result = sprintf( __('Imported the file as %s.', 'import-html-pages'), '<a href="post.php?action=edit&post='.$post_id.'">'.$my_post['post_title'].'</a>');
-		}
-		
-		// store path so we can check for parents later (even if it's empty; need that info for image imports). 
-		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
-		if (!$updatepost)
-			$this->filearr[$post_id] = $path;
-		else {  // index files will have an incomplete hierarchy if there were empty directories in their path
-			$this->fix_hierarchy($post_id, $path);
 		}
 	}
 	
