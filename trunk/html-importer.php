@@ -94,21 +94,33 @@ class HTML_Import extends WP_Importer {
 		
 		// create array of parent directories, starting with the index file's parent and moving up to the root directory
 		while ($parentdir != $options['root_directory']) {
-			$parentID = array_search($parentdir, $this->filearr);
-			if ($parentID === false)
-				$parentarr[] = $parentdir;
+			$parentarr[] = $parentdir;
 			$parentdir = rtrim($this->parent_directory($parentdir), '/');
 		}
 		// reverse the array so we start at the root -- this way the parents can be found when we search in $this->get_post
 		$parentarr = array_reverse($parentarr);
-		foreach ($parentarr as $parentdir)
-			$this->get_post($parentdir, true);
+		
+//		echo '<pre>'.print_r($parentarr, true).'</pre>';
+		
+		foreach ($parentarr as $parentdir) {
+			$parentID = array_search($parentdir, $this->filearr);
+			if ($parentID === false)
+				$this->get_post($parentdir, true);
+		}
 		
 		// now fix the parent ID of the original index file (in $postid)
-		$parentdir = array_pop($parentarr);
-		$my_post['ID'] = $postid;
-		$my_post['post_parent'] = array_search($parentdir, $this->filearr);
-		wp_update_post( $my_post );
+		// it's the next to last element in the array we want. (The last one is the index file.) If this doesn't exist, we don't need to fix the parent.
+		$grandparent = count($parentarr)-2;
+		if (isset($parentarr[$grandparent])) {
+			$parentdir = $parentarr[$grandparent];
+			$my_post['ID'] = $postid;
+			$my_post['post_parent'] = array_search($parentdir, $this->filearr);
+		
+			//echo "\n<pre>The parent of $postid should be ".$my_post['post_parent']."</pre>"; 
+		
+			if (!empty($my_post['post_parent']))
+				wp_update_post( $my_post );
+		}
 	}
 
 	function parent_directory($path) {
@@ -124,7 +136,7 @@ class HTML_Import extends WP_Importer {
 	    return $path;
 	}
 	
-	function url_remove_dot_segments( $path ) {
+	function remove_dot_segments( $path ) {
 		$inSegs  = preg_split( '!/!u', $path );
 		$outSegs = array( );
 		foreach ( $inSegs as $seg )
@@ -205,12 +217,12 @@ class HTML_Import extends WP_Importer {
 			$ext = $filename_parts[count($filename_parts) - 1];
 			// allowed extensions only, please
 			if (in_array($ext, $this->allowed)) {
-				if (filesize($path) > 0) {
+				if (filesize($path) > 0) {  // silently skip empty files
 					// read the HTML file 
 					$contents = @fopen($path);  // read entire file
 					if (empty($contents)) 
 						$contents = @file_get_contents($path); 
-					if (!empty($contents)) {				
+					if (!empty($contents)) {	// silently skip files we can't open	
 						$this->file = $contents;
 						$this->get_post($path, false); // import the post
 					}
@@ -228,10 +240,10 @@ class HTML_Import extends WP_Importer {
 					if (!empty($ext)) $exts[] .= $ext;
 				}
 
-				// allowed extensions only, please. If there are files of the proper type, we should create a parent page using the index file.
+				// allowed extensions only, please. If there are files of the proper type, we should create a placeholder page
 				$createpage = @array_intersect($exts, $this->allowed); // suppress warnings about not being an array
 
-				if (!empty($createpage) && is_post_type_hierarchical($options['type'])) { 
+				if ( !empty($createpage) &&  is_post_type_hierarchical($options['type'])) { 
 					$this->get_post($path, true);
 				}
 				
@@ -376,7 +388,8 @@ class HTML_Import extends WP_Importer {
 		else $handle = $path;
 		
 		// see if the post already exists
-		if ($post_id = post_exists($my_post['post_title'], $my_post['post_content'], $my_post['post_date']))
+		// but don't bother printing this message if we're doing an index file; we know its parent already exists
+		if ($post_id = post_exists($my_post['post_title'], $my_post['post_content'], $my_post['post_date']) && basename($path) != $options['index_file'])
 			$this->table[] = "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("%s (%s) has already been imported", 'html-import-pages'), $my_post['post_title'], $handle) . "</td></tr>";
 		
 		// if we're doing hierarchicals and this is an index file of a subdirectory, instead of importing this as a separate page, update the content of the placeholder page we created for the directory
@@ -431,8 +444,9 @@ class HTML_Import extends WP_Importer {
 		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
 		if (!$updatepost)
 			$this->filearr[$post_id] = $path;
-		else  // index files will have an incomplete hierarchy if there were empty directories in their path
-			$this->fix_hierarchy($post_id, $path);	
+		else {  // index files will have an incomplete hierarchy if there were empty directories in their path
+			$this->fix_hierarchy($post_id, $path);
+		}
 	}
 	
 	//Handle an individual file import. Borrowed almost entirely from dd32's Add From Server plugin
@@ -553,7 +567,7 @@ class HTML_Import extends WP_Importer {
 				}
 				// src="/images/foo"
 				elseif ('/' == substr($src, 0, 1)) { 
-					$imgpath = $options['root_directory']. '/' . $src;
+					$imgpath = $options['root_directory'] . $src;
 				}
 				// src="../../images/foo" or src="images/foo" or no $path
 				else { 
@@ -563,7 +577,7 @@ class HTML_Import extends WP_Importer {
 						$imgpath = dirname($path) . '/' . $src;
 				}
 				// intersect base path and src, or just clean up junk
-				$imgpath = $this->url_remove_dot_segments($imgpath);
+				$imgpath = $this->remove_dot_segments($imgpath);
 			 
 				//  load the image from $imgpath
 				$imgid = $this->handle_import_image_file($imgpath, $id);
@@ -636,6 +650,7 @@ class HTML_Import extends WP_Importer {
 		printf(__('All done. <a href="%s">Have fun!</a>', 'import-html-pages'),  'edit.php?post_type='.$posttype);
 		echo '</h3>';
 		flush();
+//		echo '<pre>'.print_r($this->filearr, true).'</pre>';
 	}
 	
 	function import() {
