@@ -214,7 +214,7 @@ class HTML_Import extends WP_Importer {
 					wp_die("The PHP functions fopen() and file_get_contents() have both failed. We can't import any files without these functions. Please ask your server administrator if they are enabled.");
 				
 				$this->file = $contents;
-				$this->get_post($path, false); 
+				$this->get_post($path, false); // import the post
 			}
 	      }
 	      elseif(is_dir($path) && is_readable($path)) { 
@@ -431,11 +431,9 @@ class HTML_Import extends WP_Importer {
 		// Don't store the index file updates; they'll screw up the parent search, and they can use their parents' path anyway
 		if (!$updatepost)
 			$this->filearr[$post_id] = $path;
-		else  // index files will have an incomplete hierarchy if there were empty directories in its path
+		else  // index files will have an incomplete hierarchy if there were empty directories in their path
 			$this->fix_hierarchy($post_id, $path);	
 	}
-	
-	
 	
 	//Handle an individual file import. Borrowed almost entirely from dd32's Add From Server plugin
 	function handle_import_image_file($file, $post_id = 0) {
@@ -554,7 +552,7 @@ class HTML_Import extends WP_Importer {
 					$imgpath = $matches[1][$i];			
 				}
 				// src="/images/foo"
-				elseif ('/' == substr($src, 1, 1)) { 
+				elseif ('/' == substr($src, 0, 1)) { 
 					$imgpath = $options['root_directory']. '/' . $src;
 				}
 				// src="../../images/foo" or src="images/foo" or no $path
