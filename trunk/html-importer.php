@@ -205,16 +205,16 @@ class HTML_Import extends WP_Importer {
 			$ext = $filename_parts[count($filename_parts) - 1];
 			// allowed extensions only, please
 			if (in_array($ext, $this->allowed)) {
-
-				// read the HTML file 
-				$contents = @fopen($path);  // read entire file
-				if (empty($contents)) 
-					$contents = @file_get_contents($path); 
-				if (empty($contents)) 
-					wp_die("The PHP functions fopen() and file_get_contents() have both failed. We can't import any files without these functions. Please ask your server administrator if they are enabled.");
-				
-				$this->file = $contents;
-				$this->get_post($path, false); // import the post
+				if (filesize($path) > 0) {
+					// read the HTML file 
+					$contents = @fopen($path);  // read entire file
+					if (empty($contents)) 
+						$contents = @file_get_contents($path); 
+					if (!empty($contents)) {				
+						$this->file = $contents;
+						$this->get_post($path, false); // import the post
+					}
+				}
 			}
 	      }
 	      elseif(is_dir($path) && is_readable($path)) { 
