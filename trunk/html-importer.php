@@ -76,7 +76,7 @@ class HTML_Import extends WP_Importer {
 		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import', 'post_type' => 'any', 'post_status' => 'any', 'numberposts' => '-1'));
 		foreach( $imported as $post ) { 
 			$old = get_post_custom($post->ID);
-			$old = implode('',$old['URL_before_HTML_Import']);
+			$old = implode('', $old['URL_before_HTML_Import']);
 			$newredirects .= "Redirect\t".$old."\t".get_permalink($post->ID)."\t[R=301,NC,L]\n";
 		}
 		if (!empty($newredirects)) { ?>
@@ -102,7 +102,7 @@ class HTML_Import extends WP_Importer {
 		// reverse the array so we start at the root -- this way the parents can be found when we search in $this->get_post
 		$parentarr = array_reverse($parentarr);
 		foreach ($parentarr as $parentdir)
-			$parentID = $this->get_post($parentdir, true);
+			$this->get_post($parentdir, true);
 		
 		// now fix the parent ID of the original index file (in $postid)
 		$parentdir = array_pop($parentarr);
