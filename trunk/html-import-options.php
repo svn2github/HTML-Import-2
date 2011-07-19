@@ -38,12 +38,17 @@ function html_import_get_options() {
 function html_import_options_page() { ?>
 	<div class="wrap">
 		<h2><?php _e( 'HTML Import Settings', 'import-html-pages'); ?></h2>
+		
 		<form method="post" id="html_import" action="options.php">
 			<?php 
 			settings_fields('html_import');
 			get_settings_errors( 'html_import' );	
 			settings_errors( 'html_import' );
 			$options = get_option('html_import');
+			
+			if ($options['firstrun'] === true) {
+			echo '<p>'.sprintf(__('Welcome to HTML Import! This is a complicated importer with many options. Please look through all the tabs on this page before running your import.', 'import-html-pages'), 'options-general.php?page=html-import.php').'</p>'; 
+			}
 			?>
 
 	<div class="ui-tabs">
@@ -192,7 +197,7 @@ function html_import_options_page() { ?>
 				<th></th>
 				<td>
 					<label><input name="html_import[encode]" id="encode"  type="checkbox" value="1" 
-						<?php checked($options['encode'], '1'); ?> /> <?php _e("Convert unencoded special characters to HTML entities", 'import-html-pages'); ?> </label>
+						<?php checked($options['encode'], '1'); ?> /> <?php _e("Convert special characters (accents and symbols)", 'import-html-pages'); ?> </label>
 				</td>
 				</tr>
 				<tr>

@@ -3,8 +3,8 @@ Contributors: sillybean
 Donate link: http://sillybean.net/code/wordpress/html-import-2/
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
-Tested up to: 3.2
-Stable tag: 1.30
+Tested up to: 3.2.1
+Stable tag: 2.0
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -14,7 +14,7 @@ Imports well-formed static HTML files into WordPress. Requires PHP 5.
 
 This plugin will import a directory of files as either pages or posts. You may specify the HTML tag (e.g. `<body>`, `<div id="content">`, or `<td width="732">`) or Dreamweaver template region (e.g. 'Main Content') containing the content you want to import.
 
-If importing pages, the directory hierarchy will be preserved. Directories containing the specified file types will be imported as empty parent pages. Directories that do not contain the specified file types will be ignored.
+If importing pages, the directory hierarchy will be preserved. Directories containing the specified file types will be imported as empty parent pages (or, if an index file is present, its contents will be used for the parent page). Directories that do not contain the specified file types will be ignored.
 
 As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your `.htaccess` file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
 
@@ -28,11 +28,11 @@ Options in 2.0:
 * specify file extensions to import (e.g. html, htm, php)
 * specify directories to exclude (e.g. images, css)
 * if importing pages (or any hierarchical post type), specify whether your top-level files should become top-level pages or children of an existing page
+* specify an index file name (e.g. index.html, default.htm) whose contents should be used for the directory parent pages 
 * set tags, categories, and custom taxonomies
 * choose status, author, and timestamp
 * use meta descriptions as excerpts
 * clean up imported HTML and strip unwanted tags and attributes
-* convert unencoded special characters to HTML entities
 
 See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details on all the options.
 
@@ -68,6 +68,10 @@ It's also quite possible that the script is trying to use more memory than your 
 
 `php_value memory_limit 1024M`
 
+= Should I remove 'images' from the list of skipped directories if I want to import images? =
+
+The skipped directory setting just tells the importer where to look for HTML files. Linked images will be imported no matter where they're located.
+
 == Upgrade Notice ==
 
 = 2.0 =
@@ -76,10 +80,10 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 == Changelog ==
 
 = 2.0 =
-* New option to import images linked in the imported HTML files. It can handle most relative paths as well as absolute URLs. The report includes a list of the image paths that couldn't be resolved.
+* New option to import images linked in the imported HTML files. It can handle most relative paths as well as absolute URLs. The report includes a list of the image paths that couldn't be found.
 * Now supports all public custom post types and taxonomies (including hierarchical ones).
 * Completely different, much better handling of special characters.
-* The import screen now lets you upload a single file, if you prefer.
+* The import screen now lets you upload a single file.
 * New user interface. The options form is now broken up into several tabbed sections. Categories and other hierarchical taxonomies are selected with checkboxes.
 * The options form is now separate from the importer. It will now check your settings before the importer runs -- for example, you'll get a warning if your beginning directory isn't readable.
 * The importer itself is now based on the WordPress import class, which means it looks and works more like other importers. It is located under Tools&rarr;Import (but you should visit the settings screen first).

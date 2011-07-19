@@ -32,10 +32,9 @@ class HTML_Import extends WP_Importer {
 		$options = get_option('html_import');
 		?>
 		<div class="narrow">
-		<p><?php _e('This importer allows you to import HTML files as posts or pages. ', 'import-html-pages'); ?></p>
 		<?php 
 		if ($options['firstrun'] === true) {
-		echo '<p>'.sprintf(__('If you have not yet visited the <a href="%s">HTML Import options page</a>, please do so now. You need to specify which portions of your HTML files should be imported before you proceed.', 'import-html-pages'), 'options-general.php?page=html-import.php').'</p>'; 
+		echo '<p>'.sprintf(__('It looks like you have not yet visited the <a href="%s">HTML Import options page</a>. Please do so now! You need to specify which portions of your HTML files should be imported before you proceed.', 'import-html-pages'), 'options-general.php?page=html-import.php').'</p>'; 
 		} 
 		else { ?>
 		<h4><?php _e('What are you importing today?'); ?></h4>
@@ -742,5 +741,5 @@ class HTML_Import extends WP_Importer {
 
 $html_import = new HTML_Import();
 
-register_importer('html', __('HTML', 'import-html-pages'), __('Import HTML files.', 'import-html-pages'), array ($html_import, 'dispatch'));
+register_importer('html', __('HTML', 'import-html-pages'), sprintf(__('Import the contents of HTML files as posts, pages, or any custom post type. Visit <a href="%s">the options page</a> first to select which portions of your documents should be imported.', 'import-html-pages'), 'options-general.php?page=html-import.php'), array ($html_import, 'dispatch'));
 ?>
