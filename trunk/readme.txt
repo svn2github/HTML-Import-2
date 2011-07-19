@@ -4,7 +4,7 @@ Donate link: http://sillybean.net/code/wordpress/html-import-2/
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 2.0
+Stable tag: 1.3
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -40,7 +40,8 @@ See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">
 
 1. Unzip the files and upload the plugin directory to `/wp-content/plugins/` 
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to Settings &rarr; HTML Import to begin.
+1. Go to Settings &rarr; HTML Import and set your preferences in all the tabbed sections.
+1. Go to Tools &rarr; Import to run the importer.
 
 == Frequently Asked Questions ==
 
@@ -93,6 +94,7 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 * Now makes proper use of the Settings API for better security and data validation.
 * Help screen and <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">user guide</a>.
 * Now requires at least WP 3.0. (July 15, 2011)
+
 = 1.30 =
 * The '.,..' directories are no longer optional, so you can't accidentally import hundreds of empty posts/pages by removing these from the skipped directories option.
 * The beginning directory default is now based on the path to your WordPress installation. There's also a hint shown below the field. This should help people locate their import directory correctly.
@@ -100,34 +102,45 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 * Character encoding is now optional. If your special characters did not import correctly before, try again with this option unchecked (which is now the default).
 * Options are now deleted on plugin uninstall instead of deactivate. (Sorry about that.)
 * Code cleanup in preparation for version 2.0. (June 24, 2011)
+
 = 1.21 =
 * same as 1.2; not sure why the plugin repository can't count
+
 = 1.2 =
 * Added custom taxonomy options
 * Better handling of mb encoding function and asXML
 * Better security checking
 * Added translation support (January 24, 2010)
+
 = 1.13 =
 * Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
 * Added an option to assign a category or tag to all imported posts
 * This is 1.12, only uncorrupted (September 13, 2009)
+
 = 1.12 =
 * Fixed a bug in 1.11 when importing content specified by a tag (thanks, mjos)
 * Added an option to assign a category or tag to all imported posts (September 13, 2009)
+
 = 1.11 =
 * Left some debugging code in 1.1, oops! (August 15, 2009)
+
 = 1.1 = 
 * Added Word cleanup option (August 14, 2009)
+
 = 1.04 =
 * Better user capability check (August 3, 2009)
+
 = 1.03 =
 * Still better error handling
 * minor code cleanup  (August 1, 2009)
+
 = 1.02 =
 * Better error handling for `fopen` and `file_get_contents`  (July 31, 2009)
+
 = 1.01 =
 * jQuery bug fixed
 * better Windows compatibility (July 31, 2009)
+
 = 1.0 =
 * First release (July 26, 2009)
 

@@ -2,8 +2,8 @@
 /*
 Plugin Name: HTML Import 2
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
-Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
-Version: 2.0
+Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. Visit the <a href="options-general.php?page=html-import.php">options page</a> to get started. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
+Version: 2.0-beta3
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 License: GPL 2
@@ -55,9 +55,9 @@ function register_html_import_settings() {
 function html_import_remove_options() {
 	delete_option('html_import');
 }
-//register_uninstall_hook( __FILE__, 'html_import_remove_options' );
+register_uninstall_hook( __FILE__, 'html_import_remove_options' );
 // for testing only
- register_deactivation_hook( __FILE__, 'html_import_remove_options' );
+// register_deactivation_hook( __FILE__, 'html_import_remove_options' );
 
 function html_import_add_pages() {
 // Add option page to admin menu
@@ -86,7 +86,7 @@ function html_import_add_pages() {
 	$text .= '<ul>';
 	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">' . __( 'User Guide', 'import-html-pages' ) . '</a></li>';
 	$text .= '<li><a href="http://sillybean.net/code/wordpress/html-import-2/">' . __( 'Plugin Home Page', 'import-html-pages' ) . '</a></li>';
-	$text .= '<li><a href="http://wordpress.org/tags/import-html-pages?forum_id=10">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
+	$text .= '<li><a href="http://forum.sillybean.net/forums/forum/html-import-2/">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
 	$text .= '</ul>';
 	
 	add_contextual_help( $pg, $text );
