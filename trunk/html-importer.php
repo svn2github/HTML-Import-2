@@ -373,9 +373,10 @@ class HTML_Import extends WP_Importer {
 
 			$excerpt = $options['meta_desc'];
 			if (!empty($excerpt)) {
-				 $my_post['post_excerpt'] = $xml->xpath('//meta[@name="description"]');
-				 if (isset($my_post['post_excerpt'][0]))
-				    $my_post['post_excerpt'] = (string)$my_post['post_excerpt'][0]['content'];
+				$my_post['post_excerpt'] = $xml->xpath('//meta[@name="description"]');
+				if (isset($my_post['post_excerpt'][0]))
+					$my_post['post_excerpt'] = $my_post['post_excerpt'][0]['content'];
+				$my_post['post_excerpt'] = (string)$my_post['post_excerpt'];
 			}
 			
 			$my_post['post_status'] = $options['status'];
