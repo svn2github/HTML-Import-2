@@ -18,8 +18,6 @@ If importing pages, the directory hierarchy will be preserved. Directories conta
 
 As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your `.htaccess` file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
 
-If you would like to test 2.0, you can grab the development version from the <a href="http://wordpress.org/extend/plugins/import-html-pages/download/">Other Versions page</a> and leave feedback on the <a href="http://forum.sillybean.net/">new support forum</a>.
-
 Options in 2.0:
 
 * import files into <del>pages or posts</del> any post type
