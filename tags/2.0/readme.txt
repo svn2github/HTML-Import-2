@@ -20,7 +20,7 @@ As files are imported, the resulting IDs, permalinks, and titles will be display
 
 Options in 2.0:
 
-* import files into <del>pages or posts</del> any post type
+* import files into any post type (posts, pages, or custom post types set to `public`)
 * import linked image files to the media library
 * select content and title by HTML tag or Dreamweaver template region
 * remove a common phrase (such as the site name) from imported titles
@@ -40,7 +40,7 @@ See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">
 
 1. Unzip the files and upload the plugin directory to `/wp-content/plugins/` 
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to Settings &rarr; HTML Import to begin.
+1. Go to Settings &rarr; HTML Import to begin. You must save the settings before proceeding to Tools &rarr; Import &rarr; HTML.
 
 == Frequently Asked Questions ==
 
