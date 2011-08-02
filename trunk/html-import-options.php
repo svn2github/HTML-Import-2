@@ -28,6 +28,7 @@ function html_import_get_options() {
 		'remove_from_title' => '',
 		'meta_desc' => 1,
 		'user' => 0,
+		'page_template' => 0,
 		'firstrun' => true,
 	);
 	$options = get_option('html_import');
@@ -346,9 +347,9 @@ function html_import_options_page() { ?>
 						if ($post_type->name != 'attachment') {
 							$typeselect .= '<label><input name="html_import[type]" type="radio" value="' . esc_attr($post_type->name) . '" '.checked($options['type'], $post_type->name, false);
 							if (is_post_type_hierarchical($post_type->name))
-								$typeselect .= "onclick=\"javascript: jQuery('#hierarchy').show('fast');\"";
+								$typeselect .= "onclick=\"javascript: jQuery('#hierarchy').show('fast');jQuery('#page-template').show('fast');\"";
 							else
-								$typeselect .= "onclick=\"javascript: jQuery('#hierarchy').hide('fast');\"";
+								$typeselect .= "onclick=\"javascript: jQuery('#hierarchy').hide('fast');jQuery('#page-template').hide('fast');\"";
 							$typeselect .= '> '.esc_html($post_type->labels->name).'</label> &nbsp;&nbsp;';
 						}
 					}
@@ -383,6 +384,7 @@ function html_import_options_page() { ?>
 				<?php wp_dropdown_users(array('selected' => $options['user'], 'name' => 'html_import[user]', 'who' => 'authors')); ?>
 			</td>
 			</tr>
+			
 			<tr id="hierarchy" <?php if (!is_post_type_hierarchical($options['type'])) echo "style=display:none;"; ?>>
 			<th><?php _e("Import pages as children of: ", 'import-html-pages'); ?></th>
 			<td>
@@ -391,6 +393,16 @@ function html_import_options_page() { ?>
 		            if (empty($pages)) $pages = "<select name=\"root_parent\"><option value=\"0\">"._e('None (top level)', 'import-html-pages')."</option></select>";
 		            echo $pages;
 		        ?>
+			</td>
+			</tr>
+			
+			<tr id="page-template" <?php if (!is_post_type_hierarchical($options['type'])) echo "style=display:none;"; ?>>
+			<th><?php _e("Template for imported pages: ", 'import-html-pages'); ?></th>
+			<td>
+		        <select name="html_import[page_template]" id="page_template">
+				<option value='0'><?php _e('Default Template'); ?></option>
+				<?php page_template_dropdown($options['page_template']); ?>
+				</select>
 			</td>
 			</tr>
 		</table>

@@ -412,12 +412,16 @@ class HTML_Import extends WP_Importer {
 		if (!$post_id) 
 			$this->table[] = "<tr><th class='error'>--</th><td colspan='3' class='error'> " . sprintf(__("Could not import %s. You should copy its contents manually.", 'html-import-pages'), $handle) . "</td></tr>";
 		
-		// if no errors, handle all the taxonomies
+		// if no errors, handle all the taxonomies...
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects', 'and' );
 		foreach ( $taxonomies as $tax ) {
 			if (isset($options[$tax->name]))
 				wp_set_post_terms( $post_id, $options[$tax->name], $tax->name, false);
 		}
+		
+		// ...and set the page template, if any
+		if (isset($options['page_template']) && !empty($options['page_template']))
+			add_post_meta($post_id, '_wp_page_template', $options['page_template'], true); 
 		
 		// create redirects from old and new paths; store old path in custom field
 		if (!empty($path) && !$updatepost) {

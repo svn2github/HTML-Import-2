@@ -4,7 +4,7 @@ Donate link: http://sillybean.net/code/wordpress/html-import-2/
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -79,6 +79,8 @@ This version requires at least WP 3.0. Now handles linked images, single file up
 
 == Changelog ==
 
+= 2.0.1 =
+* Added option to set the page template for hierarchical post types. (August 2, 2011)
 = 2.0 =
 * New option to import images linked in the imported HTML files. It can handle most relative paths as well as absolute URLs. The report includes a list of the image paths that couldn't be found.
 * Now supports all public custom post types and taxonomies (including hierarchical ones).
