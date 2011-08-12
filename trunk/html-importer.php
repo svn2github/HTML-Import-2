@@ -155,7 +155,7 @@ class HTML_Import extends WP_Importer {
 		    $outPath .= '/';
 		return $outPath;
 	}
-
+	
 	function clean_html( $string, $allowtags = NULL, $allowattributes = NULL ) {
 		// from: http://us3.php.net/manual/en/function.strip-tags.php#91498
 	    $string = strip_tags($string,$allowtags);
@@ -747,4 +747,18 @@ class HTML_Import extends WP_Importer {
 $html_import = new HTML_Import();
 
 register_importer('html', __('HTML', 'import-html-pages'), sprintf(__('Import the contents of HTML files as posts, pages, or any custom post type. Visit <a href="%s">the options page</a> first to select which portions of your documents should be imported.', 'import-html-pages'), 'options-general.php?page=html-import.php'), array ($html_import, 'dispatch'));
+
+
+// in case this server doesn't have php_mbstring enabled in php.ini...
+if (!function_exists('mb_strlen')) {
+	function mb_strlen($string) {
+		return strlen(utf8_decode($string));
+	}
+}
+if (!function_exists('mb_strrpos')) {
+	function mb_strrpos($haystack, $needle, $offset = 0) {
+		return strrpos(utf8_decode($haystack), $needle, $offset);
+	}
+}
+
 ?>
