@@ -20,6 +20,8 @@ function html_import_get_options() {
 		'encode' => 1,
 		'allow_tags' => '<p><br><img><a><ul><ol><li><dl><dt><dd><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
+		'import_images' => 0,
+		'fix_links' => 0,
 		'import_title' => 'tag',
 		'title_region' => '',
 		'title_tag' => __('title', 'import-html-pages'),
@@ -188,6 +190,12 @@ function html_import_options_page() { ?>
 				</td>
 				</tr>
 				<tr>
+				<th></th>
+				<td>
+					<label><input name="html_import[fix_links]" id="fix_links" value="1" type="checkbox" <?php checked($options['fix_links']); ?> /> 
+						 <?php _e("Update internal links", 'import-html-pages'); ?></label>
+				</td>
+				</tr>
 				<th></th>
 				<td>
 					<label><input name="html_import[meta_desc]" id="meta_desc" value="1" type="checkbox" <?php checked($options['meta_desc']); ?> /> 

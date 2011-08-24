@@ -74,8 +74,7 @@ class HTML_Import extends WP_Importer {
 		$newredirects = ''; 
 		$imported = get_posts(array('meta_key' => 'URL_before_HTML_Import', 'post_type' => 'any', 'post_status' => 'any', 'numberposts' => '-1'));
 		foreach( $imported as $post ) { 
-			$old = get_post_custom($post->ID);
-			$old = implode('', $old['URL_before_HTML_Import']);
+			$old = get_post_meta($post->ID, 'URL_before_HTML_Import', true);
 			$newredirects .= "Redirect\t".$old."\t".get_permalink($post->ID)."\t[R=301,NC,L]\n";
 		}
 		if (!empty($newredirects)) { ?>
@@ -86,7 +85,7 @@ class HTML_Import extends WP_Importer {
 		<?php }
 		else _e('No posts were found with the URL_before_HTML_Import custom field. Could not generate rewrite rules.', 'import-html-pages');
 	}
-	
+
 	function fix_hierarchy($postid, $path) {
 		$options = get_option('html_import');
 		$parentdir = rtrim($this->parent_directory($path), '/');
@@ -135,6 +134,55 @@ class HTML_Import extends WP_Importer {
 	    return $path;
 	}
 	
+	function fix_internal_links($content, $id) {		
+		// find all href attributes
+		preg_match_all('/<a[^>]* href=[\'"]?([^>\'" ]+)/', $content, $matches);
+		for ($i=0; $i<count($matches[0]); $i++) {
+			$hrefs[] = $matches[1][$i];
+		}
+		if (!empty($hrefs)) {
+			//echo '<p>Looking in '.get_permalink($id).'</p>';
+			$options = get_option('html_import');
+			$site = $options['old_url'];
+			$rootdir = $options['root_directory'];
+			foreach ($hrefs as $href) {
+				if ('#' != substr($href, 0, 1) && 'mailto:' != substr($href, 0, 7)) { // skip anchors and mailtos
+					if (preg_match('/^http:\/\//', $href) || preg_match('/^https:\/\//', $href)) {
+						// if it's an internal link, let's get a local file path
+						$linkpath = str_replace($site, $rootdir, $href);		
+					}
+					// href="/images/foo"
+					elseif ('/' == substr($href, 0, 1)) { 
+						$linkpath = $rootdir . $href;
+						$linkpath = $this->remove_dot_segments($linkpath);
+					}
+					// href="../../images/foo" or href="images/foo"
+					else {
+						// we need to know where we are in the hierarchy 
+						$oldpath = get_post_meta($id, 'URL_before_HTML_Import', true);
+						$oldpath = str_replace($site, $rootdir, $oldpath);
+						//echo '<p>Old path: '.$oldpath;
+						$oldfile = strrchr($oldpath, '/');
+						$linkpath = str_replace($oldfile, '/'.$href, $oldpath);
+						$linkpath = $this->remove_dot_segments($linkpath);
+						//echo ' Link path: '.$linkpath . '</p>';
+					}
+			
+					$linkpath = rtrim($linkpath, '/');
+					//echo '<p>Old link: '.$href.' Full path: '.$linkpath;
+					// now replace the old URL with the new permalink
+					$postkey = array_search($linkpath, $this->filearr);
+					//echo ' Post ID:'.$postkey.'.</p>';
+					if (!empty($postkey)) {
+						//echo '<p>I think '.$linkpath.' has moved to '.get_permalink($postkey).'.</p>';
+						$content = str_replace($href, get_permalink($postkey), $content);
+					}
+				} // if #/mailto
+			} // foreach
+		} // if empty
+		return $content;
+	}
+	
 	function remove_dot_segments( $path ) {
 		$inSegs  = preg_split( '!/!u', $path );
 		$outSegs = array( );
@@ -153,6 +201,9 @@ class HTML_Import extends WP_Importer {
 		if ( $outPath != '/' &&
 		    (mb_strlen($path)-1) == mb_strrpos( $path, '/', 'UTF-8' ) )
 		    $outPath .= '/';
+		$outPath = str_replace('http:/', 'http://', $outPath);
+		$outPath = str_replace('https:/', 'https://', $outPath);
+		$outPath = str_replace(':///', '://', $outPath);
 		return $outPath;
 	}
 	
@@ -614,6 +665,28 @@ class HTML_Import extends WP_Importer {
 		} // if empty
 	}
 	
+	function find_internal_links() {
+		echo '<h2>'.__( 'Fixing relative links...', 'import-html-pages').'</h2>';
+		echo '<p>'.__( 'The importer is searching your imported posts for links. This might take a few minutes.', 'import-html-pages').'</p>';
+		
+		$fixedlinks = array(); 
+		foreach ($this->filearr as $id => $path) {
+			$new_post = array();
+			$post = get_post($id);
+			$new_post['ID'] = $post->ID;
+			$new_post['post_content'] = $this->fix_internal_links($post->post_content, $post->ID);
+		
+			if (!empty($new_post['post_content']))
+				wp_update_post( $new_post );
+			$fixedlinks[] .= $post->ID;
+		}
+		if (!empty($fixedlinks)) { ?>
+		<h3><?php _e('All done!', 'import-html-pages'); ?></h3>
+		<?php }
+		else _e('No posts were found with the URL_before_HTML_Import custom field. Could not search for links.', 'import-html-pages');
+		//echo '<pre>'.print_r($this->filearr, true).'</pre>';
+	}
+	
 	function find_images() {
 		echo '<h2>'.__( 'Importing images...', 'import-html-pages').'</h2>';
 		$results = '';
@@ -674,6 +747,8 @@ class HTML_Import extends WP_Importer {
 			wp_import_cleanup($file['id']);
 			if ($options['import_images'])
 				$this->find_images();
+			if ($options['fix_links'])
+				$this->find_internal_links();
 		}
 		elseif ($_POST['import_files'] == 'directory') {
 			// in case they entered something dumb and didn't fix it when we showed an error on the options page...
@@ -692,6 +767,8 @@ class HTML_Import extends WP_Importer {
 			$this->print_results($options['type']);
 			if ($options['import_images'])
 				$this->find_images();
+			if ($options['fix_links'])
+				$this->find_internal_links();
 		}
 		else {
 			_e("Your file upload didn't work. Try again?", 'html-import-pages');
