@@ -265,7 +265,7 @@ class HTML_Import extends WP_Importer {
 	      $path = $rootdir.'/'.$val;
 	      if(is_file($path) && is_readable($path)) {
 			$filename_parts = explode(".",$val);
-			$ext = $filename_parts[count($filename_parts) - 1];
+			$ext = strtolower($filename_parts[count($filename_parts) - 1]);
 			// allowed extensions only, please
 			if (in_array($ext, $this->allowed)) {
 				if (filesize($path) > 0) {  // silently skip empty files
@@ -546,13 +546,15 @@ class HTML_Import extends WP_Importer {
 			if ( ! ( ( $uploads = wp_upload_dir($time) ) && false === $uploads['error'] ) )
 				return new WP_Error( 'upload_error', $uploads['error']);
 
+// this security check is pointless. It gives false positives, and anyone running this importer can unfiltered_upload anyway.
+/*
 			$wp_filetype = wp_check_filetype( $file, null );
 
 			extract( $wp_filetype );
 	
 			if ( ( !$type || !$ext ) && !current_user_can( 'unfiltered_upload' ) )
 				return new WP_Error('wrong_file_type', __( 'Sorry, this file type is not permitted for security reasons.' ) );
-
+/**/
 
 			$filename = wp_unique_filename( $uploads['path'], basename($file));
 

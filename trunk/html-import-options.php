@@ -557,8 +557,10 @@ function html_import_validate_options($input) {
 	// trim the extensions, skipped dirs, allowed attributes. Invalid ones will not cause problems.
 	$input['file_extensions'] = str_replace('.', '', $input['file_extensions']);
 	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
+	$input['file_extensions'] = strtolower($input['file_extensions']);
 	$input['document_mimes'] = str_replace('.', '', $input['document_mimes']);
 	$input['document_mimes'] = str_replace(' ', '', $input['document_mimes']);
+	$input['document_mimes'] = strtolower($input['document_mimes']);
 	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
 	$input['allow_tags'] = str_replace('/', '', $input['allow_tags']);
 	$input['allow_tags'] = str_replace(' ', '', $input['allow_tags']);

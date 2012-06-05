@@ -89,6 +89,7 @@ Now includes an option to fix internal links.
 = 2.2a =
 * Now imports media files other than images.
 * Now handles images with https srcs.
+* Removed a pointless security check that was preventing people from uploading valid image files.
 = 2.1 =
 * New option to fix internal links. Also, the importer now bakes you cookies. (Kidding about the cookies.) (August 23, 2011)
 = 2.0.2 =
