@@ -694,7 +694,7 @@ class HTML_Import extends WP_Importer {
 			flush();
 		} // if empty
 	}
-//*	
+	
 	function import_documents($id, $path) {
 		$post = get_post($id);
 		$options = get_option('html_import');
@@ -703,7 +703,7 @@ class HTML_Import extends WP_Importer {
 		$title = $post->post_title;
 		if (empty($title)) $title = __('(no title)', 'html-import');
 		$update = false;
-		$mimes = implode(',', $options['document_mimes']);
+		$mimes = explode(',', $options['document_mimes']);
 				
 		// find all href attributes
 		preg_match_all('/<a[^>]* href=[\'"]?([^>\'" ]+)/', $content, $matches);
@@ -789,7 +789,7 @@ class HTML_Import extends WP_Importer {
 			flush();
 		} // if empty $hrefs
 	}
-/**/	
+	
 	function find_internal_links() {
 		echo '<h2>'.__( 'Fixing relative links...', 'import-html-pages').'</h2>';
 		echo '<p>'.__( 'The importer is searching your imported posts for links. This might take a few minutes.', 'import-html-pages').'</p>';
