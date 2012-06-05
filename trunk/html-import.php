@@ -3,7 +3,7 @@
 Plugin Name: HTML Import 2
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. Visit the settings page to get started. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
-Version: 2.1
+Version: 2.2b
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 License: GPL 2
@@ -89,7 +89,7 @@ function html_import_add_pages() {
 	$text .= '<li><a href="http://forum.sillybean.net/forums/forum/html-import-2/">' . __( 'Support Forum', 'import-html-pages' ) . '</a></li>';
 	$text .= '</ul>';
 	
-	add_contextual_help( $pg, $text );
+//	add_contextual_help( $pg, $text );
 }
 add_action('admin_menu', 'html_import_add_pages');
 

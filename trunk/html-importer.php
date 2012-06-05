@@ -247,12 +247,13 @@ class HTML_Import extends WP_Importer {
 		return $content;
 	}
 	
-	function get_single_file() {
+	function get_single_file($txt = false) {
 		set_magic_quotes_runtime(0);
 		$importfile = file($this->file); // Read the file into an array
 		$importfile = implode('', $importfile); // squish it
-		$this->file = str_replace(array ("\r\n", "\r"), "\n", $importfile);
-		
+		// this strips whitespace out of <pre>. Need to find a better way to handle that. For now, leave it alone.
+		//$this->file = str_replace(array ("\r\n", "\r"), "\n", $importfile);
+		$this->file = $importfile;
 		$this->get_post('', false);
 	}
 
@@ -278,7 +279,31 @@ class HTML_Import extends WP_Importer {
 					}
 				}
 			}
+/*			
+			elseif ($options['import_documents']) {
+				$mimes = get_allowed_mime_types();
+				$mimes = array_flip($mimes);
+				$doctypes = array_diff($this->allowed, $mimes);
+				if (in_array($ext, $doctypes)) {  // allowed upload types only
+					//  load the file from $linkpath
+					$fileid = $this->handle_import_media_file($linkpath, $id);
+					if ( is_wp_error( $fileid ) )
+						echo '<span class="attachment_error">'.$fileid>get_error_message().'</span>';
+					else {
+						$filepath = wp_get_attachment_url($fileid);
+
+						//  replace paths in the content
+						if (!is_wp_error($filepath)) {			
+							$content = str_replace($href, $filepath, $content);
+							$update = true;
+						}
+
+					} // is_wp_error else
+				}
+			}
+/**/
 	      }
+
 	      elseif(is_dir($path) && is_readable($path)) { 
 	        if(!in_array($val, $this->skip)) {
 			  $createpage = array();
@@ -365,7 +390,9 @@ class HTML_Import extends WP_Importer {
 				if (!empty($titletagatt))
 					$titlequery .= '[@'.$titletagatt.'="'.$titleattval.'"]';
 				$my_post['post_title'] = $xml->xpath($titlequery);
-				$my_post['post_title'] = strip_tags(trim($my_post['post_title'][0]));
+				if (isset($my_post['post_title'][0]))
+					$my_post['post_title'] = strip_tags(trim($my_post['post_title'][0]));
+				else $my_post['post_title'] = '';
 			}
 		
 			$remove = $options['remove_from_title'];
@@ -495,8 +522,9 @@ class HTML_Import extends WP_Importer {
 		
 		// create the results table row AFTER fixing hierarchy
 		if (!empty($path)) {
-			if ($post_id & 1) $class = ' class="alternate"'; else $class = '';
-			$this->table[$post_id] = " <tr".$class."><th>".$post_id."</th><td>".$path."</td><td>".get_permalink($post_id).'</td><td>
+			if (empty($my_post['post_title']))
+				$my_post['post_title'] = __('(no title)', 'html-import');
+			$this->table[$post_id] = " <tr><th>".$post_id."</th><td>".$path."</td><td>".get_permalink($post_id).'</td><td>
 				<a href="post.php?action=edit&post='.$post_id.'">'.esc_html($my_post['post_title'])."</a></td></tr>";
 		}
 		else {
@@ -505,7 +533,7 @@ class HTML_Import extends WP_Importer {
 	}
 	
 	//Handle an individual file import. Borrowed almost entirely from dd32's Add From Server plugin
-	function handle_import_image_file($file, $post_id = 0) {
+	function handle_import_media_file($file, $post_id = 0) {
 		// see if the attachment already exists
 		$id = array_search($file, $this->filearr);	
 		if ($id === false) { 
@@ -603,6 +631,8 @@ class HTML_Import extends WP_Importer {
 		$result = array();
 		$srcs = array();
 		$content = $post->post_content;
+		$title = $post->post_title;
+		if (empty($title)) $title = __('(no title)', 'html-import');
 		$update = false;
 		
 		// find all src attributes
@@ -614,10 +644,10 @@ class HTML_Import extends WP_Importer {
 			$count = count($srcs);
 			
 			echo "<p>";
-			printf(_n('Found %d image in <a href="%s">%s</a>. Importing... ', 'Found %d images in <a href="%s">%s</a>. Importing... ', $count, 'html-import-pages'), $count, get_permalink($post->ID), $post->post_title);
+			printf(_n('Found %d image in <a href="%s">%s</a>. Importing... ', 'Found %d images in <a href="%s">%s</a>. Importing... ', $count, 'html-import-pages'), $count, get_permalink($post->ID), $title);
 			foreach ($srcs as $src) {
 				// src="http://foo.com/images/foo"
-				if (preg_match('/^http:\/\//', $src)) { 
+				if (preg_match('/^http:\/\//', $src) || preg_match('/^https:\/\//', $src)) { 
 					$imgpath = $matches[1][$i];			
 				}
 				// src="/images/foo"
@@ -635,9 +665,9 @@ class HTML_Import extends WP_Importer {
 				$imgpath = $this->remove_dot_segments($imgpath);
 			 
 				//  load the image from $imgpath
-				$imgid = $this->handle_import_image_file($imgpath, $id);
+				$imgid = $this->handle_import_media_file($imgpath, $id);
 				if ( is_wp_error( $imgid ) )
-					echo '<span class="imgerror">'.$imgid->get_error_message().'</span>';
+					echo '<span class="attachment_error">'.$imgid->get_error_message().'</span>';
 				else {
 					$imgpath = wp_get_attachment_url($imgid);
 			
@@ -664,7 +694,102 @@ class HTML_Import extends WP_Importer {
 			flush();
 		} // if empty
 	}
-	
+//*	
+	function import_documents($id, $path) {
+		$post = get_post($id);
+		$options = get_option('html_import');
+		$result = $srcs = array();
+		$content = $post->post_content;
+		$title = $post->post_title;
+		if (empty($title)) $title = __('(no title)', 'html-import');
+		$update = false;
+		$mimes = implode(',', $options['document_mimes']);
+				
+		// find all href attributes
+		preg_match_all('/<a[^>]* href=[\'"]?([^>\'" ]+)/', $content, $matches);
+		for ($i=0; $i<count($matches[0]); $i++) {
+			$hrefs[] = $matches[1][$i];
+		}
+		if (!empty($hrefs)) {
+			$count = count($hrefs);
+			
+			echo "<p>";
+			printf(_n('Found %d link in <a href="%s">%s</a>. Checking file types... ', 'Found %d links in <a href="%s">%s</a>. Checking file types... ', $count, 'html-import-pages'), $count, get_permalink($post->ID), $title);
+			
+			//echo '<p>Looking in '.get_permalink($id).'</p>';
+			$options = get_option('html_import');
+			$site = $options['old_url'];
+			$rootdir = $options['root_directory'];
+			foreach ($hrefs as $href) {
+				$linkpath = '';
+				if ('#' != substr($href, 0, 1) && 'mailto:' != substr($href, 0, 7)) { // skip anchors and mailtos
+					if (preg_match('/^http:\/\//', $href) || preg_match('/^https:\/\//', $href)) {
+						// is it a link to something on this server?
+						if (stripos($site, $href) !== false)
+							// if it's an internal link, let's get a local file path
+							$linkpath = str_replace($site, $rootdir, $href);		
+					}
+					// href="/images/foo"
+					elseif ('/' == substr($href, 0, 1)) { 
+						$linkpath = $rootdir . $href;
+						$linkpath = $this->remove_dot_segments($linkpath);
+					}
+					// href="../../images/foo" or href="images/foo"
+					else {
+						// we need to know where we are in the hierarchy 
+						$oldpath = get_post_meta($id, 'URL_before_HTML_Import', true);
+						$oldpath = str_replace($site, $rootdir, $oldpath);
+						//echo '<p>Old path: '.$oldpath;
+						$oldfile = strrchr($oldpath, '/');
+						$linkpath = str_replace($oldfile, '/'.$href, $oldpath);
+						$linkpath = $this->remove_dot_segments($linkpath);
+						//echo ' Link path: '.$linkpath . '</p>';
+					}
+			
+					if (!empty($linkpath)) {  // then we found an internal link
+						$linkpath = rtrim($linkpath, '/');
+						//echo '<p>Old link: '.$href.' Full path: '.$linkpath;
+						
+						$filename_parts = explode(".",$linkpath);
+						$ext = strtolower($filename_parts[count($filename_parts) - 1]);
+						
+						if (in_array($ext, $mimes)) {  // allowed upload types only
+							echo '<br />Importing '.ltrim(strrchr($linkpath, '/'), '/').'... ';
+							//  load the file from $linkpath
+							$fileid = $this->handle_import_media_file($linkpath, $id);
+							if ( is_wp_error( $fileid ) )
+								echo '<span class="attachment_error">'.$fileid->get_error_message().'</span>';
+							else {
+								$filepath = wp_get_attachment_url($fileid);
+
+								//  replace paths in the content
+								if (!is_wp_error($filepath)) {			
+									$content = str_replace($href, $filepath, $content);
+									$update = true;
+								}
+
+							} // is_wp_error $fileid
+						} // if in array
+					
+						
+					} // if empty linkpath
+				} // if #/mailto
+			} // foreach
+			
+			// update the post only once
+			if ($update == true) {
+				$my_post = array();
+				$my_post['ID'] = $id;
+				$my_post['post_content'] = $content;
+				wp_update_post($my_post);
+			}
+			
+			_e('done.', 'html-import-images');
+			echo '</p>';
+			flush();
+		} // if empty $hrefs
+	}
+/**/	
 	function find_internal_links() {
 		echo '<h2>'.__( 'Fixing relative links...', 'import-html-pages').'</h2>';
 		echo '<p>'.__( 'The importer is searching your imported posts for links. This might take a few minutes.', 'import-html-pages').'</p>';
@@ -692,6 +817,22 @@ class HTML_Import extends WP_Importer {
 		$results = '';
 		foreach ($this->filearr as $id => $path) {
 			$results .= $this->import_images($id, $path);
+		}
+		if (!empty($results))
+			echo $results;
+		echo '<h3>';
+		printf(__('All done. <a href="%s">Go to the Media Library.</a>'), 'media.php');
+		echo '</h3>';
+		//echo '<pre>'.print_r($this->filearr, true).'</pre>';
+	}
+	
+	function find_documents() {
+		echo '<h2>'.__( 'Importing media files...', 'import-html-pages').'</h2>';
+		echo '<p>'.__( 'The importer is searching your imported posts for links to media files. This might take a few minutes.', 'import-html-pages').'</p>';
+		
+		$results = '';
+		foreach ($this->filearr as $id => $path) {
+			$results .= $this->import_documents($id, $path);
 		}
 		if (!empty($results))
 			echo $results;
@@ -747,6 +888,8 @@ class HTML_Import extends WP_Importer {
 			wp_import_cleanup($file['id']);
 			if ($options['import_images'])
 				$this->find_images();
+			if ($options['import_documents'])
+				$this->find_documents();
 			if ($options['fix_links'])
 				$this->find_internal_links();
 		}
@@ -767,6 +910,8 @@ class HTML_Import extends WP_Importer {
 			$this->print_results($options['type']);
 			if ($options['import_images'])
 				$this->find_images();
+			if ($options['import_documents'])
+				$this->find_documents();
 			if ($options['fix_links'])
 				$this->find_internal_links();
 		}
@@ -809,7 +954,7 @@ class HTML_Import extends WP_Importer {
 			textarea#import-result { height: 12em; width: 100%; }
 			#importing th { width: 32% } 
 			#importing th#id { width: 4% }
-			span.imgerror { display: block; padding-left: 2em; color: #d54e21; /* WP orange */ }
+			span.attachment_error { display: block; padding-left: 2em; color: #d54e21; /* WP orange */ }
 		</style>
 		<?php
 	}

@@ -21,6 +21,8 @@ function html_import_get_options() {
 		'allow_tags' => '<p><br><img><a><ul><ol><li><dl><dt><dd><blockquote><cite><em><i><strong><b><h2><h3><h4><h5><h6><hr>',
 		'allow_attributes' => 'href,alt,title,src',
 		'import_images' => 0,
+		'import_documents' => 0,
+		'document_mimes' => 'rtf,doc,docx,xls,xlsx,csv,ppt,pps,pptx,ppsx,pdf,zip,wmv,avi,flv,mov,mpeg,mp3,m4a,wav',
 		'fix_links' => 0,
 		'import_title' => 'tag',
 		'title_region' => '',
@@ -192,6 +194,22 @@ function html_import_options_page() { ?>
 				<tr>
 				<th></th>
 				<td>
+					<label><input name="html_import[import_documents]" id="import_documents" value="1" type="checkbox" <?php checked($options['import_documents']); ?> onclick="jQuery(this).is(':checked') && jQuery('.mime-region').show('fast') || jQuery('.mime-region').hide('fast');" /> 
+						 <?php _e("Import linked documents", 'import-html-pages'); ?></label>
+				</td>
+				</tr>
+				<tr class="mime-region" <?php if ($options['document_mimes'] == '1') echo "style=display:table-row;"; ?>>
+				<th><?php _e("Allowed file types", 'import-html-pages'); ?></th>
+		            <td><label>
+			 			<input type="text" name="html_import[document_mimes]" id="document_mimes" 
+							value="<?php esc_attr_e($options['document_mimes']); ?>" class="widefloat" />  </label><br />
+		            <span class="description"><?php _e("Enter file extensions without periods, separated by commas. File types not listed here will not be imported to the media library. <br />
+		Suggested: rtf, doc, docx, xls, xlsx, csv, ppt, pps, pptx, ppsx, pdf, zip, wmv, avi, flv, mov, mpeg, mp3, m4a, wav<br />", 'import-html-pages'); ?></span>
+		            </td> 
+		       </tr>
+				<tr>
+				<th></th>
+				<td>
 					<label><input name="html_import[fix_links]" id="fix_links" value="1" type="checkbox" <?php checked($options['fix_links']); ?> /> 
 						 <?php _e("Update internal links", 'import-html-pages'); ?></label>
 				</td>
@@ -266,8 +284,8 @@ function html_import_options_page() { ?>
 			            <td><label>
 				 			<input type="text" name="html_import[allow_attributes]" id="allow_attributes" 
 								value="<?php esc_attr_e($options['allow_attributes']); ?>" class="widefloat" />  </label><br />
-			            <span class="description"><?php _e("Enter attributes separated by commas. All attributes not listed here will be removed. <br />Suggested: href,src,alt,title<br />
-			    			<em>If you have data tables, also include:</em> summary,rowspan,colspan,span", 'import-html-pages'); ?></span>
+			            <span class="description"><?php _e("Enter attributes separated by commas. All attributes not listed here will be removed. <br />Suggested: href, src, alt, title<br />
+			    			<em>If you have data tables, also include:</em> summary, rowspan, colspan, span", 'import-html-pages'); ?></span>
 			            </td> 
 			       </tr>
 			</table>
@@ -539,6 +557,8 @@ function html_import_validate_options($input) {
 	// trim the extensions, skipped dirs, allowed attributes. Invalid ones will not cause problems.
 	$input['file_extensions'] = str_replace('.', '', $input['file_extensions']);
 	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
+	$input['document_mimes'] = str_replace('.', '', $input['document_mimes']);
+	$input['document_mimes'] = str_replace(' ', '', $input['document_mimes']);
 	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
 	$input['allow_tags'] = str_replace('/', '', $input['allow_tags']);
 	$input['allow_tags'] = str_replace(' ', '', $input['allow_tags']);

@@ -21,7 +21,7 @@ As files are imported, the resulting IDs, permalinks, and titles will be display
 Options in 2.0:
 
 * import files into any post type (posts, pages, or custom post types set to `public`)
-* import linked image files to the media library
+* import linked media files (images, documents, etc.) to the media library
 * select content and title by HTML tag or Dreamweaver template region
 * remove a common phrase (such as the site name) from imported titles
 * upload a single file or scan a directory for files to import
@@ -86,6 +86,9 @@ Now includes an option to fix internal links.
 
 == Changelog ==
 
+= 2.2a =
+* Now imports media files other than images.
+* Now handles images with https srcs.
 = 2.1 =
 * New option to fix internal links. Also, the importer now bakes you cookies. (Kidding about the cookies.) (August 23, 2011)
 = 2.0.2 =
