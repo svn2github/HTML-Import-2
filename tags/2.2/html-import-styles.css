@@ -1,0 +1,26 @@
+.clear, #html_import p.submit, #html_import .wrap p, #html_import .wrap h3, p.htmlimportfloat.clear, div#tips { clear: both; } 	
+.wrap h4 { margin: 1em 0 0; }
+kbd { display: inline; } 
+p.htmlimportfloat { float: left; width: 15em; margin-right: 2em; clear: none; } 
+p.widefloat { width: 31.4em; } 	
+input.widefloat { width: 48.5em; } 	
+#content-region, #title-region, #taxonomy { width: 100%; height: 8em; z-index: 10; }
+#content-switch, #title-switch, #type-switch { position: relative; height: 8em; }
+#content-region, #title-region, .clean-region { display: none; }
+div.taxochecklistbox { float: left; margin: 1em 1em 1em 0; }
+ul.taxochecklist { height: 15em; width: 20em; overflow-y: scroll; border: 1px solid #dfdfdf; padding: 0 1em; background: #fff; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+ul.taxochecklist ul.children { margin-left: 1em; }
+p.taxoinput { float: left; margin: 1em 1em 1em 0; width: 22.2em; }
+p.taxoinput input { width: 100%; }
+td.taginput { width: 33%; vertical-align: top; }
+.clean-region th { text-indent: 2em; }
+body.settings_page_html-import #footer { display: none; }
+/* jQuery tabs */
+.ui-tabs-nav { border-bottom: 1px solid #ccc; height: 27px; margin: 20px 0; padding: 0; }
+.ui-tabs-nav li { display: block; float: left; margin: 0; }
+.ui-tabs-nav li a { padding: 4px 20px 6px; font-weight: bold; }
+.ui-tabs-nav li a { border-style: solid; border-color: #CCC #CCC #F9F9F9; border-width: 1px 1px 0; color: #464646; text-shadow: rgba(255, 255, 255, 1) 0 1px 0; display: inline-block; padding: 4px 14px 6px; text-decoration: none; margin: 0 6px -1px 0; -moz-border-radius: 5px 5px 0 0; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -khtml-border-top-left-radius: 5px; -khtml-border-top-right-radius: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+.ui-tabs-nav li.ui-tabs-selected, .ui-tabs-nav li.ui-state-active { padding-bottom: 1px; background: #fff; }
+.ui-tabs-nav li.ui-tabs-selected a, .ui-tabs-nav li.ui-state-active a { border-width: 1px; color: #21759b; /* WP blue */ }
+.ui-tabs-panel { clear: both; }
+.wrap h3 /*, .wrap div.ui-tabs-panel */ { display: none; }
