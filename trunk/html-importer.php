@@ -264,8 +264,12 @@ class HTML_Import extends WP_Importer {
 	      set_time_limit(30);
 	      $path = $rootdir.'/'.$val;
 	      if(is_file($path) && is_readable($path)) {
+			$filename_parts = pathinfo($path);
+			$ext = strtolower($filename_parts['extension']);
+			/*
 			$filename_parts = explode(".",$val);
 			$ext = strtolower($filename_parts[count($filename_parts) - 1]);
+			/**/
 			// allowed extensions only, please
 			if (in_array($ext, $this->allowed)) {
 				if (filesize($path) > 0) {  // silently skip empty files
@@ -287,7 +291,11 @@ class HTML_Import extends WP_Importer {
 			  // get list of files in this directory only (checking children)
 				$files = scandir($path);
 				foreach ($files as $file) {
+					$filename_parts = pathinfo($file);
+					$ext = strtolower($filename_parts['extension']);
+					/*
 					$ext = strrchr($file,'.');
+					/**/
 					$ext = trim($ext,'.'); // dratted double dots
 					if (!empty($ext)) $exts[] .= $ext;
 				}
@@ -317,7 +325,12 @@ class HTML_Import extends WP_Importer {
 			$title = str_replace('_', ' ', $title);
 			$title = str_replace('-', ' ', $title);
 			$my_post['post_title'] = ucwords($title);
-
+			
+			if ('1' == $options['preserve_slugs']) {
+				$filename = basename($path);
+				$my_post['post_name'] = substr($filename,0,strrpos($filename,'.'));
+			}
+			
 			if ($options['timestamp'] == 'filemtime')
 				$date = filemtime($path);
 			else $date = time();
@@ -376,6 +389,15 @@ class HTML_Import extends WP_Importer {
 			if (!empty($remove))
 				$my_post['post_title'] = str_replace($remove, '', $my_post['post_title']);
 		
+			if ('1' == $options['preserve_slugs']) {
+				// there is no path when we're working with a single uploaded file instead of a directory
+				if (empty($path)) 
+					$filename = $this->filename;
+				else
+					$filename = basename($path);
+				$my_post['post_name'] = substr($filename,0,strrpos($filename,'.'));
+			}
+			
 			$my_post['post_type'] = $options['type'];
 		
 			if (is_post_type_hierarchical($my_post['post_type'])) {
@@ -854,6 +876,10 @@ class HTML_Import extends WP_Importer {
 		$options = get_option('html_import');
 				
 		if ($_POST['import_files'] == 'file') {
+			// preserve original file name so we can use it for slugs later (maybe)
+			$this->filename = $_FILES['import']['name'];
+			
+			// upload the file
 			$file = wp_import_handle_upload();
 			if ( isset($file['error']) ) {
 				echo $file['error'];
