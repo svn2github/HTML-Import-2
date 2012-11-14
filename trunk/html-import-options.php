@@ -7,6 +7,7 @@ function html_import_get_options() {
 		'index_file' => 'index.html',
 		'file_extensions' => 'html,htm,shtml',
 		'skipdirs' => __('images,includes,Templates', 'import-html-pages'),
+		'preserve_slugs' => 1,
 		'status' => 'publish',
 		'root_parent' => 0,
 		'type' => 'page',
@@ -122,6 +123,19 @@ function html_import_options_page() { ?>
 						<span class="description">
 						<?php _e("Directory names, without slashes, separated by commas. All files in these directories 
 							will be ignored.", 'import-html-pages'); ?>
+						</span>
+					</p></td>
+		        </tr>
+		
+				<tr valign="top">
+			        <th scope="row"><?php _e("Preserve file names", 'import-html-pages'); ?></th>
+			        <td><p>
+				
+						<label><input name="html_import[preserve_slugs]" id="preserve_slugs" value="1" type="checkbox" <?php checked($options['preserve_slugs']); ?> /> 
+							 <?php _e("Use the file's name as the imported page's slug", 'import-html-pages'); ?></label>
+						<br />
+						<span class="description">
+						<?php _e("The slug will not include the file extension. To completely mimic your old URLs, add the extension to your permalink structure.", 'import-html-pages'); ?>
 						</span>
 					</p></td>
 		        </tr>
