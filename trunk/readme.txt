@@ -111,6 +111,7 @@ New features: import entire file, generate title from filename, preserve filenam
 * New option to import custom fields.
 * UI cleanup. The tabs should work a bit better.
 * "asXML() on a non-object" errors should be less frequent now.
+* Fixed a problem with file types that would cause blank thumbnails and images. (Props <a href="http://wordpress.org/support/topic/plugin-html-import-2-importing-images-to-media-fix?replies=3">mchev2 and Carsten Bach</a>.)
 = 2.2 =
 * Now imports media files other than images. Uses `rawurldecode()` to remove junk like `%20` from file names, and thus should now handle situations where your link is something like `my%20file.doc` and your file is actually called `my file.doc`. 
 * Now handles images with https srcs.
