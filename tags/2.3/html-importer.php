@@ -515,7 +515,8 @@ class HTML_Import extends WP_Importer {
 						// appending strings unnecessarily so this plugin can be edited in Dreamweaver if needed
 						$custommatch = '/<'.'!-- InstanceBeginEditable name="'.$options['customfield_region'][$index].'" --'.'>(.*)<'.'!-- InstanceEndEditable --'.'>/isU';
 						preg_match($custommatch, $this->file, $custommatches);
-						$customfields[$fieldname] = $custommatches[1];
+						if (isset($custommatches[1]))
+							$customfields[$fieldname] = $custommatches[1];
 					}
 					else { // it's a tag
 						$tag = $options['customfield_tag'][$index];
@@ -664,7 +665,7 @@ class HTML_Import extends WP_Importer {
 			$url = $uploads['url'] . '/' . $filename;
 
 			//Apply upload filters
-			$return = apply_filters( 'wp_handle_upload', array( 'file' => $new_file, 'url' => $url, 'type' => $type ) );
+			$return = apply_filters( 'wp_handle_upload', array( 'file' => $new_file, 'url' => $url, 'type' => wp_check_filetype( $file, null ) ) );
 			$new_file = $return['file'];
 			$url = $return['url'];
 			$type = $return['type'];
@@ -690,8 +691,9 @@ class HTML_Import extends WP_Importer {
 			}
 
 			// Construct the attachment array
+			$wp_filetype = wp_check_filetype(basename($filename), null );
 			$attachment = array(
-				'post_mime_type' => $type,
+				'post_mime_type' => $wp_filetype['type'],
 				'guid' => $url,
 				'post_parent' => $post_id,
 				'post_title' => $title,
