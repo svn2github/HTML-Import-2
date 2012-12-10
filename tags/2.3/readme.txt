@@ -106,7 +106,7 @@ New features: import entire file, generate title from filename, preserve filenam
 = 2.3 =
 * New option to import an entire file's contents instead of selecting a portion of it. (Props Shawn Zilbert.)
 * New option to generate the title from the filename. (Props Shawn Zilbert.)
-* New option to preserve the original filename (minus the extension) as the imported page slug. (Sponsored by <a href="http://nycinsider.com">NYCinsider.com</a>)
+* New option to preserve the original filename (minus the extension) as the imported page slug. (Sponsored by <a href="http://www.nycinsiderguide.com">NYCinsiderguide.com</a>)
 * New option to choose the date from an HTML tag or Dreamweaver region.
 * New option to import custom fields.
 * UI cleanup. The tabs should work a bit better.
