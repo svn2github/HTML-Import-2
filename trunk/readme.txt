@@ -1,9 +1,11 @@
 === HTML Import 2 ===
 Contributors: sillybean
 Donate link: http://sillybean.net/code/wordpress/html-import-2/
+Text Domain: html_import
+Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
-Tested up to: 3.5
+Tested up to: 3.6
 Stable tag: 2.4
 
 Imports well-formed HTML files into WordPress pages. 

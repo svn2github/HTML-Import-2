@@ -739,7 +739,7 @@ function html_import_options_page() { ?>
 				<tr>
 					<th><?php _e( 'Donate', 'import-html-pages' ) ?></th>
 					<td>
-						<p><?php printf(__('If this importer has saved you hours of copying and pasting, a <a href="%s">donation toward future development</a> would be much appreciated!', 'import-html-pages'), 'http://sillybean.net/code/wordpress/html-import-2/'); ?></p>
+						<p><?php printf(__('If this importer has saved you hours of copying and pasting, a <a href="%s">donation toward future development</a> would be much appreciated!', 'import-html-pages'), 'http://stephanieleary.com/code/wordpress/html-import/'); ?></p>
 					</td>
 			</table>
 	</div>		

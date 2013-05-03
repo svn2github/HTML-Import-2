@@ -22,8 +22,7 @@ function html_import_activation_check() {
 register_activation_hook(__FILE__, 'html_import_activation_check');
 
 // i18n
-$plugin_dir = basename(dirname(__FILE__)). '/languages';
-load_plugin_textdomain( 'html_import', 'wp-content/plugins/' . $plugin_dir, $plugin_dir );
+load_plugin_textdomain( 'html_import', false, plugin_dir_path(__FILE__) . '/languages' );
 
 // Option page styles
 function html_import_css() {
