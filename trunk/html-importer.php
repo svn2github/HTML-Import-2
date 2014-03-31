@@ -514,8 +514,9 @@ class HTML_Import extends WP_Importer {
 				if (!empty($tagatt))
 					$xquery .= '[@'.$tagatt.'="'.$attval.'"]';
 				$content = $xml->xpath($xquery);
-				if (is_array($content) && isset($content[0]) && is_object($content[0]))
+				if (is_array($content) && isset($content[0]) && is_object($content[0])) {
 					$my_post['post_content'] = $content[0]->asXML(); // asXML() preserves HTML in content
+				}
 				else {  // fallback
 					$content = $xml->xpath('//body');
 					if (is_array($content) && isset($content[0]) && is_object($content[0]))
@@ -525,9 +526,11 @@ class HTML_Import extends WP_Importer {
 				}
 			}
 			
+			
+			
 			if ($options['title_inside'])
 				$my_post['post_content'] = str_replace($title, '', $my_post['post_content']);
-			
+					
 			if (!empty($my_post['post_content'])) {
 				if (!empty($options['clean_html']))
 					$my_post['post_content'] = $this->clean_html($my_post['post_content'], $options['allow_tags'], $options['allow_attributes']);
@@ -552,12 +555,16 @@ class HTML_Import extends WP_Importer {
 						if (!empty($tagatt))
 							$xquery .= '[@'.$tagatt.'="'.$attval.'"]';
 						$content = $xml->xpath($xquery);
-						if (is_array($content) && isset($content[0]) && is_object($content[0]))
-							$customfields[$fieldname] = strip_tags($content[0]);
+						if (is_array($content) && isset($content[0]) && is_object($content[0])) {
+							// $customfields[$fieldname] = strip_tags($content[0]);
+							$customfields[$fieldname] = $content[0]->asXML();
+							if (!empty($options['clean_html']))
+								$customfields[$fieldname] = $this->clean_html($customfields[$fieldname], $options['allow_tags'], $options['allow_attributes']);
+						}
 					}
 				}
 			}
-
+			
 			// excerpt
 			$excerpt = $options['meta_desc'];
 			if (!empty($excerpt)) {
@@ -799,7 +806,7 @@ class HTML_Import extends WP_Importer {
 					if (empty($path)) 
 						$imgpath = $options['root_directory']. '/' . $src;
 					else
-						$imgpath = dirname($path) . '/' . $src;
+						$imgpath = (is_file($path) ? dirname($path) : $path) . '/' . $src;
 				}
 				// intersect base path and src, or just clean up junk
 				$imgpath = $this->remove_dot_segments($imgpath);
@@ -828,7 +835,6 @@ class HTML_Import extends WP_Importer {
 				$my_post['ID'] = $id;
 				$my_post['post_content'] = $content;
 				wp_update_post($my_post);
-				update_post_meta($id, '_ise_old_sidebar', $custom); 
 			}
 			
 			_e('done.', 'html-import-images');
@@ -1100,6 +1106,7 @@ class HTML_Import extends WP_Importer {
 			textarea#import-result { height: 12em; width: 100%; }
 			#importing th { width: 32% } 
 			#importing th#id { width: 4% }
+			#importing tbody tr:nth-child(odd) { background: #f9f9f9; }
 			span.attachment_error { display: block; padding-left: 2em; color: #d54e21; /* WP orange */ }
 		</style>
 		<?php
@@ -1128,5 +1135,3 @@ if (!function_exists('mb_strrpos')) {
 		return strrpos(utf8_decode($haystack), $needle, $offset);
 	}
 }
-
-?>

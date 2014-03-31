@@ -5,7 +5,7 @@ Text Domain: html_import
 Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
-Tested up to: 3.6
+Tested up to: 3.9
 Stable tag: 2.4
 
 Imports well-formed HTML files into WordPress pages. 
@@ -20,7 +20,7 @@ If importing pages, the directory hierarchy will be preserved. Directories conta
 
 As files are imported, the resulting IDs, permalinks, and titles will be displayed. On completion, the importer will provide a list of Apache redirects that can be used in your `.htaccess` file to seamlessly transfer visitors from the old file locations to the new WordPress permalinks. As of 2.0, if you change your permalink structure after you've imported your files, you can regenerate the redirects&mdash;the file's old URL is stored as a custom field in the imported post.
 
-Options in 2.0:
+Options:
 
 * import files into any post type (posts, pages, or custom post types set to `public`)
 * import linked media files (images, documents, etc.) to the media library
@@ -37,16 +37,10 @@ Options in 2.0:
 * use meta descriptions as excerpts
 * clean up imported HTML and strip unwanted tags and attributes
 * fix internal links in imported files to match new permalinks
-
-New in 2.3:
-
 * import the entire file and generate the title from the filename 
 * preserve the original filename as the imported page's slug
 * choose the date from an HTML tag or Dreamweaver region (uses <a href="http://php.net/strtotime">strtotime()</a>; results may vary)
 * import additional HTML tags or Dreamweaver regions as custom fields
-
-New in 2.4:
-
 * option to remove imported title from within content area
 * fallbacks: if your chosen tag/area is empty or does not exist, the importer will select `<body>` for content and `<title>` for the title
 * use a custom field named 'post_tag' to import tags from a portion of the file
@@ -95,23 +89,13 @@ It's also quite possible that the script is trying to use more memory than your 
 
 The skipped directory setting just tells the importer where to look for HTML files. Linked images will be imported no matter where they're located.
 
-== Upgrade Notice ==
-
-= 2.0 =
-This version requires at least WP 3.0. Now handles linked images, single file uploads, and custom post types and taxonomies.
-= 2.0.1 =
-2.0 requires at least WP 3.0. Now handles linked images, single file uploads, and custom post types and taxonomies. 2.0.1 adds an option to set the page template for hierarchical post types.
-= 2.0.2 =
-Added some helpers to work around servers that do not support PHP's multibyte string functions.
-= 2.1 =
-Now includes an option to fix internal links.
-= 2.2 =
-Now imports media files other than images.
-= 2.3 =
-New features: import entire file, generate title from filename, preserve filename as slug, choose date from HTML, import custom fields.
 
 == Changelog ==
 
+= 2.5a =
+* Fixed a problem with some image paths
+* Fixed some incorrectly escaped options that would trigger translations on things that shouldn't be translated
+* Custom fields now allow the same HTML tags as content
 = 2.4 =
 * You can now specify more than one index filename (e.g. 'index.php, default.htm')
 * New option to remove the imported title from within the content area

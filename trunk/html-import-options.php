@@ -94,7 +94,7 @@ function html_import_options_page() { ?>
 		        <tr valign="top">
 			        <th scope="row"><?php _e("Directory to import", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[root_directory]" id="root_directory"
-							 	value="<?php esc_attr_e($options['root_directory']); ?>" class="widefloat" />
+							 	value="<?php echo esc_attr($options['root_directory']); ?>" class="widefloat" />
 							</label><br />
 							<span class="description">
 								<?php _e('The absolute path to the files you want to import.', 'html-import-pages'); ?><br />
@@ -106,7 +106,7 @@ function html_import_options_page() { ?>
 				<tr valign="top">
 			        <th scope="row"><?php _e("Old site URL", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[old_url]" id="old_url" 
-						value="<?php esc_attr_e($options['old_url']); ?>" class="widefloat" /> </label><br />
+						value="<?php echo esc_attr($options['old_url']); ?>" class="widefloat" /> </label><br />
 						<span class="description">
 							<?php _e('This will be used only to generate accurate <kbd>.htaccess</kbd> redirects. The importer will not search for files here.', 'html-import-pages'); ?>
 						</span>
@@ -116,7 +116,7 @@ function html_import_options_page() { ?>
 				<tr valign="top">
 			        <th scope="row"><?php _e("Default file", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[index_file]" id="index_file" 
-						value="<?php esc_attr_e($options['index_file']); ?>" class="widefloat" /> </label><br />
+						value="<?php echo esc_attr($options['index_file']); ?>" class="widefloat" /> </label><br />
 						<span class="description">
 						<?php _e("Enter the name of the default file (index.html, default.htm) for directories on this server.", 'import-html-pages'); ?>
 						</span>
@@ -126,7 +126,7 @@ function html_import_options_page() { ?>
 				<tr valign="top">
 			        <th scope="row"><?php _e("File extensions to include", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[file_extensions]" id="file_extensions" 
-						value="<?php esc_attr_e($options['file_extensions']); ?>" class="widefloat" /> </label><br />
+						value="<?php echo esc_attr($options['file_extensions']); ?>" class="widefloat" /> </label><br />
 						<span class="description">
 						<?php _e("File extensions, without periods, separated by commas. All other file types will 
 							be ignored.", 'import-html-pages'); ?>
@@ -137,7 +137,7 @@ function html_import_options_page() { ?>
 				<tr valign="top">
 			        <th scope="row"><?php _e("Directories to exclude", 'import-html-pages'); ?></th>
 			        <td><p><label><input type="text" name="html_import[skipdirs]" id="skipdirs" 
-						value="<?php esc_attr_e($options['skipdirs']); ?>" class="widefloat" />  </label><br />
+						value="<?php echo esc_attr($options['skipdirs']); ?>" class="widefloat" />  </label><br />
 						<span class="description">
 						<?php _e("Directory names, without slashes, separated by commas. All files in these directories 
 							will be ignored.", 'import-html-pages'); ?>
@@ -188,21 +188,21 @@ function html_import_options_page() { ?>
 						<tr id="content-tag" <?php if ($options['import_content'] != 'tag') echo 'style="display: none;"'; ?>>
 				     	<td class="taginput">
 				            <label><?php _e("Tag", 'import-html-pages'); ?><br />
-				            <input type="text" name="html_import[content_tag]" id="content_tag" value="<?php echo esc_attr_e($options['content_tag']); ?>" />
+				            <input type="text" name="html_import[content_tag]" id="content_tag" value="<?php echo esc_attr($options['content_tag']); ?>" />
 				            </label>
 				            <br />
 				            <span class="description"><?php _e("The HTML tag, without brackets", 'import-html-pages'); ?></span>
 						</td>
 						<td class="taginput">
 				            <label><?php _e("Attribute", 'import-html-pages'); ?><br />
-				            <input type="text" name="html_import[content_tagatt]" id="content_tagatt" value="<?php esc_attr_e($options['content_tagatt']); ?>" />
+				            <input type="text" name="html_import[content_tagatt]" id="content_tagatt" value="<?php echo esc_attr($options['content_tagatt']); ?>" />
 				            </label>
 				            <br />
 				            <span class="description"><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;body&gt;", 'import-html-pages'); ?></span>
 						</td>
 						<td class="taginput">
 				            <label><?php _e("= Value", 'import-html-pages'); ?><br />
-				            <input type="text" name="html_import[content_attval]" id="content_attval" value="<?php esc_attr_e($options['content_attval']); ?>" />
+				            <input type="text" name="html_import[content_attval]" id="content_attval" value="<?php echo esc_attr($options['content_attval']); ?>" />
 				            </label>
 				            <br />
 				            <span class="description"><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes", 'import-html-pages'); ?></span>
@@ -211,7 +211,7 @@ function html_import_options_page() { ?>
 				<tr id="content-region" <?php if ($options['import_content'] != 'region') echo 'style="display: none;"'; ?>>
 					<td colspan="3">
 						<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
-				        <input type="text" name="html_import[content_region]" value="<?php esc_attr_e($options['content_region']); ?>" />  
+				        <input type="text" name="html_import[content_region]" value="<?php echo esc_attr($options['content_region']); ?>" />  
 				        </label><br />
 				        <span class="description"><?php _e("The name of the editable region (e.g. 'Main Content')", 'import-html-pages'); ?></span>
 					</td>
@@ -240,7 +240,7 @@ function html_import_options_page() { ?>
 				<th><?php _e("Allowed file types", 'import-html-pages'); ?></th>
 		            <td><label>
 			 			<input type="text" name="html_import[document_mimes]" id="document_mimes" 
-							value="<?php esc_attr_e($options['document_mimes']); ?>" class="widefloat" />  </label><br />
+							value="<?php echo esc_attr($options['document_mimes']); ?>" class="widefloat" />  </label><br />
 		            <span class="description"><?php _e("Enter file extensions without periods, separated by commas. File types not listed here will not be imported to the media library. <br />
 		Suggested: rtf, doc, docx, xls, xlsx, csv, ppt, pps, pptx, ppsx, pdf, zip, wmv, avi, flv, mov, mpeg, mp3, m4a, wav<br />", 'import-html-pages'); ?></span>
 		            </td> 
@@ -278,7 +278,7 @@ function html_import_options_page() { ?>
 			        	<th><?php _e("Allowed HTML", 'import-html-pages'); ?></th>
 			            <td>    <label>
 			                <input type="text" name="html_import[allow_tags]" id="allow_tags" 
-								value="<?php esc_attr_e($options['allow_tags']); ?>" class="widefloat" />  </label><br />
+								value="<?php echo esc_attr($options['allow_tags']); ?>" class="widefloat" />  </label><br />
 			                <span class="description"><?php _e("Enter tags (with brackets) to be preserved. All tags not listed here will be removed. <br />Suggested: ", 'import-html-pages'); ?> 
 			                &lt;p&gt;
 			                &lt;br&gt;
@@ -321,7 +321,7 @@ function html_import_options_page() { ?>
 					<th><?php _e("Allowed attributes", 'import-html-pages'); ?></th>
 			            <td><label>
 				 			<input type="text" name="html_import[allow_attributes]" id="allow_attributes" 
-								value="<?php esc_attr_e($options['allow_attributes']); ?>" class="widefloat" />  </label><br />
+								value="<?php echo esc_attr($options['allow_attributes']); ?>" class="widefloat" />  </label><br />
 			            <span class="description"><?php _e("Enter attributes separated by commas. All attributes not listed here will be removed. <br />Suggested: href, src, alt, title<br />
 			    			<em>If you have data tables, also include:</em> summary, rowspan, colspan, span", 'import-html-pages'); ?></span>
 			            </td> 
@@ -357,21 +357,21 @@ function html_import_options_page() { ?>
 					<tr id="title-tag" <?php if ($options['import_title'] !== 'tag') echo 'style="display:none;"'; ?> >
 					     	<td class="taginput">
 					            <label><?php _e("Tag", 'import-html-pages'); ?><br />
-					            <input type="text" name="html_import[title_tag]" id="title_tag" value="<?php echo esc_attr_e($options['title_tag']); ?>" />
+					            <input type="text" name="html_import[title_tag]" id="title_tag" value="<?php echo esc_attr($options['title_tag']); ?>" />
 					            </label>
 					            <br />
 					            <span class="description"><?php _e("The HTML tag, without brackets", 'import-html-pages'); ?></span>
 							</td>
 							<td class="taginput">
 					            <label><?php _e("Attribute", 'import-html-pages'); ?><br />
-					            <input type="text" name="html_import[title_tagatt]" id="title_tagatt" value="<?php esc_attr_e($options['title_tagatt']); ?>" />
+					            <input type="text" name="html_import[title_tagatt]" id="title_tagatt" value="<?php echo esc_attr($options['title_tagatt']); ?>" />
 					            </label>
 					            <br />
 					            <span class="description"><?php _e("Leave blank to use a tag without an attribute, or when the attributes don't matter, such as &lt;title&gt;", 'import-html-pages'); ?></span>
 							</td>
 							<td class="taginput">
 					            <label><?php _e("= Value", 'import-html-pages'); ?><br />
-					            <input type="text" name="html_import[title_attval]" id="title_attval" value="<?php esc_attr_e($options['title_attval']); ?>" />
+					            <input type="text" name="html_import[title_attval]" id="title_attval" value="<?php echo esc_attr($options['title_attval']); ?>" />
 					            </label>
 					            <br />
 					            <span class="description"><?php _e("Enter the attribute's value (such as width, ID, or class name) without quotes", 'import-html-pages'); ?></span>
@@ -383,7 +383,7 @@ function html_import_options_page() { ?>
 						     	<td class="taginput">
 							<td colspan="3">
 								<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
-						        <input type="text" name="html_import[title_region]" id="title_region" value="<?php esc_attr_e($options['title_region']); ?>" />  
+						        <input type="text" name="html_import[title_region]" id="title_region" value="<?php echo esc_attr($options['title_region']); ?>" />  
 						        </label><br />
 						        <span class="description"><?php _e("The name of the editable region (e.g. 'Page Title')", 'import-html-pages'); ?></span>
 							</td>
@@ -397,7 +397,7 @@ function html_import_options_page() { ?>
 			<tr valign="top">
 				<th><?php _e("Phrase to remove from page title: ", 'import-html-pages'); ?></th>
 				<td>
-					<label><input type="text" name="html_import[remove_from_title]" id="remove_from_title" value="<?php esc_attr_e($options['remove_from_title']); ?>" class="widefloat" />  </label><br />
+					<label><input type="text" name="html_import[remove_from_title]" id="remove_from_title" value="<?php echo esc_attr($options['remove_from_title']); ?>" class="widefloat" />  </label><br />
 					<span class="description"><?php _e("Any common title phrase (such as the site name, which most themes will print automatically)", 'import-html-pages'); ?></span>
 				</td>
 			</tr>
@@ -509,24 +509,24 @@ function html_import_options_page() { ?>
 					<tr id="date-tag" <?php if ($options['import_date'] !== 'tag') echo 'style="display: none;"'; ?>>
 			     	<td class="taginput">
 			            <label><?php _e("Tag", 'import-html-pages'); ?><br />
-			            <input type="text" name="html_import[date_tag]" id="date_tag" value="<?php echo esc_attr_e($options['date_tag']); ?>" />
+			            <input type="text" name="html_import[date_tag]" id="date_tag" value="<?php echo esc_attr($options['date_tag']); ?>" />
 			            </label>
 					</td>
 					<td class="taginput">
 			            <label><?php _e("Attribute", 'import-html-pages'); ?><br />
-			            <input type="text" name="html_import[date_tagatt]" id="date_tagatt" value="<?php esc_attr_e($options['date_tagatt']); ?>" />
+			            <input type="text" name="html_import[date_tagatt]" id="date_tagatt" value="<?php echo esc_attr($options['date_tagatt']); ?>" />
 			            </label>
 					</td>
 					<td class="taginput">
 			            <label><?php _e("= Value", 'import-html-pages'); ?><br />
-			            <input type="text" name="html_import[date_attval]" id="date_attval" value="<?php esc_attr_e($options['date_attval']); ?>" />
+			            <input type="text" name="html_import[date_attval]" id="date_attval" value="<?php echo esc_attr($options['date_attval']); ?>" />
 			            </label>
 			        </td>
 			</tr>
 			<tr id="date-region" <?php if ($options['import_date'] !== 'region') echo 'style="display: none;"'; ?>>
 				<td colspan="3">
 					<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
-			        <input type="text" name="html_import[date_region]" value="<?php esc_attr_e($options['date_region']); ?>" />  
+			        <input type="text" name="html_import[date_region]" value="<?php echo esc_attr($options['date_region']); ?>" />  
 			        </label>
 				</td>
 			</tr>
@@ -547,7 +547,7 @@ function html_import_options_page() { ?>
 			<th>
 				<label><?php _e('Custom field name', 'import-html-pages'); ?><br />
 					<input type="text" name="html_import[customfield_name][<?php echo $index; ?>]" 
-						value="<?php esc_attr_e($options['customfield_name'][$index]); ?>" />
+						value="<?php echo esc_attr($options['customfield_name'][$index]); ?>" />
 					</label><br />
 				<a class="button-secondary delRow" title="Remove field">&times;</a></th>
 	        <td>
@@ -570,21 +570,21 @@ function html_import_options_page() { ?>
 		     	<td class="taginput">
 		            <label><?php _e("Tag", 'import-html-pages'); ?><br />
 		            <input type="text" name="html_import[customfield_tag][<?php echo $index; ?>]" 
-						value="<?php  esc_attr_e($options['customfield_tag'][$index]); ?>" />
+						value="<?php  echo esc_attr($options['customfield_tag'][$index]); ?>" />
 		            </label>
 
 				</td>
 				<td class="taginput">
 		            <label><?php _e("Attribute", 'import-html-pages'); ?><br />
 		            <input type="text" name="html_import[customfield_tagatt][<?php echo $index; ?>]" 
-						value="<?php esc_attr_e($options['customfield_tagatt'][$index]); ?>" />
+						value="<?php echo esc_attr($options['customfield_tagatt'][$index]); ?>" />
 		            </label>
 
 				</td>
 				<td class="taginput">
 		            <label><?php _e("= Value", 'import-html-pages'); ?><br />
 		            <input type="text" name="html_import[customfield_attval][<?php echo $index; ?>]" 
-						value="<?php esc_attr_e($options['customfield_attval'][$index]); ?>" />
+						value="<?php echo esc_attr($options['customfield_attval'][$index]); ?>" />
 		            </label>
 
 		        </td>
@@ -593,7 +593,7 @@ function html_import_options_page() { ?>
 					<td colspan="3">
 						<label><?php _e("Dreamweaver template region", 'import-html-pages'); ?><br />
 				        <input type="text" name="html_import[customfield_region][<?php echo $index; ?>]" 
-							value="<?php esc_attr_e($options['customfield_region'][$index]); ?>" />  
+							value="<?php echo esc_attr($options['customfield_region'][$index]); ?>" />  
 				        </label>
 					</td>
 				</tr>
@@ -776,17 +776,17 @@ function html_import_validate_options($input) {
 	$input['old_url'] = esc_url(rtrim($input['old_url'], '/'));
 	
 	// trim the extensions, skipped dirs, allowed attributes. Invalid ones will not cause problems.
-	$input['file_extensions'] = str_replace('.', '', $input['file_extensions']);
-	$input['file_extensions'] = str_replace(' ', '', $input['file_extensions']);
-	$input['file_extensions'] = strtolower($input['file_extensions']);
-	$input['document_mimes'] = str_replace('.', '', $input['document_mimes']);
-	$input['document_mimes'] = str_replace(' ', '', $input['document_mimes']);
-	$input['document_mimes'] = strtolower($input['document_mimes']);
-	$input['skipdirs'] = str_replace(' ', '', $input['skipdirs']);
-	$input['allow_tags'] = str_replace('/', '', $input['allow_tags']);
-	$input['allow_tags'] = str_replace(' ', '', $input['allow_tags']);
+	$input['file_extensions']  = str_replace('.', '', $input['file_extensions']);
+	$input['file_extensions']  = str_replace(' ', '', $input['file_extensions']);
+	$input['file_extensions']  = strtolower($input['file_extensions']);
+	$input['document_mimes']   = str_replace('.', '', $input['document_mimes']);
+	$input['document_mimes']   = str_replace(' ', '', $input['document_mimes']);
+	$input['document_mimes']   = strtolower($input['document_mimes']);
+	$input['skipdirs'] 		   = str_replace(' ', '', $input['skipdirs']);
+	$input['allow_tags'] 	   = str_replace('/', '', $input['allow_tags']);
+	$input['allow_tags'] 	   = str_replace(' ', '', $input['allow_tags']);
 	$input['allow_attributes'] = str_replace(' ', '', $input['allow_attributes']);
-	$input['index_files'] = str_replace(' ', '', $input['index_files']);
+	$input['index_files'] 	   = str_replace(' ', '', $input['index_files']);
 	
 	if ( !in_array($input['status'], get_post_stati()) ) 
 		$input['status'] = 'publish';
@@ -804,18 +804,18 @@ function html_import_validate_options($input) {
 		$input['import_title'] = 'tag';
 	
 	// trim region/tag/attr/value
-	if (!empty($input['content_region']))	$input['content_region'] = 	trim($input['content_region']);
-	if (!empty($input['content_tag']))		$input['content_tag'] = 	trim($input['content_tag']);
-	if (!empty($input['content_tagatt']))	$input['content_tagatt'] = 	trim($input['content_tagatt']);
-	if (!empty($input['content_attval']))	$input['content_attval'] = 	esc_attr(trim($input['content_attval']));
-	if (!empty($input['title_region']))		$input['title_region'] = 	trim($input['title_region']);
-	if (!empty($input['title_tag']))		$input['title_tag'] = 		trim($input['title_tag']);
-	if (!empty($input['title_tagatt']))		$input['title_tagatt'] = 	trim($input['title_tagatt']);
-	if (!empty($input['title_attval']))		$input['title_attval'] = 	esc_attr(trim($input['title_attval']));
-	if (!empty($input['date_region']))		$input['date_region'] = 	trim($input['date_region']);
-	if (!empty($input['date_tag']))			$input['date_tag'] = 		trim($input['date_tag']);
-	if (!empty($input['date_tagatt']))		$input['date_tagatt'] = 	trim($input['date_tagatt']);
-	if (!empty($input['date_attval']))		$input['date_attval'] = 	esc_attr(trim($input['date_attval']));
+	if (!empty($input['content_region']))	$input['content_region'] = 	sanitize_text_field($input['content_region']);
+	if (!empty($input['content_tag']))		$input['content_tag'] 	 =	sanitize_text_field($input['content_tag']);
+	if (!empty($input['content_tagatt']))	$input['content_tagatt'] = 	sanitize_text_field($input['content_tagatt']);
+	if (!empty($input['content_attval']))	$input['content_attval'] = 	sanitize_text_field($input['content_attval']);
+	if (!empty($input['title_region']))		$input['title_region'] 	 = 	sanitize_text_field($input['title_region']);
+	if (!empty($input['title_tag']))		$input['title_tag'] 	 = 	sanitize_text_field($input['title_tag']);
+	if (!empty($input['title_tagatt']))		$input['title_tagatt'] 	 = 	sanitize_text_field($input['title_tagatt']);
+	if (!empty($input['title_attval']))		$input['title_attval'] 	 = 	sanitize_text_field($input['title_attval']);
+	if (!empty($input['date_region']))		$input['date_region'] 	 = 	sanitize_text_field($input['date_region']);
+	if (!empty($input['date_tag']))			$input['date_tag'] 		 = 	sanitize_text_field($input['date_tag']);
+	if (!empty($input['date_tagatt']))		$input['date_tagatt'] 	 = 	sanitize_text_field($input['date_tagatt']);
+	if (!empty($input['date_attval']))		$input['date_attval'] 	 = 	sanitize_text_field($input['date_attval']);
 	
 	// We could have many custom fields. For now, let's just make it an array. Deal with it in the importer.
 	if (!is_array($input['customfield_name']))
@@ -940,4 +940,3 @@ class HTML_Import_Walker_Category_Checklist extends Walker {
          $output .= "</li>\n";
      }
 }
-?>

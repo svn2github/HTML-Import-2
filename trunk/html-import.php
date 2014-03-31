@@ -3,7 +3,7 @@
 Plugin Name: HTML Import 2
 Plugin URI: http://sillybean.net/code/wordpress/html-import/
 Description: Imports well-formed static HTML files into WordPress posts or pages. Supports Dreamweaver templates and Word HTML cleanup. Visit the settings page to get started. See the <a href="http://sillybean.net/code/wordpress/html-import-2/user-guide/">User Guide</a> for details.
-Version: 2.4
+Version: 2.5
 Author: Stephanie Leary
 Author URI: http://sillybean.net/
 License: GPL 2
@@ -26,7 +26,7 @@ load_plugin_textdomain( 'html_import', false, plugin_dir_path(__FILE__) . '/lang
 
 // Option page styles
 function html_import_css() {
-    wp_register_style( 'html-import-css', WP_PLUGIN_URL . '/import-html-pages/html-import-styles.css' );
+    wp_register_style( 'html-import-css', plugins_url( 'html-import-styles.css', __FILE__ ) );
 
 }
 function add_html_import_styles() {
@@ -37,7 +37,7 @@ add_action( 'admin_init', 'html_import_css' );
 // Option page scripts
 function html_import_scripts() {
 	wp_enqueue_script( 'jquery-ui-tabs' );
-	wp_enqueue_script( 'html-import-tabs', WP_PLUGIN_URL . '/import-html-pages/js/tabs.js', array('jquery', 'jquery-ui-tabs') );
+	wp_enqueue_script( 'html-import-tabs', plugins_url( 'js/tabs.js', __FILE__ ), array('jquery', 'jquery-ui-tabs') );
 }
 
 // set default options 
@@ -101,4 +101,3 @@ function html_import_plugin_actions($links) {
 	$new_links[] = '<a href="options-general.php?page=html-import.php">' . __('Settings', 'html-import') . '</a>';
 	return array_merge($new_links, $links);
 }
-?>
