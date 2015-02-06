@@ -6,7 +6,7 @@ Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 2.4
+Stable tag: 2.5
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -35,7 +35,7 @@ Options:
 * set tags, categories, and custom taxonomies
 * choose status, author, and timestamp
 * use meta descriptions as excerpts
-* clean up imported HTML and strip unwanted tags and attributes
+* clean up imported HTML and strip unwanted tags and attributes in content and custom fields
 * fix internal links in imported files to match new permalinks
 * import the entire file and generate the title from the filename 
 * preserve the original filename as the imported page's slug
@@ -79,7 +79,7 @@ The importer will attempt to work around your server's `max_execution_time` sett
 
 `php_value max_execution_time 160`
 
-If that gets you further but still doesn't finish, just increase the number (it's in seconds). However, note that your host might get irritated with you for hogging the server's resources. If you have a _lot_ of files to import, it's best to install WordPress on your desktop (XAMPP for Windows and MAMP for Macs make it pretty easy) and do the heavy lifting there.
+If that gets you further but still doesn't finish, just increase the number (it's in seconds). However, note that your host might get irritated with you for hogging the server's resources. If you have a _lot_ of files to import, it's best to install WordPress on your desktop (XAMPP for Windows and MAMP for Macs make it pretty easy) and run the importer there instead of doing it on your live server.
 
 It's also quite possible that the script is trying to use more memory than your server allows. You can try to change that setting, too, in `.htaccess`:
 
@@ -92,10 +92,12 @@ The skipped directory setting just tells the importer where to look for HTML fil
 
 == Changelog ==
 
-= 2.5a =
+= 2.5 =
+* Custom fields can now allow the same HTML tags as content
 * Fixed a problem with some image paths
+* Made image and link searches case-insensitive (props <a href="https://profiles.wordpress.org/noamcleanforestsolutionscom/">Clean Forest Solutions</a>)
 * Fixed some incorrectly escaped options that would trigger translations on things that shouldn't be translated
-* Custom fields now allow the same HTML tags as content
+* Page template selections are now pre-selected when returning to the options page (props <a href="https://profiles.wordpress.org/lee-fent/">Lee Fent</a>)
 = 2.4 =
 * You can now specify more than one index filename (e.g. 'index.php, default.htm')
 * New option to remove the imported title from within the content area
