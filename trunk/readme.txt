@@ -45,7 +45,7 @@ Options:
 * fallbacks: if your chosen tag/area is empty or does not exist, the importer will select `<body>` for content and `<title>` for the title
 * use a custom field named 'post_tag' to import tags from a portion of the file
 
-See the <a href="http://stephanieleary.com/downloads/html-import/user-guide.html">User Guide</a> for details on all the options.
+See the <a href="http://stephanieleary.com/code/wordpress/html-import/html-import-2-user-guide/">User Guide</a> for details on all the options.
 
 == Installation ==
 
@@ -59,7 +59,7 @@ See the <a href="http://stephanieleary.com/downloads/html-import/user-guide.html
 
 You didn't find the right HTML tag that surrounds the content you wanted to import. Open up one of your old files in a browser and use its inspector (or Firebug) to select the content you want. Look for the tag that surrounds that content and find something unique about it. (An ID attribute is best, but anything <em>unique</em> will work. If it's a table cell, a unique width will do just fine.) The enter the tag name, the attribute name, and the attribute's value into the separate boxes in the Content section of the importer's options page.
 
-See the <a href="http://stephanieleary.com/downloads/html-import/user-guide.html">User Guide</a> for details and examples.
+See the <a href="http://stephanieleary.com/code/wordpress/html-import/html-import-2-user-guide/">User Guide</a> for details and examples.
 
 = Does this work on Windows servers? =
 
@@ -89,6 +89,13 @@ It's also quite possible that the script is trying to use more memory than your 
 
 The skipped directory setting just tells the importer where to look for HTML files. Linked images will be imported no matter where they're located.
 
+= Can I import files from another server? =
+
+No. The files must be on the same server as your WordPress installation. I have no intention of ever making this plugin import files from URLs. You are welcome to fork the code if you want to add this feature.
+
+= Can I set this import to run as a cron job? =
+
+No. <a href="http://www.wpallimport.com/">WP All Import</a> might be a better choice if you need to re-do your import on a recurring basis.
 
 == Changelog ==
 
@@ -189,5 +196,12 @@ Thanks to...
 
 1. Settings for files to import
 2. Content settings
-3. Importer screen
-4. Completed import: pages, rewrite rules, and images
+3. HTML cleanup options
+4. Title and metadata settings
+5. Alternative title specifications
+6. Custom field settings
+7. Category, tag, and taxonomy settings
+8. Import screen (directory/file selection)
+9. Completed import: pages, rewrite rules, and images
+10. Sample directory and file structure
+11. The same site, after the import (directory hierarchy preserved as parent/child pages)
