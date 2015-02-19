@@ -468,7 +468,7 @@ function html_import_options_page() { ?>
 				<td>
 			        <?php 
 			            $pages = wp_dropdown_pages( array( 'echo' => 0, 'selected' => $options['root_parent'], 'name' => 'html_import[root_parent]', 'show_option_none' => __( 'None ( top level )', 'import-html-pages' ), 'sort_column'=> 'menu_order, post_title' ) );
-			            if ( empty( $pages ) ) $pages = "<select name=\"root_parent\"><option value=\"0\">"._e( 'None ( top level )', 'import-html-pages' )."</option></select>";
+			            if ( empty( $pages ) ) $pages = "<select name=\"root_parent\"><option value=\"0\">".__( 'None ( top level )', 'import-html-pages' )."</option></select>";
 			            echo $pages;
 			        ?>
 				</td>
@@ -929,17 +929,17 @@ class HTML_Import_Walker_Category_Checklist extends Walker {
      var $tree_type = 'category';
      var $db_fields = array ( 'parent' => 'parent', 'id' => 'term_id' ); 
 
- 	function start_lvl( &$output, $depth, $args ) {
+ 	function start_lvl( &$output, $depth = 0, $args = array() ) {
          $indent = str_repeat( "\t", $depth );
          $output .= "$indent<ul class='children'>\n";
      }
  
- 	function end_lvl( &$output, $depth, $args ) {
+ 	function end_lvl( &$output, $depth = 0, $args = array() ) {
          $indent = str_repeat( "\t", $depth );
          $output .= "$indent</ul>\n";
      }
  
- 	function start_el( &$output, $category, $depth, $args ) {
+ 	function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
          extract( $args );
          if ( empty( $taxonomy ) )
              $taxonomy = 'category';
@@ -947,11 +947,11 @@ class HTML_Import_Walker_Category_Checklist extends Walker {
 		// This is the part we changed
          $name = 'html_import['.$taxonomy.']';
  
-         $class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
-         $output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters( 'the_category', $category->name ) ) . '</label>';
+         $class = in_array( $object->term_id, $popular_cats ) ? ' class="popular-category"' : '';
+         $output .= "\n<li id='{$taxonomy}-{$object->term_id}'$class>" . '<label class="selectit"><input value="' . $object->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $object->term_id . '"' . checked( in_array( $object->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters( 'the_category', $object->name ) ) . '</label>';
      }
  
- 	function end_el( &$output, $category, $depth, $args ) {
+ 	function end_el( &$output, $category, $depth = 0, $args = array() ) {
          $output .= "</li>\n";
      }
 }

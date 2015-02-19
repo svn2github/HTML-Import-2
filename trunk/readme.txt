@@ -6,7 +6,7 @@ Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 2.5
+Stable tag: 2.5.1
 
 Imports well-formed HTML files into WordPress pages. 
 
@@ -93,12 +93,11 @@ The skipped directory setting just tells the importer where to look for HTML fil
 
 No. The files must be on the same server as your WordPress installation. I have no intention of ever making this plugin import files from URLs. You are welcome to fork the code if you want to add this feature.
 
-= Can I set this import to run as a cron job? =
-
-No. <a href="http://www.wpallimport.com/">WP All Import</a> might be a better choice if you need to re-do your import on a recurring basis.
-
 == Changelog ==
 
+= 2.5.1 =
+* Fixed warnings and notices related to the custom category walker.
+* Fixed bug where the page parent option displayed incorrectly in sites with no published pages.
 = 2.5 =
 * Custom fields can now allow the same HTML tags as content
 * Fixed a problem with some image paths
