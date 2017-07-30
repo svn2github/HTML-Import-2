@@ -5,7 +5,7 @@ Text Domain: html_import
 Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
 Requires at least: 3.0
-Tested up to: 4.6
+Tested up to: 4.8
 Stable tag: 2.6
 
 Imports well-formed HTML files into WordPress pages. 
