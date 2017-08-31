@@ -4,6 +4,7 @@ Donate link: http://sillybean.net/code/wordpress/html-import-2/
 Text Domain: html_import
 Domain Path: /languages
 Tags: import, pages, static files, taxonomies, taxonomy, dreamweaver, Word, FrontPage
+Requires PHP: 5.2
 Requires at least: 3.0
 Tested up to: 4.8
 Stable tag: 2.6
